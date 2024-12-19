@@ -1,0 +1,9 @@
+{
+  "itemrarity:cursed": "[Maudit]",
+  "itemrarity:common": "[Commun]",
+  "itemrarity:uncommon": "[Peu commun]",
+  "itemrarity:rare": "[Rare]",
+  "itemrarity:epic": "[Epique]",
+  "itemrarity:legendary": "[Légendaire]",
+  "itemrarity:unique": "[Unique]"
+}
