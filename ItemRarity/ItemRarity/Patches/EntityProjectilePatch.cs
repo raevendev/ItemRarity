@@ -30,7 +30,7 @@ public static class EntityProjectilePatch
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)
         {
-            __instance.Damage = __instance.Damage * modAttributes.GetFloat(ModAttributes.PiercingPower);
+            __instance.Damage *= modAttributes.GetFloat(ModAttributes.PiercingPower);
         }
 
         if (modAttributes.GetString(ModAttributes.PiercingPower).Equals("unique", StringComparison.InvariantCultureIgnoreCase))
