@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace ItemRarity.Config;
 
+using ItemRarity = (string Key, ItemRarityConfig Value);
+
 /// <summary>
 /// Represents the configuration.
 /// </summary>
@@ -101,7 +103,8 @@ public sealed class ModConfig
                 DurabilityMultiplier = 2f,
                 MiningSpeedMultiplier = 1.9f,
                 AttackPowerMultiplier = 1.9f,
-                PiercingPowerMultiplier = 1.9f
+                PiercingPowerMultiplier = 1.9f,
+                Effects = ["Thor"]
             }
         }
     };
@@ -112,7 +115,7 @@ public sealed class ModConfig
     /// <returns>
     /// A tuple containing the key (rarity name) and value (<see cref="ItemRarityConfig"/>) of the randomly selected rarity.
     /// </returns>
-    public (string Key, ItemRarityConfig Value) GetRandomRarity()
+    public ItemRarity GetRandomRarity()
     {
         var totalWeight = Rarities.Values.Sum(i => i.Rarity);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
@@ -136,7 +139,7 @@ public sealed class ModConfig
     /// <returns>
     /// A tuple containing the rarity name and the corresponding <see cref="ItemRarityConfig"/>.
     /// </returns>
-    public (string Key, ItemRarityConfig Value) this[string rarity]
+    public ItemRarity this[string rarity]
     {
         get
         {
