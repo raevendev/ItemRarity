@@ -30,10 +30,12 @@ public static class EntityProjectilePatch
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)
         {
-            __instance.Damage *= modAttributes.GetFloat(ModAttributes.PiercingPower);
+            __instance.Damage = modAttributes.GetFloat(ModAttributes.PiercingPower, 1f);
         }
 
-        if (modAttributes.GetString(ModAttributes.PiercingPower).Equals("unique", StringComparison.InvariantCultureIgnoreCase))
+        var itemRarity = ItemRarityModSystem.Config[modAttributes.GetString(ModAttributes.Rarity)];
+
+        if (itemRarity.Value.HasEffect("thor"))
         {
             var hitPoint = entity.Pos;
 
