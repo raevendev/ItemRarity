@@ -11,10 +11,13 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity;
 
+/// <summary>
+/// Mod Entry point.
+/// </summary>
 public sealed class ModCore : ModSystem
 {
-    public const string HarmonyId = "itemrarity.patches";
-    public const string ConfigFileName = "itemrarity.json";
+    private const string HarmonyId = "itemrarity.patches";
+    private const string ConfigFileName = "itemrarity.json";
 
     public static ICoreAPI CoreApi = null!;
     public static Harmony HarmonyInstance = null!;
