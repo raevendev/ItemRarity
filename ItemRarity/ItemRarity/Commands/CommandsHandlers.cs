@@ -81,7 +81,7 @@ public static class CommandsHandlers
                 g.First().Rarity,
                 g.First().Color,
             })
-            .OrderBy(r => r.Rarity)
+            .OrderBy(r => r.Count)
             .ToList();
 
         var message = new StringBuilder();
