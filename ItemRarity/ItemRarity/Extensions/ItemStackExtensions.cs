@@ -22,10 +22,9 @@ public static class ItemStackExtensions
     public static (string Key, ItemRarityConfig Value) SetRarity(this ItemStack itemStack, string rarity)
     {
         if (itemStack.Collectible == null)
-            throw new Exception("ItemStack.Collectible is null");
+            throw new Exception("Missing Collectible in itemStack.");
 
         var itemRarity = ItemRarityModSystem.Config[rarity];
-
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
 
         modAttributes.SetString(ModAttributes.Rarity, itemRarity.Key); // Use the key as the rarity.
