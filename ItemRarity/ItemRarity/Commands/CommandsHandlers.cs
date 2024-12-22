@@ -91,7 +91,7 @@ public static class CommandsHandlers
         foreach (var rarity in results)
         {
             var relativeChance = rarity.Rarity / totalRarity * 100f;
-            message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} (Relative Chance {relativeChance:F2}%)");
+            message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
         }
 
         // Envoie le message
