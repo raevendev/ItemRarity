@@ -93,8 +93,7 @@ public static class CommandsHandlers
             var relativeChance = rarity.Rarity / totalRarity * 100f;
             message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
         }
-
-        // Envoie le message
+        
         serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
 
         return TextCommandResult.Success();
