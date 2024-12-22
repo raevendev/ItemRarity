@@ -1,5 +1,4 @@
 ﻿using System;
-using Vintagestory.API.Util;
 
 namespace ItemRarity.Config;
 
@@ -47,6 +46,11 @@ public sealed class ItemRarityConfig
     /// Gets the effects applied to an item's based on its rarity.
     /// </summary>
     public string[] Effects { get; init; } = [];
+
+    /// <summary>
+    /// Gets which items are supported by this rarity
+    /// </summary>
+    public string[] SupportedItems { get; init; } = ["*", "NOT-YET-SUPPORTED"];
 
     public bool HasEffect(string value)
     {
