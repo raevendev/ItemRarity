@@ -68,7 +68,7 @@ public static class CollectibleObjectPatch
         var modAttributes = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
         var attributeRarity = modAttributes.GetString(ModAttributes.Rarity);
-        var rarity = ItemRarityModSystem.Config[attributeRarity];
+        var rarity = ModCore.Config[attributeRarity];
         var rarityName = Lang.Get($"itemrarity:{attributeRarity}");
 
         if (__result.Contains(rarityName))
@@ -162,7 +162,7 @@ public static class CollectibleObjectPatch
         if (itemStack == null || itemStack.Item?.Tool == null || itemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
-        var rarity = ItemRarityModSystem.Config.GetRandomRarity();
+        var rarity = ModCore.GetRandomRarity();
 
         itemStack.SetRarity(rarity.Key);
     }

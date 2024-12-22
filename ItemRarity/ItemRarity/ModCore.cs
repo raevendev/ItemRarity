@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using HarmonyLib;
 using ItemRarity.Commands;
 using ItemRarity.Config;
@@ -10,7 +11,7 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity;
 
-public sealed class ItemRarityModSystem : ModSystem
+public sealed class ModCore : ModSystem
 {
     public const string HarmonyId = "itemrarity.patches";
     public const string ConfigFileName = "itemrarity.json";
@@ -75,9 +76,32 @@ public sealed class ItemRarityModSystem : ModSystem
         if (itemStack == null || itemStack.Item?.Tool == null || itemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
-        var rarity = Config.GetRandomRarity();
+        var rarity = GetRandomRarity();
 
         itemStack.SetRarity(rarity.Key);
+    }
+
+    /// <summary>
+    /// Returns a random rarity based on the configured rarities and their associated weights.
+    /// </summary>
+    /// <returns>
+    /// A tuple containing the key (rarity name) and value (<see cref="ItemRarityConfig"/>) of the randomly selected rarity.
+    /// </returns>
+    public static ItemRarityInfos GetRandomRarity()
+    {
+        var totalWeight = Config.Rarities.Values.Sum(i => i.Rarity);
+        var randomValue = Random.Shared.NextDouble() * totalWeight;
+        var cumulativeWeight = 0f;
+
+        foreach (var item in Config.Rarities)
+        {
+            cumulativeWeight += item.Value.Rarity;
+            if (randomValue < cumulativeWeight)
+                return (item.Key, item.Value);
+        }
+
+        var first = Config.Rarities.First();
+        return (first.Key, first.Value);
     }
 
     /// <summary>

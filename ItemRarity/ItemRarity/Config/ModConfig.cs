@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace ItemRarity.Config;
-
-using ItemRarity = (string Key, ItemRarityConfig Value);
 
 /// <summary>
 /// Represents the configuration.
@@ -110,36 +107,13 @@ public sealed class ModConfig
     };
 
     /// <summary>
-    /// Returns a random rarity based on the configured rarities and their associated weights.
-    /// </summary>
-    /// <returns>
-    /// A tuple containing the key (rarity name) and value (<see cref="ItemRarityConfig"/>) of the randomly selected rarity.
-    /// </returns>
-    public ItemRarity GetRandomRarity()
-    {
-        var totalWeight = Rarities.Values.Sum(i => i.Rarity);
-        var randomValue = Random.Shared.NextDouble() * totalWeight;
-        var cumulativeWeight = 0f;
-
-        foreach (var item in Rarities)
-        {
-            cumulativeWeight += item.Value.Rarity;
-            if (randomValue < cumulativeWeight)
-                return (item.Key, item.Value);
-        }
-
-        var first = Rarities.First();
-        return (first.Key, first.Value);
-    }
-
-    /// <summary>
     /// Indexer to retrieve a rarity configuration by its name.
     /// </summary>
     /// <param name="rarity">The name of the rarity to retrieve.</param>
     /// <returns>
     /// A tuple containing the rarity name and the corresponding <see cref="ItemRarityConfig"/>.
     /// </returns>
-    public ItemRarity this[string rarity]
+    public ItemRarityInfos this[string rarity]
     {
         get
         {

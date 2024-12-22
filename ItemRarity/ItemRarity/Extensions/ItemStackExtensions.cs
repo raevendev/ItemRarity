@@ -24,7 +24,7 @@ public static class ItemStackExtensions
         if (itemStack.Collectible == null)
             throw new Exception("Missing Collectible in itemStack.");
 
-        var itemRarity = ItemRarityModSystem.Config[rarity];
+        var itemRarity = ModCore.Config[rarity];
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
 
         modAttributes.SetString(ModAttributes.Rarity, itemRarity.Key); // Use the key as the rarity.

@@ -22,7 +22,7 @@ public static class EntityProjectilePatch
     [HarmonyPrefix, HarmonyPatch("impactOnEntity")]
     public static void PatchImpactEntity(EntityProjectile __instance, Entity entity)
     {
-        if (ItemRarityModSystem.WeatherSystemServer == null || !__instance.ProjectileStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (ModCore.WeatherSystemServer == null || !__instance.ProjectileStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
         var modAttributes = __instance.ProjectileStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
@@ -32,13 +32,13 @@ public static class EntityProjectilePatch
             __instance.Damage = modAttributes.GetFloat(ModAttributes.PiercingPower, 1f);
         }
 
-        var itemRarity = ItemRarityModSystem.Config[modAttributes.GetString(ModAttributes.Rarity)];
+        var itemRarity = ModCore.Config[modAttributes.GetString(ModAttributes.Rarity)];
 
         if (itemRarity.Value.HasEffect("thor"))
         {
             var hitPoint = entity.Pos;
 
-            ItemRarityModSystem.WeatherSystemServer.SpawnLightningFlash(hitPoint.XYZ);
+            ModCore.WeatherSystemServer.SpawnLightningFlash(hitPoint.XYZ);
 
             entity.IsOnFire = true;
         }

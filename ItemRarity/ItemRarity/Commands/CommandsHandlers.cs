@@ -43,7 +43,7 @@ public static class CommandsHandlers
     /// <returns>A result indicating the success or failure of the reload operation.</returns>
     public static TextCommandResult HandleReloadConfigCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
-        ItemRarityModSystem.LoadConfig(serverApi);
+        ModCore.LoadConfig(serverApi);
 
         return TextCommandResult.Success("Configuration has been reloaded");
     }
@@ -64,11 +64,11 @@ public static class CommandsHandlers
         }
 
         var rarities = new List<ItemRarityConfig>(timeRun);
-        var totalRarity = ItemRarityModSystem.Config.Rarities.Sum(r => r.Value.Rarity);
+        var totalRarity = ModCore.Config.Rarities.Sum(r => r.Value.Rarity);
 
         for (var i = 0; i < timeRun; i++)
         {
-            var rarity = ItemRarityModSystem.Config.GetRandomRarity().Value;
+            var rarity = ModCore.GetRandomRarity().Value;
             rarities.Add(rarity);
         }
 
@@ -93,7 +93,7 @@ public static class CommandsHandlers
             var relativeChance = rarity.Rarity / totalRarity * 100f;
             message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
         }
-        
+
         serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
 
         return TextCommandResult.Success();
