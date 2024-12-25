@@ -59,7 +59,7 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(0)]
     public static void PatchGetHeldItemName(CollectibleObject __instance, ItemStack? itemStack, ref string __result)
     {
-        if (itemStack == null || itemStack.Item?.Tool == null)
+        if (itemStack == null || itemStack.Collectible?.Tool == null)
             return;
 
         if (!itemStack.Attributes.HasAttribute(ModAttributes.Guid))

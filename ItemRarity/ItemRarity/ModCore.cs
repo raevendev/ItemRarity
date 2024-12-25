@@ -4,10 +4,14 @@ using HarmonyLib;
 using ItemRarity.Commands;
 using ItemRarity.Config;
 using ItemRarity.Extensions;
+using ItemRarity.Packets;
+using Newtonsoft.Json;
+using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace ItemRarity;
 
@@ -18,32 +22,60 @@ public sealed class ModCore : ModSystem
 {
     private const string HarmonyId = "itemrarity.patches";
     private const string ConfigFileName = "itemrarity.json";
+    private const string ConfigSyncNetChannel = "itemrarity.configsync";
 
-    public static ICoreAPI CoreApi = null!;
+    public static ModConfig Config = ModConfig.GetDefaultConfig();
     public static Harmony HarmonyInstance = null!;
-    public static ModConfig Config = null!;
+    public static ICoreClientAPI ClientApi = null!;
+    public static ICoreServerAPI ServerApi = null!;
     public static WeatherSystemServer? WeatherSystemServer;
 
     public override void Start(ICoreAPI api)
     {
-        CoreApi = api;
-        HarmonyInstance = new Harmony(HarmonyId);
-        HarmonyInstance.PatchAll();
-
-        if (api.Side == EnumAppSide.Client)
-            return;
+        if (!Harmony.HasAnyPatches(HarmonyId))
+        {
+            HarmonyInstance = new Harmony(HarmonyId);
+            HarmonyInstance.PatchAll();
+        }
 
         LoadConfig(api);
 
-        WeatherSystemServer = api.ModLoader.GetModSystem<WeatherSystemServer>();
-
-        api.Event.OnEntitySpawn += OnEntitySpawn;
+        api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 
         api.Logger.Notification("[ItemRarity] Mod loaded.");
     }
 
+    public override void StartClientSide(ICoreClientAPI api)
+    {
+        ClientApi = api;
+
+        api.Network.GetChannel(ConfigSyncNetChannel).SetMessageHandler<ServerConfigMessage>(packet =>
+        {
+            try
+            {
+                var config = JsonSerializer.Deserialize<ModConfig>(packet.SerializedConfig);
+                if (config != null)
+                {
+                    Config = config;
+                    api.Logger.Notification("[ItemRarity] Received config from server.");
+                }
+            }
+            catch (Exception e)
+            {
+                api.Logger.Error(e);
+            }
+        });
+    }
+
     public override void StartServerSide(ICoreServerAPI api)
     {
+        ServerApi = api;
+
+        api.Event.OnEntitySpawn += OnServerEntitySpawn;
+        api.Event.PlayerJoin += OnServerPlayerJoin;
+
+        WeatherSystemServer = api.ModLoader.GetModSystem<WeatherSystemServer>();
+
         var parsers = api.ChatCommands.Parsers;
 
         var mainCommand = api.ChatCommands.Create("rarity")
@@ -69,7 +101,13 @@ public sealed class ModCore : ModSystem
             .EndSubCommand();
     }
 
-    private void OnEntitySpawn(Entity entity)
+    private void OnServerPlayerJoin(IServerPlayer byplayer)
+    {
+        ServerApi.Network.GetChannel(ConfigSyncNetChannel).SendPacket(new ServerConfigMessage
+            { SerializedConfig = JsonConvert.SerializeObject(Config) }, byplayer);
+    }
+
+    private void OnServerEntitySpawn(Entity entity)
     {
         if (entity is not EntityItem item || item.Attributes == null)
             return;
@@ -82,6 +120,11 @@ public sealed class ModCore : ModSystem
         var rarity = GetRandomRarity();
 
         itemStack.SetRarity(rarity.Key);
+    }
+    
+    public override void Dispose()
+    {
+        HarmonyInstance.UnpatchAll(HarmonyId);
     }
 
     /// <summary>
@@ -116,21 +159,20 @@ public sealed class ModCore : ModSystem
         try
         {
             Config = api.LoadModConfig<ModConfig>(ConfigFileName);
-            if (Config != null)
+            if (Config != null && Config.Rarities.Any())
             {
                 api.Logger.Notification("[ItemRarity] Configuration loaded.");
                 return;
             }
 
-            Config = new ModConfig();
-            api.Logger.Notification("[ItemRarity] Configuration not found. Generating default configuration.");
+            Config = ModConfig.GetDefaultConfig();
             api.StoreModConfig(Config, ConfigFileName);
+            api.Logger.Notification("[ItemRarity] Configuration not found. Generating default configuration.");
         }
         catch
         {
-            api.Logger.Warning("[ItemRarity] Failed to load configuration. Falling back to the default configuration.");
-            Config = new ModConfig();
-            api.StoreModConfig(Config, ConfigFileName);
+            api.Logger.Warning("[ItemRarity] Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration).");
+            Config = ModConfig.GetDefaultConfig();
         }
     }
 }
