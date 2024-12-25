@@ -34,7 +34,7 @@ public static class ItemSpearPatch
 
         if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
             return true;
-
+        
         var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
         if (!modAttributes.HasAttribute("rarity") || !modAttributes.HasAttribute(ModAttributes.PiercingPower))
