@@ -6,6 +6,7 @@ using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
+using Vintagestory.API.Server;
 
 // ReSharper disable InconsistentNaming
 
@@ -69,7 +70,7 @@ public static class CollectibleObjectPatch
 
         var attributeRarity = modAttributes.GetString(ModAttributes.Rarity);
         var rarity = ModCore.Config[attributeRarity];
-        var rarityName = Lang.GetWithFallback($"itemrarity:{attributeRarity}", rarity.Value.Name);
+        var rarityName = Lang.GetWithFallback($"itemrarity:{attributeRarity}", "itemrarity:unknown", rarity.Value.Name);
 
         if (__result.Contains(rarityName))
             return;
@@ -143,7 +144,9 @@ public static class CollectibleObjectPatch
 
         var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
 
-        __result = miningSpeed.GetFloat(block.BlockMaterial.ToString());
+        __result = miningSpeed.GetFloat(block.BlockMaterial.ToString(), __result);
+        ModCore.ServerApi?.Logger.Warning("Mining speed for " + block.BlockMaterial.ToString() + " is: " + __result);
+        ModCore.ClientApi?.Logger.Warning("Mining speed for " + block.BlockMaterial.ToString() + " is: " + __result);
     }
 
     /// <summary>
