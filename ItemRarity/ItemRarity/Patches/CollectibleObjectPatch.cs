@@ -69,7 +69,7 @@ public static class CollectibleObjectPatch
 
         var attributeRarity = modAttributes.GetString(ModAttributes.Rarity);
         var rarity = ModCore.Config[attributeRarity];
-        var rarityName = Lang.Get($"itemrarity:{attributeRarity}");
+        var rarityName = Lang.GetWithFallback($"itemrarity:{attributeRarity}", rarity.Value.Name);
 
         if (__result.Contains(rarityName))
             return;
