@@ -145,8 +145,6 @@ public static class CollectibleObjectPatch
         var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
 
         __result = miningSpeed.GetFloat(block.BlockMaterial.ToString(), __result);
-        ModCore.ServerApi?.Logger.Warning("Mining speed for " + block.BlockMaterial.ToString() + " is: " + __result);
-        ModCore.ClientApi?.Logger.Warning("Mining speed for " + block.BlockMaterial.ToString() + " is: " + __result);
     }
 
     /// <summary>
