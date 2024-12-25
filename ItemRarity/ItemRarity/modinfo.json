@@ -4,7 +4,7 @@
   "side:": "universal",
   "name": "ItemRarity",
   "description": "This mod introduces a rarity mechanic to items. Rarity levels influence key item stats, such as durability, damage, and more.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "website": "https://github.com/raevendev/itemrarity",
   "authors": [
     "Unreal852"
