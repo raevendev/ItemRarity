@@ -26,8 +26,8 @@ public sealed class ModCore : ModSystem
 
     public static ModConfig Config = ModConfig.GetDefaultConfig();
     public static Harmony HarmonyInstance = null!;
-    public static ICoreClientAPI ClientApi = null!;
-    public static ICoreServerAPI ServerApi = null!;
+    public static ICoreClientAPI? ClientApi;
+    public static ICoreServerAPI? ServerApi;
     public static WeatherSystemServer? WeatherSystemServer;
 
     public override void Start(ICoreAPI api)
@@ -103,7 +103,7 @@ public sealed class ModCore : ModSystem
 
     private void OnServerPlayerJoin(IServerPlayer byplayer)
     {
-        ServerApi.Network.GetChannel(ConfigSyncNetChannel).SendPacket(new ServerConfigMessage
+        ServerApi?.Network.GetChannel(ConfigSyncNetChannel).SendPacket(new ServerConfigMessage
             { SerializedConfig = JsonConvert.SerializeObject(Config) }, byplayer);
     }
 
@@ -121,7 +121,7 @@ public sealed class ModCore : ModSystem
 
         itemStack.SetRarity(rarity.Key);
     }
-    
+
     public override void Dispose()
     {
         HarmonyInstance.UnpatchAll(HarmonyId);

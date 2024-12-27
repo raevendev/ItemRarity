@@ -19,7 +19,7 @@ public static class ItemStackExtensions
     /// A tuple containing the key and corresponding <see cref="ItemRarityConfig"/> of the applied rarity.
     /// </returns>
     /// <exception cref="Exception">Thrown if the <see cref="ItemStack"/> does not have a valid collectible item.</exception>
-    public static (string Key, ItemRarityConfig Value) SetRarity(this ItemStack itemStack, string rarity)
+    public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
     {
         if (itemStack.Collectible == null)
             throw new Exception("Missing Collectible in itemStack.");
