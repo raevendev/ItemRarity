@@ -6,7 +6,6 @@ using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
-using Vintagestory.API.Server;
 
 // ReSharper disable InconsistentNaming
 
@@ -143,7 +142,7 @@ public static class CollectibleObjectPatch
             return;
 
         var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
-
+        
         __result = miningSpeed.GetFloat(block.BlockMaterial.ToString(), __result);
     }
 
