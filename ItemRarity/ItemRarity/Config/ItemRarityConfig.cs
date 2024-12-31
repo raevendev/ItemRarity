@@ -43,6 +43,11 @@ public sealed class ItemRarityConfig
     public float PiercingPowerMultiplier { get; init; } = 1F;
 
     /// <summary>
+    /// Gets the multiplier applied to an armor based on its rarity
+    /// </summary>
+    public float FlatDamageReductionMultiplier { get; init; } = 1F;
+
+    /// <summary>
     /// Gets the effects applied to an item's based on its rarity.
     /// </summary>
     public string[] Effects { get; init; } = [];

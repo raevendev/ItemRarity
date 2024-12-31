@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
-using ItemRarity.Commands;
 using ItemRarity.Config;
-using ItemRarity.Extensions;
 using ItemRarity.Packets;
-using Newtonsoft.Json;
+using ItemRarity.Server;
+using ItemRarity.Server.Commands;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Server;
 using Vintagestory.GameContent;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -20,9 +18,9 @@ namespace ItemRarity;
 /// </summary>
 public sealed class ModCore : ModSystem
 {
-    private const string HarmonyId = "itemrarity.patches";
-    private const string ConfigFileName = "itemrarity.json";
-    private const string ConfigSyncNetChannel = "itemrarity.configsync";
+    public const string HarmonyId = "itemrarity.patches";
+    public const string ConfigFileName = "itemrarity.json";
+    public const string ConfigSyncNetChannel = "itemrarity.configsync";
 
     public static ModConfig Config = ModConfig.GetDefaultConfig();
     public static Harmony HarmonyInstance = null!;
@@ -71,8 +69,8 @@ public sealed class ModCore : ModSystem
     {
         ServerApi = api;
 
-        api.Event.OnEntitySpawn += OnServerEntitySpawn;
-        api.Event.PlayerJoin += OnServerPlayerJoin;
+        api.Event.OnEntitySpawn += ServerEventsHandlers.OnEntitySpawn;
+        api.Event.PlayerJoin += ServerEventsHandlers.OnPlayerJoin;
 
         WeatherSystemServer = api.ModLoader.GetModSystem<WeatherSystemServer>();
 
@@ -101,53 +99,10 @@ public sealed class ModCore : ModSystem
             .EndSubCommand();
     }
 
-    private void OnServerPlayerJoin(IServerPlayer byplayer)
-    {
-        ServerApi?.Network.GetChannel(ConfigSyncNetChannel).SendPacket(new ServerConfigMessage
-            { SerializedConfig = JsonConvert.SerializeObject(Config) }, byplayer);
-    }
-
-    private void OnServerEntitySpawn(Entity entity)
-    {
-        if (entity is not EntityItem item || item.Attributes == null)
-            return;
-
-        var itemStack = item.Itemstack;
-
-        if (itemStack == null || itemStack.Item?.Tool == null || itemStack.Attributes.HasAttribute(ModAttributes.Guid))
-            return;
-
-        var rarity = GetRandomRarity();
-
-        itemStack.SetRarity(rarity.Key);
-    }
 
     public override void Dispose()
     {
         HarmonyInstance.UnpatchAll(HarmonyId);
-    }
-
-    /// <summary>
-    /// Returns a random rarity based on the configured rarities and their associated weights.
-    /// </summary>
-    /// <returns>
-    /// A tuple containing the key (rarity name) and value (<see cref="ItemRarityConfig"/>) of the randomly selected rarity.
-    /// </returns>
-    public static ItemRarityInfos GetRandomRarity()
-    {
-        var totalWeight = Config.Rarities.Values.Sum(i => i.Rarity);
-        var randomValue = Random.Shared.NextDouble() * totalWeight;
-        var cumulativeWeight = 0f;
-
-        foreach (var item in Config.Rarities)
-        {
-            cumulativeWeight += item.Value.Rarity;
-            if (randomValue < cumulativeWeight)
-                return (item.Key, item.Value);
-        }
-
-        var first = Config.Rarities.First();
-        return (first.Key, first.Value);
     }
 
     /// <summary>

@@ -44,10 +44,11 @@ public sealed class ModConfig
                         Name = "Cursed",
                         Color = "#606060",
                         Rarity = 8,
-                        DurabilityMultiplier = 0.5f,
-                        MiningSpeedMultiplier = 0.5f,
-                        AttackPowerMultiplier = 0.5f,
-                        PiercingPowerMultiplier = 0.5f
+                        DurabilityMultiplier = 0.5F,
+                        MiningSpeedMultiplier = 0.5F,
+                        AttackPowerMultiplier = 0.5F,
+                        PiercingPowerMultiplier = 0.5F,
+                        FlatDamageReductionMultiplier = 0.5F
                     }
                 },
 
@@ -57,10 +58,11 @@ public sealed class ModConfig
                         Name = "Common",
                         Color = "#FFFFFF",
                         Rarity = 40,
-                        DurabilityMultiplier = 1f,
-                        MiningSpeedMultiplier = 1f,
-                        AttackPowerMultiplier = 1f,
-                        PiercingPowerMultiplier = 1f
+                        DurabilityMultiplier = 1F,
+                        MiningSpeedMultiplier = 1F,
+                        AttackPowerMultiplier = 1F,
+                        PiercingPowerMultiplier = 1F,
+                        FlatDamageReductionMultiplier = 1F
                     }
                 },
 
@@ -70,10 +72,11 @@ public sealed class ModConfig
                         Name = "Uncommon",
                         Color = "#36FF00",
                         Rarity = 30,
-                        DurabilityMultiplier = 1.1f,
-                        MiningSpeedMultiplier = 1.1f,
-                        AttackPowerMultiplier = 1.1f,
-                        PiercingPowerMultiplier = 1.1f
+                        DurabilityMultiplier = 1.1F,
+                        MiningSpeedMultiplier = 1.1F,
+                        AttackPowerMultiplier = 1.1F,
+                        PiercingPowerMultiplier = 1.1F,
+                        FlatDamageReductionMultiplier = 1.1F
                     }
                 },
 
@@ -83,10 +86,11 @@ public sealed class ModConfig
                         Name = "Rare",
                         Color = "#13DBE8",
                         Rarity = 20,
-                        DurabilityMultiplier = 1.2f,
-                        MiningSpeedMultiplier = 1.2f,
-                        AttackPowerMultiplier = 1.2f,
-                        PiercingPowerMultiplier = 1.2f
+                        DurabilityMultiplier = 1.2F,
+                        MiningSpeedMultiplier = 1.2F,
+                        AttackPowerMultiplier = 1.2F,
+                        PiercingPowerMultiplier = 1.2F,
+                        FlatDamageReductionMultiplier = 1.2F
                     }
                 },
 
@@ -96,10 +100,11 @@ public sealed class ModConfig
                         Name = "Epic",
                         Color = "#8413E8",
                         Rarity = 12,
-                        DurabilityMultiplier = 1.4f,
-                        MiningSpeedMultiplier = 1.3f,
-                        AttackPowerMultiplier = 1.3f,
-                        PiercingPowerMultiplier = 1.3f
+                        DurabilityMultiplier = 1.4F,
+                        MiningSpeedMultiplier = 1.3F,
+                        AttackPowerMultiplier = 1.3F,
+                        PiercingPowerMultiplier = 1.3F,
+                        FlatDamageReductionMultiplier = 1.3F
                     }
                 },
 
@@ -109,10 +114,11 @@ public sealed class ModConfig
                         Name = "Legendary",
                         Color = "#E08614",
                         Rarity = 8,
-                        DurabilityMultiplier = 1.6f,
-                        MiningSpeedMultiplier = 1.5f,
-                        AttackPowerMultiplier = 1.5f,
-                        PiercingPowerMultiplier = 1.5f
+                        DurabilityMultiplier = 1.6F,
+                        MiningSpeedMultiplier = 1.5F,
+                        AttackPowerMultiplier = 1.5F,
+                        PiercingPowerMultiplier = 1.5F,
+                        FlatDamageReductionMultiplier = 1.5F
                     }
                 },
 
@@ -122,10 +128,11 @@ public sealed class ModConfig
                         Name = "Unique",
                         Color = "#EC290E",
                         Rarity = 2,
-                        DurabilityMultiplier = 2f,
-                        MiningSpeedMultiplier = 1.9f,
-                        AttackPowerMultiplier = 1.9f,
-                        PiercingPowerMultiplier = 1.9f,
+                        DurabilityMultiplier = 2F,
+                        MiningSpeedMultiplier = 1.9F,
+                        AttackPowerMultiplier = 1.9F,
+                        PiercingPowerMultiplier = 1.9F,
+                        FlatDamageReductionMultiplier = 1.9F,
                         Effects = ["Thor"]
                     }
                 }

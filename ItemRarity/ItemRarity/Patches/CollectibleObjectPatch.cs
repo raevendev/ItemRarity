@@ -2,8 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
-using ItemRarity.Extensions;
 using Vintagestory.API.Common;
+using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
 
@@ -59,10 +59,7 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(0)]
     public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack? itemStack, ref string __result)
     {
-        if (itemStack == null || itemStack.Collectible?.Tool == null)
-            return;
-
-        if (!itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (itemStack == null || !itemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
         var modAttributes = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
@@ -162,7 +159,7 @@ public static class CollectibleObjectPatch
         if (itemStack == null || itemStack.Item?.Tool == null || itemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
-        var rarity = ModCore.GetRandomRarity();
+        var rarity = ModRarity.GetRandomRarity();
 
         itemStack.SetRarity(rarity.Key);
     }

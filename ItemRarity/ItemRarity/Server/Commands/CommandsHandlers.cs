@@ -2,11 +2,10 @@
 using System.Linq;
 using System.Text;
 using ItemRarity.Config;
-using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Server;
 
-namespace ItemRarity.Commands;
+namespace ItemRarity.Server.Commands;
 
 /// <summary>
 /// Contains handler methods for various commands.
@@ -68,7 +67,7 @@ public static class CommandsHandlers
 
         for (var i = 0; i < timeRun; i++)
         {
-            var rarity = ModCore.GetRandomRarity().Value;
+            var rarity = ModRarity.GetRandomRarity().Value;
             rarities.Add(rarity);
         }
 
