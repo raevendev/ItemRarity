@@ -34,10 +34,10 @@ public static class ItemSpearPatch
 
         if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
             return true;
-        
+
         var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
-        if (!modAttributes.HasAttribute("rarity") || !modAttributes.HasAttribute(ModAttributes.PiercingPower))
+        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.PiercingPower))
             return true;
 
         CollectibleObjectPatch.ReversePatchGetHeldItemInfo(__instance, inSlot, dsc, world,
