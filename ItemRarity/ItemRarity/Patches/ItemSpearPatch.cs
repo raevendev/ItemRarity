@@ -40,7 +40,7 @@ public static class ItemSpearPatch
         if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.PiercingPower))
             return true;
 
-        CollectibleObjectPatch.ReversePatchGetHeldItemInfo(__instance, inSlot, dsc, world,
+        CollectibleObjectPatch.GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world,
             withDebugInfo); // Call the original method to fill item infos before adding our own.
 
         var piercingDamages = modAttributes.GetFloat(ModAttributes.PiercingPower);

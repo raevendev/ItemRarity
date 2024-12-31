@@ -31,7 +31,7 @@ public static class ItemKnifePatch
         var miningSpeedAttribute = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
         var miningSpeed = CalculateHarvestingSpeed(miningSpeedAttribute.GetFloat(EnumBlockMaterial.Plant.ToString()))
-            * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448; // TODO: use a dedicated setting for that
+            * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448;
 
         __result = secondsUsed < miningSpeed;
     }
@@ -40,12 +40,10 @@ public static class ItemKnifePatch
     public static void OnHeldInteractStopPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel)
     {
-        var itemStack = slot.Itemstack;
-
-        if (!itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (slot.Itemstack == null || !slot.Itemstack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
-        var modAttributes = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
+        var modAttributes = slot.Itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
         if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
             return;

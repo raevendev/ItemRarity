@@ -29,7 +29,7 @@ public static class CollectibleObjectPatch
     /// <param name="world">The <c>IWorldAccessor</c> representing the game world in which the item exists.</param>
     /// <param name="withDebugInfo">A boolean indicating whether debug information should be included in the item's description.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPriority(0)]
-    public static void PatchGetHeldItemInfo(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+    public static void GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         if (__instance.MiningSpeed == null || __instance.MiningSpeed.Count == 0)
             return;
@@ -57,7 +57,7 @@ public static class CollectibleObjectPatch
     /// <param name="itemStack">The <c>ItemStack</c> representing the held item whose name is being queried.</param>
     /// <param name="__result">A reference to the resulting item name.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(0)]
-    public static void PatchGetHeldItemName(CollectibleObject __instance, ItemStack? itemStack, ref string __result)
+    public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack? itemStack, ref string __result)
     {
         if (itemStack == null || itemStack.Collectible?.Tool == null)
             return;
@@ -85,7 +85,7 @@ public static class CollectibleObjectPatch
     /// <param name="itemstack">The <c>ItemStack</c> representing the item whose durability is being queried.</param>
     /// <param name="__result">A reference to the resulting maximum durability.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(0)]
-    public static void PatchGetMaxDurability(CollectibleObject __instance, ItemStack itemstack, ref int __result)
+    public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
         if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
@@ -106,7 +106,7 @@ public static class CollectibleObjectPatch
     /// <param name="withItemStack">The <c>ItemStack</c> representing the item being used to attack.</param>
     /// <param name="__result">A reference to the resulting attack power.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(0)]
-    public static void PatchGetAttackPower(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
+    public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
         if (!withItemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
@@ -130,7 +130,7 @@ public static class CollectibleObjectPatch
     /// <param name="forPlayer">The <c>IPlayer</c> instance representing the player performing the mining action.</param>
     /// <param name="__result">A reference to the resulting mining speed.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(0)]
-    public static void PatchGetMiningSpeed(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
+    public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result)
     {
         if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
@@ -142,7 +142,7 @@ public static class CollectibleObjectPatch
             return;
 
         var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
-        
+
         __result = miningSpeed.GetFloat(block.BlockMaterial.ToString(), __result);
     }
 
@@ -155,7 +155,7 @@ public static class CollectibleObjectPatch
     /// <param name="outputSlot">The <c>ItemSlot</c> where the crafted item will be placed.</param>
     /// <param name="matchingRecipe">The <c>GridRecipe</c> object that matched the crafting process.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(0)]
-    public static void PatchConsumeCraftingIngredients(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
+    public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
         var itemStack = outputSlot.Itemstack;
 
@@ -182,7 +182,7 @@ public static class CollectibleObjectPatch
     /// </param>
     [HarmonyReversePatch, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo))]
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public static void ReversePatchGetHeldItemInfo(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+    public static void GetHeldItemInfoReversePatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
     }
 

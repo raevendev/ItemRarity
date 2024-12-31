@@ -20,7 +20,7 @@ public static class EntityProjectilePatch
     /// The instance of the <c>EntityProjectile</c> that is impacting the entity.</param>
     /// <param name="entity">The <c>Entity</c> being impacted by the projectile.</param>
     [HarmonyPrefix, HarmonyPatch("impactOnEntity")]
-    public static void PatchImpactEntity(EntityProjectile __instance, Entity entity)
+    public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {
         if (ModCore.WeatherSystemServer == null || !__instance.ProjectileStack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
