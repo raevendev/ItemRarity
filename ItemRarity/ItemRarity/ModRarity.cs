@@ -19,10 +19,7 @@ public static class ModRarity
 
         var collectible = itemStack.Collectible;
 
-        if (collectible.Tool != null) // Item is any tool
-            return true;
-
-        if (collectible is ItemWearable) // Item is an armor or clothe
+        if (collectible.Durability > 0) // Support any item that has durabiltiy
             return true;
 
         return false;

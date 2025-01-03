@@ -8,5 +8,4 @@ namespace ItemRarity.Patches;
 [HarmonyPatch(typeof(ItemWearable))]
 public static class ItemWearablePatch
 {
-
 }
