@@ -48,7 +48,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 0.5F,
                         AttackPowerMultiplier = 0.5F,
                         PiercingPowerMultiplier = 0.5F,
-                        FlatDamageReductionMultiplier = 0.5F
+                        FlatDamageReductionMultiplier = 0.5F,
+                        RelativeProtectionMultiplier = 0.5F
                     }
                 },
 
@@ -62,7 +63,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1F,
                         AttackPowerMultiplier = 1F,
                         PiercingPowerMultiplier = 1F,
-                        FlatDamageReductionMultiplier = 1F
+                        FlatDamageReductionMultiplier = 1F,
+                        RelativeProtectionMultiplier = 1F
                     }
                 },
 
@@ -76,7 +78,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.1F,
                         AttackPowerMultiplier = 1.1F,
                         PiercingPowerMultiplier = 1.1F,
-                        FlatDamageReductionMultiplier = 1.1F
+                        FlatDamageReductionMultiplier = 1.1F,
+                        RelativeProtectionMultiplier = 1.1F
                     }
                 },
 
@@ -90,7 +93,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.2F,
                         AttackPowerMultiplier = 1.2F,
                         PiercingPowerMultiplier = 1.2F,
-                        FlatDamageReductionMultiplier = 1.2F
+                        FlatDamageReductionMultiplier = 1.2F,
+                        RelativeProtectionMultiplier = 1.2F
                     }
                 },
 
@@ -104,7 +108,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.3F,
                         AttackPowerMultiplier = 1.3F,
                         PiercingPowerMultiplier = 1.3F,
-                        FlatDamageReductionMultiplier = 1.3F
+                        FlatDamageReductionMultiplier = 1.3F,
+                        RelativeProtectionMultiplier = 1.3F
                     }
                 },
 
@@ -118,7 +123,8 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.5F,
                         AttackPowerMultiplier = 1.5F,
                         PiercingPowerMultiplier = 1.5F,
-                        FlatDamageReductionMultiplier = 1.5F
+                        FlatDamageReductionMultiplier = 1.5F,
+                        RelativeProtectionMultiplier = 1.5F
                     }
                 },
 
@@ -133,6 +139,7 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 1.9F,
                         PiercingPowerMultiplier = 1.9F,
                         FlatDamageReductionMultiplier = 1.9F,
+                        RelativeProtectionMultiplier = 1.9F,
                         Effects = ["Thor"]
                     }
                 }
