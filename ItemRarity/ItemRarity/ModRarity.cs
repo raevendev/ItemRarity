@@ -3,6 +3,7 @@ using System.Linq;
 using ItemRarity.Config;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
+using Vintagestory.API.Datastructures;
 using Vintagestory.GameContent;
 
 namespace ItemRarity;
@@ -23,6 +24,18 @@ public static class ModRarity
             return true;
 
         return false;
+    }
+
+    public static bool TryGetRarityTreeAttribute(ItemStack? itemStack, out ITreeAttribute treeAttribute)
+    {
+        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
+        {
+            treeAttribute = null!;
+            return false;
+        }
+
+        treeAttribute = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
+        return treeAttribute != null;
     }
 
     /// <summary>

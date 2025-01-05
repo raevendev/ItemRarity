@@ -22,17 +22,15 @@ public static class EntityProjectilePatch
     [HarmonyPrefix, HarmonyPatch("impactOnEntity")]
     public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {
-        if (ModCore.WeatherSystemServer == null || !__instance.ProjectileStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (ModCore.WeatherSystemServer == null || !ModRarity.TryGetRarityTreeAttribute(__instance.ProjectileStack, out var modAttribute))
             return;
-
-        var modAttributes = __instance.ProjectileStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)
         {
-            __instance.Damage = modAttributes.GetFloat(ModAttributes.PiercingPower, 1f);
+            __instance.Damage = modAttribute.GetFloat(ModAttributes.PiercingPower, 1f);
         }
 
-        var itemRarity = ModCore.Config[modAttributes.GetString(ModAttributes.Rarity)];
+        var itemRarity = ModCore.Config[modAttribute.GetString(ModAttributes.Rarity)];
 
         if (itemRarity.Value.HasEffect("thor"))
         {

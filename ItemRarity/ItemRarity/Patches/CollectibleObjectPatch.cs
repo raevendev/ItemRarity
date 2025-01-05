@@ -6,6 +6,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
+using Vintagestory.GameContent;
 
 // ReSharper disable InconsistentNaming
 
@@ -31,22 +32,15 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPriority(0)]
     public static void GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
-        if (__instance.MiningSpeed == null || __instance.MiningSpeed.Count == 0)
-            return;
-
         var itemstack = inSlot.Itemstack;
 
-        if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute))
             return;
 
-        var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
+        if (!modAttribute.HasAttribute(ModAttributes.Rarity) || !modAttribute.HasAttribute(ModAttributes.MiningSpeed))
             return;
 
-        var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
-
-        FixMiningSpeedInfos(dsc, miningSpeed);
+        FixItemInfos(itemstack, __instance, dsc, modAttribute);
     }
 
     /// <summary>
@@ -57,14 +51,12 @@ public static class CollectibleObjectPatch
     /// <param name="itemStack">The <c>ItemStack</c> representing the held item whose name is being queried.</param>
     /// <param name="__result">A reference to the resulting item name.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(0)]
-    public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack? itemStack, ref string __result)
+    public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
-        if (itemStack == null || !itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var modAttribute))
             return;
 
-        var modAttributes = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        var attributeRarity = modAttributes.GetString(ModAttributes.Rarity);
+        var attributeRarity = modAttribute.GetString(ModAttributes.Rarity);
         var rarity = ModCore.Config[attributeRarity];
         var rarityName = Lang.GetWithFallback($"itemrarity:{attributeRarity}", "itemrarity:unknown", rarity.Value.Name);
 
@@ -84,15 +76,13 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(0)]
     public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
-        if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute))
             return;
 
-        var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MaxDurability))
+        if (!modAttribute.HasAttribute(ModAttributes.Rarity) || !modAttribute.HasAttribute(ModAttributes.MaxDurability))
             return;
 
-        __result = modAttributes.GetInt(ModAttributes.MaxDurability);
+        __result = modAttribute.GetInt(ModAttributes.MaxDurability);
     }
 
     /// <summary>
@@ -105,15 +95,13 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(0)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
-        if (!withItemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(withItemStack, out var modAttribute))
             return;
 
-        var modAttributes = withItemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.AttackPower))
+        if (!modAttribute.HasAttribute(ModAttributes.Rarity) || !modAttribute.HasAttribute(ModAttributes.AttackPower))
             return;
 
-        __result = modAttributes.GetFloat(ModAttributes.AttackPower);
+        __result = modAttribute.GetFloat(ModAttributes.AttackPower);
     }
 
     /// <summary>
@@ -126,21 +114,25 @@ public static class CollectibleObjectPatch
     /// <param name="block">The <c>Block</c> being mined.</param>
     /// <param name="forPlayer">The <c>IPlayer</c> instance representing the player performing the mining action.</param>
     /// <param name="__result">A reference to the resulting mining speed.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
     public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
-        ref float __result)
+        ref float __result, ref ICoreAPI ___api)
     {
-        if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(itemstack as ItemStack, out var modAttribute))
             return;
 
-        var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
+        if (!modAttribute.HasAttribute(ModAttributes.Rarity) || !modAttribute.HasAttribute(ModAttributes.MiningSpeed))
             return;
 
-        var miningSpeed = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
+        var miningSpeedAttribute = modAttribute.GetTreeAttribute(ModAttributes.MiningSpeed);
 
-        __result = miningSpeed.GetFloat(block.BlockMaterial.ToString(), __result);
+        var traitMiningSpeed = block.GetBlockMaterial(___api.World.BlockAccessor, blockSel.Position) switch // Same as the original method
+        {
+            EnumBlockMaterial.Ore or EnumBlockMaterial.Stone => forPlayer.Entity.Stats.GetBlended("miningSpeedMul"),
+            _ => 1f
+        };
+
+        __result = miningSpeedAttribute.GetFloat(block.BlockMaterial.ToString(), __result) * traitMiningSpeed;
     }
 
     /// <summary>
@@ -183,60 +175,69 @@ public static class CollectibleObjectPatch
     {
     }
 
-    /// <summary>
-    /// Modifies the item's tooltip to enhance mining speed information by adding details based on its rarity.
-    /// </summary>
-    /// <param name="sb">
-    /// A <c>StringBuilder</c> containing the item's tooltip description, which will be updated with mining speed information based on its rarity.
-    /// </param>
-    /// <param name="miningSpeeds">
-    /// An <c>ITreeAttribute</c> containing mining speed factors for various block materials. Each key represents a block material,
-    /// and its corresponding value represents the mining speed factor.
-    /// </param>
-    private static void FixMiningSpeedInfos(StringBuilder sb, ITreeAttribute miningSpeeds)
+    public static void FixItemInfos(ItemStack itemStack, CollectibleObject collectible, StringBuilder sb, ITreeAttribute modAttribute)
     {
-        var lines = sb.ToString().Trim().Split(Environment.NewLine);
-        var miningSpeedLine = Lang.Get("item-tooltip-miningspeed") ?? string.Empty;
-
-        // Find the line that starts with the mining speed line
-        var foundLine = Array.FindIndex(lines, line => line.StartsWith(miningSpeedLine, StringComparison.Ordinal));
-
-        if (foundLine < 0)
-            return;
-
-        var lineSpan = lines[foundLine].AsSpan();
-        var includedLineStart = lineSpan.LastIndexOf('x'); // Find the last x (ex: 1.3x, 5.2x)
-        var includedLineTotal = includedLineStart >= 0 ? lineSpan.Slice(includedLineStart + 1).ToString() : string.Empty;
+        var lines = sb.ToString().Trim().Split(Environment.NewLine); // Split all lines
 
         sb.Clear();
 
-        for (var i = 0; i < lines.Length; i++)
+        if (itemStack.Collectible.MiningSpeed != null && itemStack.Collectible.MiningSpeed.Count > 0)
         {
-            if (i != foundLine)
+            var miningSpeedLine = Lang.Get("item-tooltip-miningspeed") ?? string.Empty;
+            var foundLine = Array.FindIndex(lines, line => line.StartsWith(miningSpeedLine, StringComparison.Ordinal));
+            var miningSpeeds = modAttribute.GetTreeAttribute(ModAttributes.MiningSpeed);
+
+            for (var i = 0; i < lines.Length; i++)
             {
-                sb.AppendLine(lines[i]);
-                continue;
-            }
-
-            sb.Append(miningSpeedLine);
-
-            var num = 0;
-
-            foreach (var speed in miningSpeeds)
-            {
-                var miningSpeedFactor = miningSpeeds.GetFloat(speed.Key);
-                if (miningSpeedFactor >= 1.1)
+                if (i != foundLine)
                 {
-                    if (num++ > 0)
-                        sb.Append(", ");
-                    sb.Append(Lang.Get(speed.Key))
-                        .Append(' ')
-                        .Append(miningSpeedFactor.ToString("#.#"))
-                        .Append('x');
+                    sb.AppendLine(lines[i]);
+                    continue;
                 }
-            }
 
-            sb.AppendLine(includedLineTotal);
+                sb.Append(miningSpeedLine);
+
+                var num = 0;
+
+                foreach (var speed in miningSpeeds)
+                {
+                    var miningSpeedFactor = miningSpeeds.GetFloat(speed.Key);
+                    if (miningSpeedFactor >= 1.1)
+                    {
+                        if (num++ > 0)
+                            sb.Append(", ");
+                        sb.Append(Lang.Get(speed.Key))
+                            .Append(' ')
+                            .Append(miningSpeedFactor.ToString("#.#"))
+                            .Append('x');
+                    }
+                }
+
+                sb.AppendLine();
+            }
+        }
+        else if (collectible is ItemWearable wearable)
+        {
+            // TODO: game has no translation for thoses
+            var foundLine = Array.FindIndex(lines, line => line.StartsWith("Flat", StringComparison.Ordinal));
+
+            for (var i = 0; i < lines.Length; i++)
+            {
+                if (i != foundLine)
+                {
+                    sb.AppendLine(lines[i]);
+                    continue;
+                }
+
+                var protectionModifier = itemStack.Attributes.GetTreeAttribute("protectionModifiers");
+                if (protectionModifier == null)
+                {
+                    sb.AppendLine("Missing flat protection modifier");
+                    continue;
+                }
+
+                sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat("flatDamageReduction")));
+            }
         }
     }
 }
