@@ -114,6 +114,7 @@ public static class CollectibleObjectPatch
     /// <param name="block">The <c>Block</c> being mined.</param>
     /// <param name="forPlayer">The <c>IPlayer</c> instance representing the player performing the mining action.</param>
     /// <param name="__result">A reference to the resulting mining speed.</param>
+    /// <param name="___api">A reference to the <c>ICoreAPI</c> for this collectible</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
     public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result, ref ICoreAPI ___api)

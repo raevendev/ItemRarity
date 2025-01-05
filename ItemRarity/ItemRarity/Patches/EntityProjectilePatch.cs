@@ -19,7 +19,7 @@ public static class EntityProjectilePatch
     /// <param name="__instance">
     /// The instance of the <c>EntityProjectile</c> that is impacting the entity.</param>
     /// <param name="entity">The <c>Entity</c> being impacted by the projectile.</param>
-    [HarmonyPrefix, HarmonyPatch("impactOnEntity")]
+    [HarmonyPrefix, HarmonyPatch("impactOnEntity"), HarmonyPriority(Priority.Last)]
     public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {
         if (ModCore.WeatherSystemServer == null || !ModRarity.TryGetRarityTreeAttribute(__instance.ProjectileStack, out var modAttribute))

@@ -14,7 +14,7 @@ public static class ItemKnifePatch
         return (float)(1.0 / ((baseHarvestingSpeed - 1.0) * 0.5 + 1.0));
     }
 
-    [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStep))]
+    [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStep)), HarmonyPriority(Priority.Last)]
     public static void OnHeldInteractStepPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel, ref bool __result)
     {
@@ -36,7 +36,7 @@ public static class ItemKnifePatch
         __result = secondsUsed < miningSpeed;
     }
 
-    [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStop))]
+    [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStop)), HarmonyPriority(Priority.Last)]
     public static void OnHeldInteractStopPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel)
     {

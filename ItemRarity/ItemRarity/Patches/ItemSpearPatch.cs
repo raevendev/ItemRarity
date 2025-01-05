@@ -27,7 +27,7 @@ public static class ItemSpearPatch
     /// Returns <c>false</c> to prevent the original method from running after appending the custom info, or <c>true</c> if no changes 
     /// were made and the original method should execute.
     /// </returns>
-    [HarmonyPrefix, HarmonyPatch(nameof(ItemSpear.GetHeldItemInfo)), HarmonyPriority(0)]
+    [HarmonyPrefix, HarmonyPatch(nameof(ItemSpear.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
     public static bool PatchGetHeldItemInfo(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         var itemstack = inSlot.Itemstack;
