@@ -16,6 +16,7 @@ namespace ItemRarity;
 /// <summary>
 /// Mod Entry point.
 /// </summary>
+[HarmonyPatch]
 public sealed class ModCore : ModSystem
 {
     public const string HarmonyId = "itemrarity.patches";
@@ -97,6 +98,11 @@ public sealed class ModCore : ModSystem
             .WithArgs(parsers.Int("times"))
             .HandleWith(del => CommandsHandlers.HandleTestRarityCommand(api, del))
             .EndSubCommand();
+
+        mainCommand.BeginSubCommand("itemdebug")
+            .WithDescription("Dev debug command")
+            .HandleWith(del => CommandsHandlers.HandleDebugItemAttributesCommand(api, del))
+            .EndSubCommand();
     }
 
 
@@ -116,6 +122,7 @@ public sealed class ModCore : ModSystem
             Config = api.LoadModConfig<ModConfig>(ConfigFileName);
             if (Config != null && Config.Rarities.Any())
             {
+                api.StoreModConfig(Config, ConfigFileName); // Store it again in game the mod added new properties
                 api.Logger.Notification("[ItemRarity] Configuration loaded.");
                 return;
             }

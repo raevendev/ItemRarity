@@ -69,7 +69,7 @@ public static class ModRarity
 
     public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
     {
-        if (!IsValidForRarity(itemStack))
+        if (!IsValidForRarity(itemStack, false))
             throw new Exception("Invalid item. Rarity is not supported for this item");
 
         var itemRarity = ModCore.Config[rarity];
@@ -102,19 +102,67 @@ public static class ModRarity
             modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * itemRarity.Value.AttackPowerMultiplier);
         }
 
-        if (itemStack.Collectible is ItemWearable wearable && wearable.IsArmor)
+        if (itemStack.Collectible is ItemWearable wearable && wearable.IsArmor) // Set armor stats
         {
-            var protectionModifier = itemStack.Attributes.GetTreeAttribute("protectionModifiers");
+            var protectionModifier = modAttributes.GetOrAddTreeAttribute(ModAttributes.ProtectionModifiers);
             if (protectionModifier == null)
             {
                 ModCore.ServerApi?.Logger.Warning("Mod is trying to set protection modifier for item but the item is missing attributes.");
                 return itemRarity;
             }
 
-            var flatDamageProtection = protectionModifier.GetFloat("flatDamageReduction");
-            protectionModifier.SetFloat("flatDamageReduction", flatDamageProtection * itemRarity.Value.FlatDamageReductionMultiplier);
+            protectionModifier.SetFloat(ModAttributes.FlatDamageReduction,
+                wearable.ProtectionModifiers.FlatDamageReduction * itemRarity.Value.FlatDamageReductionMultiplier);
+            protectionModifier.SetFloat(ModAttributes.RelativeProtection,
+                wearable.ProtectionModifiers.RelativeProtection * itemRarity.Value.RelativeProtectionMultiplier);
+
+            var perTierRelativeProtectionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.PerTierRelativeProtectionLoss);
+            for (var i = 0; i < wearable.ProtectionModifiers.PerTierRelativeProtectionLoss.Length; i++)
+            {
+                perTierRelativeProtectionLossAttribute.SetFloat(i.ToString(),
+                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] * itemRarity.Value.RelativeProtectionMultiplier);
+            }
+
+            var perTierFlatDamageRedudctionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.PerTierFlatDamageReductionLoss);
+            for (var i = 0; i < wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss.Length; i++)
+            {
+                perTierFlatDamageRedudctionLossAttribute.SetFloat(i.ToString(),
+                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] * itemRarity.Value.FlatDamageReductionMultiplier);
+            }
         }
 
         return itemRarity;
+    }
+
+    public static ProtectionModifiers GetRarityProtectionModifiers(ItemStack itemStack)
+    {
+        if (itemStack.Collectible is not ItemWearable wearable)
+            throw new Exception("Mod is trying to get protection modifier for an unsupported item.");
+
+        if (TryGetRarityTreeAttribute(itemStack, out var treeAttribute) &&
+            treeAttribute.HasAttribute(ModAttributes.ProtectionModifiers))
+        {
+            var protAttribute = treeAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
+            var protModifiers = new ProtectionModifiers();
+            protModifiers.FlatDamageReduction = protAttribute.GetFloat(ModAttributes.FlatDamageReduction);
+            protModifiers.RelativeProtection = protAttribute.GetFloat(ModAttributes.RelativeProtection);
+
+            var perTierRelativeProtectionLossAttribute = protAttribute.GetTreeAttribute(ModAttributes.PerTierRelativeProtectionLoss);
+            protModifiers.PerTierRelativeProtectionLoss = new float[perTierRelativeProtectionLossAttribute.Count];
+            for (var i = 0; i < perTierRelativeProtectionLossAttribute.Count; i++)
+                protModifiers.PerTierRelativeProtectionLoss[i] = perTierRelativeProtectionLossAttribute.GetFloat(i.ToString());
+
+            var perTierFlatDamageRedudctionLossAttribute = protAttribute.GetTreeAttribute(ModAttributes.PerTierFlatDamageReductionLoss);
+            protModifiers.PerTierFlatDamageReductionLoss = new float[perTierFlatDamageRedudctionLossAttribute.Count];
+            for (var i = 0; i < perTierFlatDamageRedudctionLossAttribute.Count; i++)
+                protModifiers.PerTierFlatDamageReductionLoss[i] = perTierFlatDamageRedudctionLossAttribute.GetFloat(i.ToString());
+
+            protModifiers.ProtectionTier = wearable.ProtectionModifiers.ProtectionTier;
+            protModifiers.HighDamageTierResistant = wearable.ProtectionModifiers.HighDamageTierResistant;
+
+            return protModifiers;
+        }
+
+        return wearable.ProtectionModifiers;
     }
 }

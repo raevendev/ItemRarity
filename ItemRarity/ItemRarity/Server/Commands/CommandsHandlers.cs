@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ItemRarity.Config;
 using Vintagestory.API.Common;
+using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
 
 namespace ItemRarity.Server.Commands;
@@ -96,5 +98,40 @@ public static class CommandsHandlers
         serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
 
         return TextCommandResult.Success();
+    }
+
+    public static TextCommandResult HandleDebugItemAttributesCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
+    {
+        var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
+        var currentItemStack = activeSlot.Itemstack;
+
+        if (ModRarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Rarity Attributes: ");
+            BuildAttributesTree(modAttribute, sb, 1);
+            return TextCommandResult.Success(sb.ToString());
+        }
+
+        return TextCommandResult.Success("Configuration has been reloaded");
+    }
+
+    private static void BuildAttributesTree(ITreeAttribute attributes, StringBuilder sb, int level = 0)
+    {
+        foreach (var attribute in attributes)
+        {
+            sb.Append(new string('\t', level));
+            sb.Append($"<font color=\"#1E90FF\">{attribute.Key}</font>").Append(": ");
+
+            if (attribute.Value is ITreeAttribute treeAttribute)
+            {
+                sb.AppendLine();
+                BuildAttributesTree(treeAttribute, sb, level + 1);
+            }
+            else
+            {
+                sb.AppendLine($"<font color=\"#32CD32\">{attribute.Value.GetValue()?.ToString() ?? "null"}</font>");
+            }
+        }
     }
 }
