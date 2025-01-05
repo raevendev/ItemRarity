@@ -229,7 +229,7 @@ public static class CollectibleObjectPatch
                     continue;
                 }
 
-                var protectionModifier = itemStack.Attributes.GetTreeAttribute(ModAttributes.ProtectionModifiers);
+                var protectionModifier = modAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
                 if (protectionModifier == null)
                 {
                     sb.AppendLine("Missing flat protection modifier");

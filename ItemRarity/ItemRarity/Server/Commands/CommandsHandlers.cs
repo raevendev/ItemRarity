@@ -113,7 +113,7 @@ public static class CommandsHandlers
             return TextCommandResult.Success(sb.ToString());
         }
 
-        return TextCommandResult.Success("Configuration has been reloaded");
+        return TextCommandResult.Success("Item has no rarity attributes.");
     }
 
     private static void BuildAttributesTree(ITreeAttribute attributes, StringBuilder sb, int level = 0)
