@@ -218,25 +218,27 @@ public static class CollectibleObjectPatch
         }
         else if (collectible is ItemWearable wearable)
         {
-            // TODO: game has no translation for thoses
-            var foundLine = Array.FindIndex(lines, line => line.StartsWith("Flat", StringComparison.Ordinal));
+            var protectionModifier = modAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
+
+            if (protectionModifier == null)
+            {
+                sb.AppendLine("Missing flat protection modifier");
+                return;
+            }
+
+            var flatProtTranslation = Lang.Get("Flat damage reduction: {0} hp", wearable.ProtectionModifiers.FlatDamageReduction) ?? string.Empty;
+            var relProtTranslation = Lang.Get("Percent protection: {0}%", 100.0 * wearable.ProtectionModifiers.RelativeProtection) ?? string.Empty;
 
             for (var i = 0; i < lines.Length; i++)
             {
-                if (i != foundLine)
-                {
-                    sb.AppendLine(lines[i]);
-                    continue;
-                }
+                var line = lines[i];
 
-                var protectionModifier = modAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
-                if (protectionModifier == null)
-                {
-                    sb.AppendLine("Missing flat protection modifier");
-                    continue;
-                }
-
-                sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat(ModAttributes.FlatDamageReduction).ToString("F")));
+                if (line.StartsWith(flatProtTranslation))
+                    sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat(ModAttributes.FlatDamageReduction).ToString("F")));
+                // else if (line.StartsWith(relProtTranslation.Substring(0, 5)))
+                //     sb.AppendLine(Lang.Get("Percent protection: {0}%", (protectionModifier.GetFloat(ModAttributes.RelativeProtection) * 100.0).ToString("F")));
+                else
+                    sb.AppendLine(line);
             }
         }
     }

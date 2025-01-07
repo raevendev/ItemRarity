@@ -7,7 +7,9 @@ using ItemRarity.Server;
 using ItemRarity.Server.Commands;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
+using Vintagestory.API.Config;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -38,6 +40,8 @@ public sealed class ModCore : ModSystem
         }
 
         LoadConfig(api);
+
+        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(ModAttributes.Guid); // Importang for TreasureTrader
 
         api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 

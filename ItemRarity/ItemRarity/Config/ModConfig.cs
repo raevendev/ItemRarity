@@ -49,7 +49,9 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 0.5F,
                         PiercingPowerMultiplier = 0.5F,
                         FlatDamageReductionMultiplier = 0.5F,
-                        RelativeProtectionMultiplier = 0.5F
+                        PerTierFlatDamageProtectionLossMultiplier = 0.5F,
+                        RelativeProtectionMultiplier = 0.5F,
+                        PerTierRelativeProtectionLossMultiplier = 0.5F
                     }
                 },
 
@@ -64,7 +66,9 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 1F,
                         PiercingPowerMultiplier = 1F,
                         FlatDamageReductionMultiplier = 1F,
-                        RelativeProtectionMultiplier = 1F
+                        PerTierFlatDamageProtectionLossMultiplier = 1F,
+                        RelativeProtectionMultiplier = 1F,
+                        PerTierRelativeProtectionLossMultiplier = 1F
                     }
                 },
 
@@ -79,7 +83,9 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 1.1F,
                         PiercingPowerMultiplier = 1.1F,
                         FlatDamageReductionMultiplier = 1.1F,
-                        RelativeProtectionMultiplier = 1.1F
+                        PerTierFlatDamageProtectionLossMultiplier = 1.1F,
+                        RelativeProtectionMultiplier = 1.1F,
+                        PerTierRelativeProtectionLossMultiplier = 1.1F
                     }
                 },
 
@@ -94,7 +100,9 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 1.2F,
                         PiercingPowerMultiplier = 1.2F,
                         FlatDamageReductionMultiplier = 1.2F,
-                        RelativeProtectionMultiplier = 1.2F
+                        PerTierFlatDamageProtectionLossMultiplier = 1.2F,
+                        RelativeProtectionMultiplier = 1.2F,
+                        PerTierRelativeProtectionLossMultiplier = 1.2F
                     }
                 },
 
@@ -109,7 +117,9 @@ public sealed class ModConfig
                         AttackPowerMultiplier = 1.3F,
                         PiercingPowerMultiplier = 1.3F,
                         FlatDamageReductionMultiplier = 1.3F,
-                        RelativeProtectionMultiplier = 1.3F
+                        PerTierFlatDamageProtectionLossMultiplier = 1.3F,
+                        RelativeProtectionMultiplier = 1.3F,
+                        PerTierRelativeProtectionLossMultiplier = 1.3F
                     }
                 },
 
@@ -123,8 +133,10 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.5F,
                         AttackPowerMultiplier = 1.5F,
                         PiercingPowerMultiplier = 1.5F,
-                        FlatDamageReductionMultiplier = 1.5F,
-                        RelativeProtectionMultiplier = 1.5F
+                        FlatDamageReductionMultiplier = 1.4F,
+                        PerTierFlatDamageProtectionLossMultiplier = 1.4F,
+                        RelativeProtectionMultiplier = 1.4F,
+                        PerTierRelativeProtectionLossMultiplier = 1.4F
                     }
                 },
 
@@ -138,8 +150,10 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.9F,
                         AttackPowerMultiplier = 1.9F,
                         PiercingPowerMultiplier = 1.9F,
-                        FlatDamageReductionMultiplier = 1.9F,
-                        RelativeProtectionMultiplier = 1.9F,
+                        FlatDamageReductionMultiplier = 1.5F,
+                        PerTierFlatDamageProtectionLossMultiplier = 1.5F,
+                        RelativeProtectionMultiplier = 1.5F,
+                        PerTierRelativeProtectionLossMultiplier = 1.5F,
                         Effects = ["Thor"]
                     }
                 }

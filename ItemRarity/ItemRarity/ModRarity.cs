@@ -114,22 +114,23 @@ public static class ModRarity
             protectionModifier.SetFloat(ModAttributes.FlatDamageReduction,
                 wearable.ProtectionModifiers.FlatDamageReduction * itemRarity.Value.FlatDamageReductionMultiplier);
             protectionModifier.SetFloat(ModAttributes.RelativeProtection,
-                wearable.ProtectionModifiers.RelativeProtection * itemRarity.Value.RelativeProtectionMultiplier);
+                wearable.ProtectionModifiers.RelativeProtection); // TODO: Support relative protection
 
             var perTierRelativeProtectionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.PerTierRelativeProtectionLoss);
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierRelativeProtectionLoss.Length; i++)
             {
                 perTierRelativeProtectionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] * itemRarity.Value.RelativeProtectionMultiplier);
+                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] / itemRarity.Value.PerTierRelativeProtectionLossMultiplier);
             }
 
             var perTierFlatDamageRedudctionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.PerTierFlatDamageReductionLoss);
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss.Length; i++)
             {
                 perTierFlatDamageRedudctionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] * itemRarity.Value.FlatDamageReductionMultiplier);
+                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] / itemRarity.Value.PerTierFlatDamageProtectionLossMultiplier);
             }
         }
+
 
         return itemRarity;
     }

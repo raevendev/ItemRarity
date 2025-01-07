@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace ItemRarity.Config;
 
@@ -7,50 +8,28 @@ namespace ItemRarity.Config;
 /// </summary>
 public sealed class ItemRarityConfig
 {
-    /// <summary>
-    /// Gets the name of the rarity.
-    /// </summary>
     public required string Name { get; init; }
 
-    /// <summary>
-    /// Gets the color associated with the rarity.
-    /// </summary>
     public required string Color { get; init; }
 
-    /// <summary>
-    /// Gets the numerical value representing the rarity.
-    /// </summary>
     public required float Rarity { get; init; }
 
-    /// <summary>
-    /// Gets the multiplier applied to an item's durability based on its rarity.
-    /// </summary>
     public float DurabilityMultiplier { get; init; } = 1F;
 
-    /// <summary>
-    /// Gets the multiplier applied to an item's mining speed based on its rarity.
-    /// </summary>
     public float MiningSpeedMultiplier { get; init; } = 1F;
 
-    /// <summary>
-    /// Gets the multiplier applied to an item's attack power based on its rarity.
-    /// </summary>
     public float AttackPowerMultiplier { get; init; } = 1F;
 
-    /// <summary>
-    /// Gets the multiplier applied to an item's piercing power based on its rarity.
-    /// </summary>
     public float PiercingPowerMultiplier { get; init; } = 1F;
 
-    /// <summary>
-    /// Gets the flat damage multiplier applied to an armor based on its rarity
-    /// </summary>
     public float FlatDamageReductionMultiplier { get; init; } = 1F;
 
-    /// <summary>
-    /// Gets the relative protection multiplier applied to an armor based on its rarity
-    /// </summary>
+    public float PerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
+
+    [JsonIgnore]
     public float RelativeProtectionMultiplier { get; init; } = 1F;
+
+    public float PerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
 
     /// <summary>
     /// Gets the effects applied to an item's based on its rarity.

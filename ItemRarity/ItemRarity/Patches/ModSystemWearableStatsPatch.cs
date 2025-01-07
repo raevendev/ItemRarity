@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
-using Vintagestory.API.Client;
 using Vintagestory.API.Common;
-using Vintagestory.API.Common.Entities;
 using Vintagestory.API.Config;
 using Vintagestory.API.MathTools;
 using Vintagestory.API.Server;
@@ -114,21 +111,17 @@ public static class ModSystemWearableStatsPatch
         itemslot.Itemstack.Collectible.DamageItem(___api.World, player.Entity, itemslot, amount);
         if (itemslot.Empty)
             ___api.World.PlaySoundAt(new AssetLocation("sounds/effect/toolbreak"), player);
-        
+
         ModCore.ServerApi?.Logger.Warning($"Flat: {flatDamageReduction}");
         ModCore.ServerApi?.Logger.Warning($"Rel: {relativeProtection}");
         ModCore.ServerApi?.Logger.Warning($"Dmg: {damage}");
         ModCore.ServerApi?.Logger.Warning($"===");
-        
+
         __result = damage;
         return false;
     }
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
 
-    [SuppressMessage("ReSharper", "RedundantCast")]
-    [SuppressMessage("ReSharper", "RedundantExplicitNullableCreation")]
-    [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
     private static float ApplyShieldProtection(IPlayer player, float damage, DamageSource dmgSource, ICoreAPI api)
     {
         var num1 = 1.0471975803375244;
@@ -161,7 +154,7 @@ public static class ModSystemWearableStatsPatch
                         nullable2 = nullable1;
                     }
                     else
-                        nullable2 = new bool?(attributes["isProjectile"].AsBool());
+                        nullable2 = attributes["isProjectile"].AsBool();
                 }
 
                 nullable1 = nullable2;
@@ -196,29 +189,29 @@ public static class ModSystemWearableStatsPatch
                     }
 
                     if (!flag
-                            ? (double)Math.Abs(GameMath.AngleRadDistance((float)yaw, (float)attackYaw)) < num1
-                            : (double)Math.Abs(GameMath.AngleRadDistance((float)pitch, (float)attackPitch)) < 0.5235987901687622)
+                            ? Math.Abs(GameMath.AngleRadDistance((float)yaw, (float)attackYaw)) < num1
+                            : Math.Abs(GameMath.AngleRadDistance((float)pitch, (float)attackPitch)) < 0.5235987901687622)
                     {
                         var val1 = 0.0f;
                         var num5 = api.World.Rand.NextDouble();
-                        if (num5 < (double)num3)
+                        if (num5 < num3)
                             val1 += num4;
                         if (player is IServerPlayer serverPlayer)
                         {
                             var damageLogChatGroup = GlobalConstants.DamageLogChatGroup;
-                            var message = Lang.Get("{0:0.#} of {1:0.#} damage blocked by shield ({2} use)", (object)Math.Min(val1, damage), (object)damage,
-                                (object)key1);
+                            var message = Lang.Get("{0:0.#} of {1:0.#} damage blocked by shield ({2} use)", Math.Min(val1, damage), damage,
+                                key1);
                             serverPlayer.SendMessage(damageLogChatGroup, message, EnumChatType.Notification);
                         }
 
                         damage = Math.Max(0.0f, damage - val1);
-                        var key2 = "blockSound" + ((double)num2 > 6.0 ? "Heavy" : "Light");
+                        var key2 = "blockSound" + (num2 > 6.0 ? "Heavy" : "Light");
                         api.World.PlaySoundAt(
-                            AssetLocation.Create(itemslot.Itemstack.ItemAttributes["shield"][key2].AsString("held/shieldblock-wood-light"),
+                            AssetLocation.Create(itemslot.Itemstack!.ItemAttributes!["shield"][key2].AsString("held/shieldblock-wood-light"),
                                 itemslot.Itemstack.Collectible.Code.Domain).WithPathPrefixOnce("sounds/").WithPathAppendixOnce(".ogg"), player);
-                        if (num5 < (double)num3)
-                            (api as ICoreServerAPI).Network.BroadcastEntityPacket(player.Entity.EntityId, 200,
-                                SerializerUtil.Serialize<string>("shieldBlock" + (index == 0 ? "L" : "R")));
+                        if (num5 < num3)
+                            (api as ICoreServerAPI)!.Network.BroadcastEntityPacket(player.Entity.EntityId, 200,
+                                SerializerUtil.Serialize("shieldBlock" + (index == 0 ? "L" : "R")));
                         if (api.Side == EnumAppSide.Server)
                         {
                             itemslot.Itemstack.Collectible.DamageItem(api.World, dmgSource.SourceEntity, itemslot);
