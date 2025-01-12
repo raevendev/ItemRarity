@@ -22,14 +22,16 @@ public sealed class ItemRarityConfig
 
     public float PiercingPowerMultiplier { get; init; } = 1F;
 
-    public float FlatDamageReductionMultiplier { get; init; } = 1F;
+    public float ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
 
-    public float PerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
+    public float ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
 
     [JsonIgnore]
-    public float RelativeProtectionMultiplier { get; init; } = 1F;
+    public float ArmorRelativeProtectionMultiplier { get; init; } = 1F;
 
-    public float PerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
+    public float ArmorPerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
+
+    public float ShieldProtectionMultiplier { get; init; } = 1F;
 
     /// <summary>
     /// Gets the effects applied to an item's based on its rarity.

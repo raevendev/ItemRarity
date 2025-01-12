@@ -28,7 +28,7 @@ public static class CollectibleObjectPatch
     /// </param>
     /// <param name="world">The <c>IWorldAccessor</c> representing the game world in which the item exists.</param>
     /// <param name="withDebugInfo">A boolean indicating whether debug information should be included in the item's description.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         var itemstack = inSlot.Itemstack;
@@ -49,7 +49,7 @@ public static class CollectibleObjectPatch
     /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
     /// <param name="itemStack">The <c>ItemStack</c> representing the held item whose name is being queried.</param>
     /// <param name="__result">A reference to the resulting item name.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
         if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var modAttribute))
@@ -72,7 +72,7 @@ public static class CollectibleObjectPatch
     /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
     /// <param name="itemstack">The <c>ItemStack</c> representing the item whose durability is being queried.</param>
     /// <param name="__result">A reference to the resulting maximum durability.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(Priority.Last)]
     public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
         if (!ModRarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute))
@@ -91,7 +91,7 @@ public static class CollectibleObjectPatch
     /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
     /// <param name="withItemStack">The <c>ItemStack</c> representing the item being used to attack.</param>
     /// <param name="__result">A reference to the resulting attack power.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
         if (!ModRarity.TryGetRarityTreeAttribute(withItemStack, out var modAttribute))
@@ -143,7 +143,7 @@ public static class CollectibleObjectPatch
     /// <param name="slots">An array of <c>ItemSlot</c> objects representing the crafting ingredients.</param>
     /// <param name="outputSlot">The <c>ItemSlot</c> where the crafted item will be placed.</param>
     /// <param name="matchingRecipe">The <c>GridRecipe</c> object that matched the crafting process.</param>
-    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(0)]
+    [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
     public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
         var itemStack = outputSlot.Itemstack;
@@ -234,9 +234,9 @@ public static class CollectibleObjectPatch
                 var line = lines[i];
 
                 if (line.StartsWith(flatProtTranslation))
-                    sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat(ModAttributes.FlatDamageReduction).ToString("F")));
+                    sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat(ModAttributes.ArmorFlatDamageReduction).ToString("F")));
                 // else if (line.StartsWith(relProtTranslation.Substring(0, 5)))
-                //     sb.AppendLine(Lang.Get("Percent protection: {0}%", (protectionModifier.GetFloat(ModAttributes.RelativeProtection) * 100.0).ToString("F")));
+                //     sb.AppendLine(Lang.Get("Percent protection: {0}%", (protectionModifier.GetFloat(ModAttributes.ArmorRelativeProtection) * 100.0).ToString("F")));
                 else
                     sb.AppendLine(line);
             }

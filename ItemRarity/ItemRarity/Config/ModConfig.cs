@@ -48,10 +48,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 0.5F,
                         AttackPowerMultiplier = 0.5F,
                         PiercingPowerMultiplier = 0.5F,
-                        FlatDamageReductionMultiplier = 0.5F,
-                        PerTierFlatDamageProtectionLossMultiplier = 0.5F,
-                        RelativeProtectionMultiplier = 0.5F,
-                        PerTierRelativeProtectionLossMultiplier = 0.5F
+                        ArmorFlatDamageReductionMultiplier = 0.5F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 0.5F,
+                        ArmorRelativeProtectionMultiplier = 0.5F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 0.5F,
+                        ShieldProtectionMultiplier = 0.5F
                     }
                 },
 
@@ -65,10 +66,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1F,
                         AttackPowerMultiplier = 1F,
                         PiercingPowerMultiplier = 1F,
-                        FlatDamageReductionMultiplier = 1F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1F,
-                        RelativeProtectionMultiplier = 1F,
-                        PerTierRelativeProtectionLossMultiplier = 1F
+                        ArmorFlatDamageReductionMultiplier = 1F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1F,
+                        ArmorRelativeProtectionMultiplier = 1F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1F,
+                        ShieldProtectionMultiplier = 1F
                     }
                 },
 
@@ -82,10 +84,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.1F,
                         AttackPowerMultiplier = 1.1F,
                         PiercingPowerMultiplier = 1.1F,
-                        FlatDamageReductionMultiplier = 1.1F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1.1F,
-                        RelativeProtectionMultiplier = 1.1F,
-                        PerTierRelativeProtectionLossMultiplier = 1.1F
+                        ArmorFlatDamageReductionMultiplier = 1.1F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1.1F,
+                        ArmorRelativeProtectionMultiplier = 1.1F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1.1F,
+                        ShieldProtectionMultiplier = 1.1F
                     }
                 },
 
@@ -99,10 +102,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.2F,
                         AttackPowerMultiplier = 1.2F,
                         PiercingPowerMultiplier = 1.2F,
-                        FlatDamageReductionMultiplier = 1.2F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1.2F,
-                        RelativeProtectionMultiplier = 1.2F,
-                        PerTierRelativeProtectionLossMultiplier = 1.2F
+                        ArmorFlatDamageReductionMultiplier = 1.2F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1.2F,
+                        ArmorRelativeProtectionMultiplier = 1.2F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1.2F,
+                        ShieldProtectionMultiplier = 1.2F
                     }
                 },
 
@@ -116,10 +120,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.3F,
                         AttackPowerMultiplier = 1.3F,
                         PiercingPowerMultiplier = 1.3F,
-                        FlatDamageReductionMultiplier = 1.3F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1.3F,
-                        RelativeProtectionMultiplier = 1.3F,
-                        PerTierRelativeProtectionLossMultiplier = 1.3F
+                        ArmorFlatDamageReductionMultiplier = 1.3F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1.3F,
+                        ArmorRelativeProtectionMultiplier = 1.3F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1.3F,
+                        ShieldProtectionMultiplier = 1.3F
                     }
                 },
 
@@ -133,10 +138,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.5F,
                         AttackPowerMultiplier = 1.5F,
                         PiercingPowerMultiplier = 1.5F,
-                        FlatDamageReductionMultiplier = 1.4F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1.4F,
-                        RelativeProtectionMultiplier = 1.4F,
-                        PerTierRelativeProtectionLossMultiplier = 1.4F
+                        ArmorFlatDamageReductionMultiplier = 1.5F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1.5F,
+                        ArmorRelativeProtectionMultiplier = 1.5F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1.5F,
+                        ShieldProtectionMultiplier = 1.6F
                     }
                 },
 
@@ -150,10 +156,11 @@ public sealed class ModConfig
                         MiningSpeedMultiplier = 1.9F,
                         AttackPowerMultiplier = 1.9F,
                         PiercingPowerMultiplier = 1.9F,
-                        FlatDamageReductionMultiplier = 1.5F,
-                        PerTierFlatDamageProtectionLossMultiplier = 1.5F,
-                        RelativeProtectionMultiplier = 1.5F,
-                        PerTierRelativeProtectionLossMultiplier = 1.5F,
+                        ArmorFlatDamageReductionMultiplier = 1.9F,
+                        ArmorPerTierFlatDamageProtectionLossMultiplier = 1.9F,
+                        ArmorRelativeProtectionMultiplier = 1.9F,
+                        ArmorPerTierRelativeProtectionLossMultiplier = 1.9F,
+                        ShieldProtectionMultiplier = 1.9F,
                         Effects = ["Thor"]
                     }
                 }
