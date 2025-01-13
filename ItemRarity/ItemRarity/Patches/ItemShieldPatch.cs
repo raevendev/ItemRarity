@@ -21,7 +21,7 @@ public static class ItemShieldPatch
         var attributeRarity = modAttribute.GetString(ModAttributes.Rarity);
         var rarity = ModCore.Config[attributeRarity];
         var rarityName = rarity.Value.IgnoreTranslation
-            ? rarity.Value.Name
+            ? $"[{rarity.Value.Name}]" 
             : Lang.GetWithFallback($"itemrarity:{attributeRarity}", "itemrarity:unknown", rarity.Value.Name);
 
         if (__result.Contains(rarityName))
