@@ -2,6 +2,9 @@
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
+// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
+
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 // ReSharper disable InconsistentNaming
 
 namespace ItemRarity.Patches;
@@ -18,6 +21,9 @@ public static class ItemKnifePatch
     public static void OnHeldInteractStepPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel, ref bool __result)
     {
+        if (slot == null)
+            return;
+
         var itemStack = slot.Itemstack;
 
         if (!itemStack.Attributes.HasAttribute(ModAttributes.Guid))
@@ -40,7 +46,7 @@ public static class ItemKnifePatch
     public static void OnHeldInteractStopPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel)
     {
-        if (slot.Itemstack == null || !slot.Itemstack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (slot?.Itemstack == null || !slot.Itemstack.Attributes.HasAttribute(ModAttributes.Guid))
             return;
 
         var modAttributes = slot.Itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
