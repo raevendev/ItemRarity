@@ -17,17 +17,6 @@ namespace ItemRarity.Patches;
 [HarmonyPatch(typeof(CollectibleObject))]
 public static class CollectibleObjectPatch
 {
-    /// <summary>
-    /// A Harmony patch applied to the <c>GetHeldItemInfo</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch appends additional mining speed information to the item's description.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
-    /// <param name="inSlot">The <c>ItemSlot</c> containing the item for which information is being retrieved.</param>
-    /// <param name="dsc">
-    /// A <c>StringBuilder</c> object to which the item's description, including any additional information, is appended.
-    /// </param>
-    /// <param name="world">The <c>IWorldAccessor</c> representing the game world in which the item exists.</param>
-    /// <param name="withDebugInfo">A boolean indicating whether debug information should be included in the item's description.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
@@ -42,13 +31,6 @@ public static class CollectibleObjectPatch
         FixItemInfos(itemstack, __instance, dsc, modAttribute);
     }
 
-    /// <summary>
-    /// A Harmony patch applied to the <c>GetHeldItemName</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch modifies the display name of a held item to include its rarity, formatted with a specific color and style.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
-    /// <param name="itemStack">The <c>ItemStack</c> representing the held item whose name is being queried.</param>
-    /// <param name="__result">A reference to the resulting item name.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
@@ -57,7 +39,9 @@ public static class CollectibleObjectPatch
 
         var attributeRarity = modAttribute.GetString(ModAttributes.Rarity);
         var rarity = ModCore.Config[attributeRarity];
-        var rarityName = Lang.GetWithFallback($"itemrarity:{attributeRarity}", "itemrarity:unknown", rarity.Value.Name);
+        var rarityName = rarity.Value.IgnoreTranslation
+            ? rarity.Value.Name
+            : Lang.GetWithFallback($"itemrarity:{attributeRarity}", "itemrarity:unknown", rarity.Value.Name);
 
         if (__result.Contains(rarityName))
             return;
@@ -65,13 +49,6 @@ public static class CollectibleObjectPatch
         __result = $"<font color=\"{rarity.Value.Color}\" weight=bold>{rarityName} {__result}</font>";
     }
 
-    /// <summary>
-    /// A Harmony patch applied to the <c>GetMaxDurability</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch modifies the maximum durability of an item based on its rarity.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
-    /// <param name="itemstack">The <c>ItemStack</c> representing the item whose durability is being queried.</param>
-    /// <param name="__result">A reference to the resulting maximum durability.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(Priority.Last)]
     public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
@@ -84,13 +61,6 @@ public static class CollectibleObjectPatch
         __result = modAttribute.GetInt(ModAttributes.MaxDurability);
     }
 
-    /// <summary>
-    /// A Harmony patch applied to the <c>GetAttackPower</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch modifies the attack power of an item based on its rarity.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
-    /// <param name="withItemStack">The <c>ItemStack</c> representing the item being used to attack.</param>
-    /// <param name="__result">A reference to the resulting attack power.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
@@ -103,17 +73,6 @@ public static class CollectibleObjectPatch
         __result = modAttribute.GetFloat(ModAttributes.AttackPower);
     }
 
-    /// <summary>
-    /// A Harmony patch applied to the <c>GetMiningSpeed</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch modifies the mining speed of an item based on its rarity.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> invoking the method.</param>
-    /// <param name="itemstack">The <c>IItemStack</c> representing the item being used to mine.</param>
-    /// <param name="blockSel">The <c>BlockSelection</c> providing details about the block being targeted.</param>
-    /// <param name="block">The <c>Block</c> being mined.</param>
-    /// <param name="forPlayer">The <c>IPlayer</c> instance representing the player performing the mining action.</param>
-    /// <param name="__result">A reference to the resulting mining speed.</param>
-    /// <param name="___api">A reference to the <c>ICoreAPI</c> for this collectible</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
     public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result, ref ICoreAPI ___api)
@@ -135,14 +94,6 @@ public static class CollectibleObjectPatch
         __result = miningSpeedAttribute.GetFloat(block.BlockMaterial.ToString(), __result) * traitMiningSpeed;
     }
 
-    /// <summary>
-    /// A Harmony patch applied to the <c>ConsumeCraftingIngredients</c> method of the <c>CollectibleObject</c> class. 
-    /// This patch assigns a random rarity to crafted items when they are created.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> that invoked the method.</param>
-    /// <param name="slots">An array of <c>ItemSlot</c> objects representing the crafting ingredients.</param>
-    /// <param name="outputSlot">The <c>ItemSlot</c> where the crafted item will be placed.</param>
-    /// <param name="matchingRecipe">The <c>GridRecipe</c> object that matched the crafting process.</param>
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
     public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
@@ -156,19 +107,6 @@ public static class CollectibleObjectPatch
         itemStack.SetRarity(rarity.Key);
     }
 
-    /// <summary>
-    /// A Harmony reverse patch for the <c>GetHeldItemInfo</c> method of the <c>CollectibleObject</c> class. 
-    /// This method provides a callable version of the original method.
-    /// </summary>
-    /// <param name="__instance">The instance of the <c>CollectibleObject</c> whose information is being retrieved.</param>
-    /// <param name="inSlot">The <c>ItemSlot</c> containing the item for which information is being queried.</param>
-    /// <param name="dsc">
-    /// A <c>StringBuilder</c> object to which the item's original description, or any additional information, is appended.
-    /// </param>
-    /// <param name="world">The <c>IWorldAccessor</c> representing the game world in which the item exists.</param>
-    /// <param name="withDebugInfo">
-    /// A boolean indicating whether debug information should be included in the item's description.
-    /// </param>
     [HarmonyReversePatch, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo))]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void GetHeldItemInfoReversePatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
@@ -227,7 +165,7 @@ public static class CollectibleObjectPatch
             }
 
             var flatProtTranslation = Lang.Get("Flat damage reduction: {0} hp", wearable.ProtectionModifiers.FlatDamageReduction) ?? string.Empty;
-            var relProtTranslation = Lang.Get("Percent protection: {0}%", 100.0 * wearable.ProtectionModifiers.RelativeProtection) ?? string.Empty;
+            // var relProtTranslation = Lang.Get("Percent protection: {0}%", 100.0 * wearable.ProtectionModifiers.RelativeProtection) ?? string.Empty;
 
             for (var i = 0; i < lines.Length; i++)
             {

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Text;
 using ItemRarity.Config;
+using ItemRarity.Packets;
+using Newtonsoft.Json;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
@@ -13,11 +15,6 @@ namespace ItemRarity.Server.Commands;
 /// </summary>
 public static class CommandsHandlers
 {
-    /// <summary>
-    /// Handles the "/rarity set" command to change the rarity of the item in the player's active hotbar slot.
-    /// </summary>
-    /// <param name="args">The arguments passed to the command.</param>
-    /// <returns>A result indicating whether the command was successful or if there was an error.</returns>
     public static TextCommandResult HandleSetRarityCommand(TextCommandCallingArgs args)
     {
         var rarity = args.Parsers[0].GetValue().ToString();
@@ -35,25 +32,17 @@ public static class CommandsHandlers
         return TextCommandResult.Success($"Item rarity has been set to <font color=\"{setRarity.Value.Color}\">{setRarity.Value.Name}</font>");
     }
 
-    /// <summary>
-    /// Handles the "/rarity reload" command to reload the configuration.
-    /// </summary>
-    /// <param name="serverApi">The server API instance.</param>
-    /// <param name="args">The arguments passed to the command.</param>
-    /// <returns>A result indicating the success or failure of the reload operation.</returns>
     public static TextCommandResult HandleReloadConfigCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
         ModCore.LoadConfig(serverApi);
 
+        var networkChannel = serverApi.Network.GetChannel(ModCore.ConfigSyncNetChannel);
+        var newConfig = new ServerConfigMessage { SerializedConfig = JsonConvert.SerializeObject(ModCore.Config) };
+        networkChannel.BroadcastPacket(newConfig);
+
         return TextCommandResult.Success("Configuration has been reloaded");
     }
 
-    /// <summary>
-    /// Handles the "/rarity test" command to test the distribution of item rarities over a specified number of runs.
-    /// </summary>
-    /// <param name="serverApi">The server API instance.</param>
-    /// <param name="args">The arguments passed to the command.</param>
-    /// <returns>A result indicating whether the command was successful.</returns>
     public static TextCommandResult HandleTestRarityCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
         var timesToRun = args.Parsers[0].GetValue().ToString();

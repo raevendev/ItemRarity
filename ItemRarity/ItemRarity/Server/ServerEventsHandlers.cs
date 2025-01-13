@@ -8,10 +8,7 @@ namespace ItemRarity.Server;
 
 internal static class ServerEventsHandlers
 {
-    /// <summary>
-    /// Called by the server when a player join the server.
-    /// </summary>
-    /// <param name="byplayer">The player joining</param>
+
     public static void OnPlayerJoin(IServerPlayer byplayer)
     {
         ModCore.ServerApi?.Network.GetChannel(ModCore.ConfigSyncNetChannel).SendPacket(new ServerConfigMessage

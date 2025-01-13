@@ -14,6 +14,7 @@ public sealed class ItemRarityConfig
 
     public required float Rarity { get; init; }
 
+
     public float DurabilityMultiplier { get; init; } = 1F;
 
     public float MiningSpeedMultiplier { get; init; } = 1F;
@@ -38,10 +39,10 @@ public sealed class ItemRarityConfig
     /// </summary>
     public string[] Effects { get; init; } = [];
 
-    /// <summary>
-    /// Gets which items are supported by this rarity
-    /// </summary>
+    [JsonIgnore]
     public string[] SupportedItems { get; init; } = ["*", "NOT-YET-SUPPORTED"];
+
+    public bool IgnoreTranslation { get; init; } = false;
 
     public bool HasEffect(string value)
     {

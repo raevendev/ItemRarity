@@ -13,12 +13,6 @@ namespace ItemRarity.Patches;
 [HarmonyPatch(typeof(EntityProjectile))]
 public static class EntityProjectilePatch
 {
-    /// <summary>
-    /// Modifies the behavior of a projectile's impact on an entity by applying rarity-based effects and enhancing damage properties.
-    /// </summary>
-    /// <param name="__instance">
-    /// The instance of the <c>EntityProjectile</c> that is impacting the entity.</param>
-    /// <param name="entity">The <c>Entity</c> being impacted by the projectile.</param>
     [HarmonyPrefix, HarmonyPatch("impactOnEntity"), HarmonyPriority(Priority.Last)]
     public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {

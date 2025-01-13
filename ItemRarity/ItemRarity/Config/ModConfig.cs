@@ -8,18 +8,8 @@ namespace ItemRarity.Config;
 /// </summary>
 public sealed class ModConfig
 {
-    /// <summary>
-    /// Gets the dictionary of item rarities, where the key is the rarity name and the value is the corresponding <see cref="ItemRarityConfig"/>.
-    /// </summary>
     public Dictionary<string, ItemRarityConfig> Rarities { get; init; } = new();
-
-    /// <summary>
-    /// Indexer to retrieve a rarity configuration by its name.
-    /// </summary>
-    /// <param name="rarity">The name of the rarity to retrieve.</param>
-    /// <returns>
-    /// A tuple containing the rarity name and the corresponding <see cref="ItemRarityConfig"/>.
-    /// </returns>
+    
     public ItemRarityInfos this[string rarity]
     {
         get

@@ -22,9 +22,7 @@ public static class ModSystemWearableStatsPatch
         ref ICoreAPI ___api, ref Dictionary<int, EnumCharacterDressType[]> ___clothingDamageTargetsByAttackTacket, ref AssetLocation ___ripSound)
     {
         var type = dmgSource.Type;
-        ModCore.ServerApi?.Logger.Warning($"Pre Shield Damages: {damage}");
         damage = ApplyShieldProtection(player, damage, dmgSource, ___api);
-        ModCore.ServerApi?.Logger.Warning($"After Shield Damages: {damage}");
         if (damage <= 0.0)
         {
             __result = 0f;
@@ -116,8 +114,6 @@ public static class ModSystemWearableStatsPatch
 
         __result = damage;
 
-        ModCore.ServerApi?.Logger.Warning($"Final Damages: {__result}");
-
         return false;
     }
 
@@ -165,14 +161,12 @@ public static class ModSystemWearableStatsPatch
                 if (valueOrDefault && itemAttribute["protectionChance"][key1 + "-projectile"].Exists)
                 {
                     num3 = itemAttribute["protectionChance"][key1 + "-projectile"].AsFloat();
-                    num4 = ModAttributes.GetShieldProjectileDamageAbsorption(itemslot.Itemstack!, 2F);
+                    num4 = ModAttributes.GetShieldProjectileDamageAbsorption(itemslot.Itemstack!, itemAttribute["projectileDamageAbsorption"].AsFloat(2F));
                 }
                 else
                 {
                     num3 = itemAttribute["protectionChance"][key1].AsFloat();
-                    num4 = ModAttributes.GetShieldDamageAbsorption(itemslot.Itemstack!, 2F);
-                    ModCore.ServerApi?.Logger.Warning("DMG: " + itemAttribute["damageAbsorption"].AsFloat(2f));
-                    ModCore.ServerApi?.Logger.Warning("MODDMG: " + ModAttributes.GetShieldDamageAbsorption(itemslot.Itemstack!));
+                    num4 = ModAttributes.GetShieldDamageAbsorption(itemslot.Itemstack!, itemAttribute["damageAbsorption"].AsFloat(2F));
                 }
 
                 double attackYaw;
