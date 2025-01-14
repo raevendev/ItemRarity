@@ -21,21 +21,22 @@ public static class ItemKnifePatch
     public static void OnHeldInteractStepPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel, ref bool __result)
     {
-        if (slot == null)
+        if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        var itemStack = slot.Itemstack;
-
-        if (!itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (!ModRarity.TryGetRarityTreeAttribute(slot.Itemstack, out var modAttributes))
             return;
-
-        var modAttributes = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
 
         if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
             return;
 
         var miningSpeedAttribute = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
+
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
+
+        if (entityBehaviour == null || !entityBehaviour.Harvestable)
+            return;
+
         var miningSpeed = CalculateHarvestingSpeed(miningSpeedAttribute.GetFloat(EnumBlockMaterial.Plant.ToString()))
             * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448;
 
@@ -46,10 +47,11 @@ public static class ItemKnifePatch
     public static void OnHeldInteractStopPatch(ItemKnife __instance, float secondsUsed, ItemSlot slot, EntityAgent byEntity,
         BlockSelection blockSel, EntitySelection entitySel)
     {
-        if (slot?.Itemstack == null || !slot.Itemstack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        var modAttributes = slot.Itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
+        if (!ModRarity.TryGetRarityTreeAttribute(slot.Itemstack, out var modAttributes))
+            return;
 
         if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
             return;
