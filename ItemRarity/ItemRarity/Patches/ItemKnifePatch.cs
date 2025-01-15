@@ -3,7 +3,6 @@ using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
 // ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 // ReSharper disable InconsistentNaming
 
@@ -24,21 +23,16 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!ModRarity.TryGetRarityTreeAttribute(slot.Itemstack, out var modAttributes))
+        if (!Rarity.TryGetRarityInfos(slot.Itemstack, out var rarityInfos))
             return;
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
-            return;
-
-        var miningSpeedAttribute = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
 
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
 
-        if (entityBehaviour == null || !entityBehaviour.Harvestable)
+        if (entityBehaviour is not { Harvestable: true })
             return;
 
-        var miningSpeed = CalculateHarvestingSpeed(miningSpeedAttribute.GetFloat(EnumBlockMaterial.Plant.ToString()))
-            * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448;
+        var miningSpeed = CalculateHarvestingSpeed(__instance.KnifeHarvestingSpeed * rarityInfos.Value.MiningSpeedMultiplier
+                                                                                   * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f);
 
         __result = secondsUsed < miningSpeed;
     }
@@ -50,17 +44,13 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!ModRarity.TryGetRarityTreeAttribute(slot.Itemstack, out var modAttributes))
+        if (!Rarity.TryGetRarityInfos(slot.Itemstack, out var rarityInfos))
             return;
 
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.MiningSpeed))
-            return;
-
-        var miningSpeedAttribute = modAttributes.GetTreeAttribute(ModAttributes.MiningSpeed);
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
 
         if (entityBehaviour == null || !entityBehaviour.Harvestable ||
-            secondsUsed < CalculateHarvestingSpeed(miningSpeedAttribute.GetFloat(EnumBlockMaterial.Plant.ToString()))
+            secondsUsed < CalculateHarvestingSpeed(__instance.KnifeHarvestingSpeed * rarityInfos.Value.MiningSpeedMultiplier)
             * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
             return;
 

@@ -8,14 +8,17 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity;
 
-public static class ModRarity
+public static class Rarity
 {
-    public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true)
+    public const string GuidAttribute = "FE327889-1DD2-430C-BCCA-D94FB132E968"; // Ensure (almost) unique tree attribute key
+    public const string RarityAttribute = "rarity";
+
+    public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
-        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
+        if (itemStack is not { Attributes: not null, Collectible: not null })
             return false;
 
-        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(GuidAttribute))
             return false;
 
         var collectible = itemStack.Collectible;
@@ -36,6 +39,26 @@ public static class ModRarity
 
         treeAttribute = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
         return treeAttribute != null;
+    }
+
+    public static bool TryGetRarityInfos(ItemStack? itemStack, out ItemRarityInfos rarityInfos)
+    {
+        if (itemStack is not { Attributes: not null, Collectible: not null })
+        {
+            rarityInfos = default;
+            return false;
+        }
+
+        var modAttribute = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
+
+        if (modAttribute is null || !modAttribute.HasAttribute(ModAttributes.Rarity))
+        {
+            rarityInfos = default;
+            return false;
+        }
+
+        rarityInfos = ModCore.Config[modAttribute.GetString(ModAttributes.Rarity)];
+        return true;
     }
 
     /// <summary>
@@ -69,7 +92,7 @@ public static class ModRarity
 
     public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
     {
-        if (!IsValidForRarity(itemStack, false))
+        if (!IsSuitableFor(itemStack, false))
             throw new Exception("Invalid item. Rarity is not supported for this item");
 
         var itemRarity = ModCore.Config[rarity];

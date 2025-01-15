@@ -20,9 +20,9 @@ internal static class ServerEventsHandlers
         if (entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
             return;
 
-        if (!ModRarity.IsValidForRarity(item.Itemstack))
+        if (!Rarity.IsSuitableFor(item.Itemstack))
             return;
 
-        ModRarity.SetRandomRarity(item.Itemstack);
+        Rarity.SetRandomRarity(item.Itemstack);
     }
 }

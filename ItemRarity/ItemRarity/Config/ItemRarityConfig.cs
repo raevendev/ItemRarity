@@ -14,7 +14,6 @@ public sealed class ItemRarityConfig
 
     public required float Rarity { get; init; }
 
-
     public float DurabilityMultiplier { get; init; } = 1F;
 
     public float MiningSpeedMultiplier { get; init; } = 1F;
