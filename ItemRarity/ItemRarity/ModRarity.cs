@@ -102,7 +102,7 @@ public static class ModRarity
             modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * itemRarity.Value.AttackPowerMultiplier);
         }
 
-        if (itemStack.Collectible is ItemWearable wearable && wearable.IsArmor) // Set armor stats
+        if (itemStack.Collectible is ItemWearable { ProtectionModifiers: not null } wearable && wearable.IsArmor) // Set armor stats
         {
             var protectionModifier = modAttributes.GetOrAddTreeAttribute(ModAttributes.ProtectionModifiers);
 

@@ -154,7 +154,7 @@ public static class CollectibleObjectPatch
                 sb.AppendLine();
             }
         }
-        else if (collectible is ItemWearable wearable)
+        else if (collectible is ItemWearable { ProtectionModifiers: not null } wearable)
         {
             var protectionModifier = modAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
 
