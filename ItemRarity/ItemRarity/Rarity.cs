@@ -93,7 +93,10 @@ public static class Rarity
     public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
     {
         if (!IsSuitableFor(itemStack, false))
-            throw new Exception("Invalid item. Rarity is not supported for this item");
+        {
+            ModCore.LogWarning("Invalid item. Rarity is not supported for this item");
+            return ModCore.Config[string.Empty];
+        }
 
         var itemRarity = ModCore.Config[rarity];
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
@@ -168,7 +171,11 @@ public static class Rarity
     public static ProtectionModifiers GetRarityProtectionModifiers(ItemStack itemStack)
     {
         if (itemStack.Collectible is not ItemWearable wearable)
-            throw new Exception("Mod is trying to get protection modifier for an unsupported item.");
+        {
+            ModCore.ServerApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
+            ModCore.ClientApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
+            return new ProtectionModifiers { PerTierRelativeProtectionLoss = [], PerTierFlatDamageReductionLoss = [] };
+        }
 
         if (TryGetRarityTreeAttribute(itemStack, out var treeAttribute) &&
             treeAttribute.HasAttribute(ModAttributes.ProtectionModifiers))
