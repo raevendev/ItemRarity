@@ -50,7 +50,7 @@ public static class ItemShieldPatch
             var num2 = itemAttribute["protectionChance"]["passive-projectile"].AsFloat();
             var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * rarityInfos.Value.ShieldProtectionMultiplier;
             dsc.AppendLine("<strong>" + Lang.Get("Projectile protection") + "</strong>");
-            dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num1), (int)(100.0 * num2), num3));
+            dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num1), (int)(100.0 * num2), num3.ToString("#.#")));
             dsc.AppendLine();
         }
 
@@ -58,7 +58,7 @@ public static class ItemShieldPatch
         var num5 = itemAttribute["protectionChance"]["active"].AsFloat();
         var num6 = itemAttribute["protectionChance"]["passive"].AsFloat();
         dsc.AppendLine("<strong>" + Lang.Get("Melee attack protection") + "</strong>");
-        dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num5), (int)(100.0 * num6), num4));
+        dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num5), (int)(100.0 * num6), num4.ToString("#.#")));
         dsc.AppendLine();
         switch (__instance.Construction)
         {

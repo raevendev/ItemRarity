@@ -34,7 +34,6 @@ public static class ItemKnifePatch
         var miningSpeed = __instance.KnifeHarvestingSpeed / rarityInfos.Value.MiningSpeedMultiplier
                                                           * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f;
         __result = secondsUsed < miningSpeed;
-        ModCore.ServerApi?.Logger.Warning(__instance.KnifeHarvestingSpeed + " | " +secondsUsed + " < " + miningSpeed + ": " + __result);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStop)), HarmonyPriority(Priority.Last)]
