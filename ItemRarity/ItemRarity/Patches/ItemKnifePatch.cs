@@ -31,10 +31,10 @@ public static class ItemKnifePatch
         if (entityBehaviour is not { Harvestable: true })
             return;
 
-        var miningSpeed = CalculateHarvestingSpeed(__instance.KnifeHarvestingSpeed * rarityInfos.Value.MiningSpeedMultiplier
-                                                                                   * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f);
-
+        var miningSpeed = __instance.KnifeHarvestingSpeed / rarityInfos.Value.MiningSpeedMultiplier
+                                                          * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f;
         __result = secondsUsed < miningSpeed;
+        ModCore.ServerApi?.Logger.Warning(__instance.KnifeHarvestingSpeed + " | " +secondsUsed + " < " + miningSpeed + ": " + __result);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(ItemKnife.OnHeldInteractStop)), HarmonyPriority(Priority.Last)]
@@ -50,8 +50,8 @@ public static class ItemKnifePatch
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
 
         if (entityBehaviour == null || !entityBehaviour.Harvestable ||
-            secondsUsed < CalculateHarvestingSpeed(__instance.KnifeHarvestingSpeed * rarityInfos.Value.MiningSpeedMultiplier)
-            * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
+            secondsUsed < __instance.KnifeHarvestingSpeed / rarityInfos.Value.MiningSpeedMultiplier
+                                                          * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
             return;
 
         entityBehaviour.SetHarvested(byEntity is EntityPlayer entityPlayer ? entityPlayer.Player : default);
