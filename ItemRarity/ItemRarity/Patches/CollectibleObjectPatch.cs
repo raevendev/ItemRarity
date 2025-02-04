@@ -110,8 +110,6 @@ public static class CollectibleObjectPatch
                     continue;
                 }
 
-                ModCore.ClientApi?.Logger.Warning(lines[i]);
-
                 sb.Append(miningSpeedLine);
 
                 var num = 0;
@@ -130,7 +128,7 @@ public static class CollectibleObjectPatch
                 }
 
                 sb.AppendLine();
-                
+
                 if (collectible.GetAttackPower(itemStack) > 0.5)
                 {
                     sb.AppendLine(Lang.Get("Attack power: -{0} hp", collectible.GetAttackPower(itemStack).ToString("0.#")));
