@@ -106,8 +106,11 @@ public static class CollectibleObjectPatch
                 if (i != foundLine)
                 {
                     sb.AppendLine(lines[i]);
+
                     continue;
                 }
+
+                ModCore.ClientApi?.Logger.Warning(lines[i]);
 
                 sb.Append(miningSpeedLine);
 
@@ -127,6 +130,11 @@ public static class CollectibleObjectPatch
                 }
 
                 sb.AppendLine();
+                
+                if (collectible.GetAttackPower(itemStack) > 0.5)
+                {
+                    sb.AppendLine(Lang.Get("Attack power: -{0} hp", collectible.GetAttackPower(itemStack).ToString("0.#")));
+                }
             }
         }
         else if (collectible is ItemWearable { ProtectionModifiers: not null } wearable)
