@@ -21,6 +21,9 @@ public static class ModRarity
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
             return false;
 
+        if (itemStack.Code.Domain.Contains("repairme")
+            return false;
+
         var collectible = itemStack.Collectible;
 
         if (collectible.Durability > 0) // Support any item that has durabiltiy
