@@ -10,12 +10,9 @@ namespace ItemRarity;
 
 public static class ModRarity
 {
-    public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true, string[]? exclusionList = null)
+    public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
         if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
-            return false;
-
-        if (exclusionList != null && exclusionList.Contains(itemStack.Collectible.Code?.ToString()))
             return false;
 
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
@@ -67,10 +64,10 @@ public static class ModRarity
         return (first.Key, first.Value);
     }
 
-    public static ItemRarityInfos SetRandomRarity(ItemStack itemStack, string[]? exclusionList = null)
+    public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
-        if (!IsValidForRarity(itemStack, true, exclusionList))
-            return ("", null!); // Indicate that rarity was not set due to exclusion or invalid item
+        if (!IsValidForRarity(itemStack, true))
+            return ("", null!);
 
         var rarity = GetRandomRarity();
         return SetRarity(itemStack, rarity.Key);
