@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ItemRarity.Config;
 using Vintagestory.API.Common;
@@ -12,7 +12,7 @@ public static class ModRarity
 {
     public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
-        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
+        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null || itemStack.Collectible.Attributes == null)
             return false;
 
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
@@ -46,6 +46,12 @@ public static class ModRarity
     /// </returns>
     public static ItemRarityInfos GetRandomRarity()
     {
+        if (ModCore.Config.Rarities == null || ModCore.Config.Rarities.Count == 0)
+        {
+            Console.WriteLine("Warning: No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            return (string.Empty, null!);
+        }
+
         var totalWeight = ModCore.Config.Rarities.Values.Sum(i => i.Rarity);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
         var cumulativeWeight = 0f;
@@ -63,6 +69,9 @@ public static class ModRarity
 
     public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
+        if (!IsValidForRarity(itemStack, true))
+            return ("", null!);
+
         var rarity = GetRandomRarity();
         return SetRarity(itemStack, rarity.Key);
     }
@@ -73,6 +82,13 @@ public static class ModRarity
             throw new Exception("Invalid item. Rarity is not supported for this item");
 
         var itemRarity = ModCore.Config[rarity];
+
+        if (itemRarity.Value == null)
+        {
+            Console.WriteLine($"Error: Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
+            return itemRarity;
+        }
+
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
 
         modAttributes.SetString(ModAttributes.Rarity, itemRarity.Key); // Use the key as the rarity.
@@ -91,7 +107,7 @@ public static class ModRarity
             }
         }
 
-        if (itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
+        if (itemStack.Collectible.Attributes != null && itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
         {
             var damages = itemStack.Collectible.Attributes["damage"].AsFloat();
             modAttributes.SetFloat(ModAttributes.PiercingPower, damages * itemRarity.Value.PiercingPowerMultiplier);
