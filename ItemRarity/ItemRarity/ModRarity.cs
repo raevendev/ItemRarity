@@ -12,13 +12,10 @@ public static class ModRarity
 {
     public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
-        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
+        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null || itemStack.Collectible.Attributes == null)
             return false;
-
+        
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
-            return false;
-
-        if (itemStack.Code.Domain.Contains("repairme")
             return false;
 
         var collectible = itemStack.Collectible;
@@ -66,9 +63,6 @@ public static class ModRarity
 
     public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
-        if (!IsValidForRarity(itemStack, true))
-            return ("", null!);
-
         var rarity = GetRandomRarity();
         return SetRarity(itemStack, rarity.Key);
     }
