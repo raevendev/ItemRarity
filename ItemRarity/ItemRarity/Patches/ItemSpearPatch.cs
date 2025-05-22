@@ -17,20 +17,18 @@ public static class ItemSpearPatch
     [HarmonyPrefix, HarmonyPatch(nameof(ItemSpear.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
     public static bool GetHeldItemInfoPatch(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
-        var itemstack = inSlot.Itemstack;
-
-        if (!itemstack.Attributes.HasAttribute(ModAttributes.Guid))
-            return true;
-
-        var modAttributes = itemstack.Attributes.GetTreeAttribute(ModAttributes.Guid);
-
-        if (!modAttributes.HasAttribute(ModAttributes.Rarity) || !modAttributes.HasAttribute(ModAttributes.PiercingPower))
+        if (!Rarity.TryGetRarityInfos(inSlot.Itemstack, out var rarityInfos))
             return true;
 
         CollectibleObjectPatch.GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world,
             withDebugInfo); // Call the original method to fill item infos before adding our own.
 
-        var piercingDamages = modAttributes.GetFloat(ModAttributes.PiercingPower);
+        var piercingDamages = 1.5f;
+
+        if (inSlot.Itemstack.Collectible.Attributes != null)
+            piercingDamages = inSlot.Itemstack.Collectible.Attributes["damage"].AsFloat();
+
+        piercingDamages *= rarityInfos.Value.PiercingPowerMultiplier;
 
         dsc.AppendLine(piercingDamages + Lang.Get("piercing-damage-thrown"));
 

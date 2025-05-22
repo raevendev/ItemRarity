@@ -57,7 +57,7 @@ public static class CommandsHandlers
 
         for (var i = 0; i < timeRun; i++)
         {
-            var rarity = ModRarity.GetRandomRarity().Value;
+            var rarity = Rarity.GetRandomRarity().Value;
             rarities.Add(rarity);
         }
 
@@ -93,7 +93,7 @@ public static class CommandsHandlers
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
 
-        if (ModRarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
+        if (Rarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
         {
             var sb = new StringBuilder();
             sb.AppendLine("Rarity Attributes: ");

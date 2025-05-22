@@ -15,12 +15,12 @@ public static class ItemWearablePatch
     {
         if (__instance.ProtectionModifiers is null)
             return;
-        
+
         var itemstack = inSlot.Itemstack;
 
-        if (!ModRarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute) || !modAttribute.HasAttribute(ModAttributes.Rarity))
+        if (!Rarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute) || !modAttribute.HasAttribute(ModAttributes.Rarity))
             return;
 
-        CollectibleObjectPatch.FixItemInfos(itemstack, __instance, dsc, modAttribute);
+        // CollectibleObjectPatch.FixItemInfos(itemstack, __instance, dsc, modAttribute);
     }
 }

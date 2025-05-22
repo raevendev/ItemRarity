@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using ItemRarity.Config;
 using Vintagestory.API.Common;
@@ -8,14 +8,17 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity;
 
-public static class ModRarity
+public static class Rarity
 {
-    public static bool IsValidForRarity(ItemStack? itemStack, bool invalidIfRarityExists = true)
+    public const string GuidAttribute = "FE327889-1DD2-430C-BCCA-D94FB132E968"; // Ensure (almost) unique tree attribute key
+    public const string RarityAttribute = "rarity";
+
+    public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
-        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null || itemStack.Collectible.Attributes == null)
+        if (itemStack?.Attributes == null || itemStack.Collectible?.Attributes == null)
             return false;
 
-        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(ModAttributes.Guid))
+        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(GuidAttribute))
             return false;
 
         var collectible = itemStack.Collectible;
@@ -38,6 +41,26 @@ public static class ModRarity
         return treeAttribute != null;
     }
 
+    public static bool TryGetRarityInfos(ItemStack? itemStack, out ItemRarityInfos rarityInfos)
+    {
+        if (itemStack is not { Attributes: not null, Collectible: not null })
+        {
+            rarityInfos = default;
+            return false;
+        }
+
+        var modAttribute = itemStack.Attributes.GetTreeAttribute(ModAttributes.Guid);
+
+        if (modAttribute is null || !modAttribute.HasAttribute(ModAttributes.Rarity))
+        {
+            rarityInfos = default;
+            return false;
+        }
+
+        rarityInfos = ModCore.Config[modAttribute.GetString(ModAttributes.Rarity)];
+        return true;
+    }
+
     /// <summary>
     /// Returns a random rarity based on the configured rarities and their associated weights.
     /// </summary>
@@ -46,9 +69,9 @@ public static class ModRarity
     /// </returns>
     public static ItemRarityInfos GetRandomRarity()
     {
-        if (ModCore.Config.Rarities == null || ModCore.Config.Rarities.Count == 0)
+        if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
         {
-            Console.WriteLine("Warning: No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            ModCore.LogWarning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
             return (string.Empty, null!);
         }
 
@@ -69,23 +92,23 @@ public static class ModRarity
 
     public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
-        if (!IsValidForRarity(itemStack, true))
-            return ("", null!);
-
         var rarity = GetRandomRarity();
         return SetRarity(itemStack, rarity.Key);
     }
 
     public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
     {
-        if (!IsValidForRarity(itemStack, false))
-            throw new Exception("Invalid item. Rarity is not supported for this item");
+        if (!IsSuitableFor(itemStack, false))
+        {
+            ModCore.LogWarning("Invalid item. Rarity is not supported for this item");
+            return ModCore.Config[string.Empty];
+        }
 
         var itemRarity = ModCore.Config[rarity];
 
         if (itemRarity.Value == null)
         {
-            Console.WriteLine($"Error: Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
+            ModCore.LogError($"Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
             return itemRarity;
         }
 
@@ -107,7 +130,7 @@ public static class ModRarity
             }
         }
 
-        if (itemStack.Collectible.Attributes != null && itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
+        if (itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
         {
             var damages = itemStack.Collectible.Attributes["damage"].AsFloat();
             modAttributes.SetFloat(ModAttributes.PiercingPower, damages * itemRarity.Value.PiercingPowerMultiplier);
@@ -161,7 +184,11 @@ public static class ModRarity
     public static ProtectionModifiers GetRarityProtectionModifiers(ItemStack itemStack)
     {
         if (itemStack.Collectible is not ItemWearable wearable)
-            throw new Exception("Mod is trying to get protection modifier for an unsupported item.");
+        {
+            ModCore.ServerApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
+            ModCore.ClientApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
+            return new ProtectionModifiers { PerTierRelativeProtectionLoss = [], PerTierFlatDamageReductionLoss = [] };
+        }
 
         if (TryGetRarityTreeAttribute(itemStack, out var treeAttribute) &&
             treeAttribute.HasAttribute(ModAttributes.ProtectionModifiers))

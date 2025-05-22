@@ -84,7 +84,7 @@ public static class ModSystemWearableStatsPatch
 
         // ReSharper disable once RedundantAssignment
         var protectionModifiers = (itemslot.Itemstack.Item as ItemWearable)!.ProtectionModifiers;
-        protectionModifiers = ModRarity.GetRarityProtectionModifiers(itemslot.Itemstack); // Our own protection modifiers
+        protectionModifiers = Rarity.GetRarityProtectionModifiers(itemslot.Itemstack); // Our own protection modifiers
 
         var damageTier = dmgSource.DamageTier;
         var flatDamageReduction = protectionModifiers.FlatDamageReduction;
@@ -162,6 +162,7 @@ public static class ModSystemWearableStatsPatch
                 {
                     num3 = itemAttribute["protectionChance"][key1 + "-projectile"].AsFloat();
                     num4 = ModAttributes.GetShieldProjectileDamageAbsorption(itemslot.Itemstack!, itemAttribute["projectileDamageAbsorption"].AsFloat(2F));
+                    // TODO 
                 }
                 else
                 {

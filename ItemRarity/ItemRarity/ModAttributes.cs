@@ -21,35 +21,35 @@ public static class ModAttributes
 
     public static string GetRarity(ItemStack itemStack, string defaultValue = "unknown")
     {
-        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
+        if (!ItemRarity.Rarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
             return defaultValue;
         return attribute.GetString(Rarity);
     }
 
     public static ItemRarityInfos GetRarityInfo(ItemStack itemStack, string defaultValue = "unknown")
     {
-        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
+        if (!ItemRarity.Rarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
             return ModCore.Config[defaultValue];
         return ModCore.Config[attribute.GetString(Rarity, defaultValue)];
     }
 
     public static float GetMaxDurability(ItemStack itemStack, float defaultValue = 1F)
     {
-        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
+        if (!ItemRarity.Rarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
             return defaultValue;
         return attribute.GetFloat(MaxDurability, defaultValue);
     }
 
     public static float GetShieldProjectileDamageAbsorption(ItemStack itemStack, float defaultValue = 1F)
     {
-        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
+        if (!ItemRarity.Rarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
             return defaultValue;
         return attribute.GetFloat(ShieldProjectileDamageAbsorption, defaultValue);
     }
 
     public static float GetShieldDamageAbsorption(ItemStack itemStack, float defaultValue = 1F)
     {
-        if (!ModRarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
+        if (!ItemRarity.Rarity.TryGetRarityTreeAttribute(itemStack, out var attribute))
             return defaultValue;
         return attribute.GetFloat(ShieldDamageAbsorption, defaultValue);
     }
