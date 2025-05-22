@@ -1,93 +1,134 @@
-**Item Rarity Mod**
+# 🪄 Item Rarity Mod
 
-This mod introduces an exciting **rarity mechanic** to items, adding a dynamic twist to the crafting and looting experience. Rarity levels influences key item stats, such as durability, damage, and more. Currently, rarities are applied exclusively to tools when they are crafted or dropped.
+Add excitement and variety to your **Vintage Story** experience with the **Item Rarity Mod**! This mod introduces a **rarity system** for tools, affecting their stats and adding special effects. Every time you craft or find a tool, it has a chance to receive a rarity making each item feel unique and powerful!
 
-### **Features**
+---
 
-#### **Stat Modifications**
+## 🌟 Features
 
-Rarities affect the default stats of tools, enhancing or altering their performance.
+### 🔧 Stat Modifiers
 
-**Supported Stats:**
+Each rarity level modifies core tool stats, making tools stronger or more efficient based on their rarity.
 
-*   **Durability**: All tools benefit from durability adjustments.
-*   **Mining Speed**: Applies to tools capable of mining.
-*   **Attack Power**: Influences the strength of all tools in combat.
-*   **Piercing Power**: Impacts tools that deal piercing damage.
+**Affected stats:**
 
-#### **Magical Effects**
+* **Durability** - Increases or decreases the lifespan of tools.
+* **Mining Speed** – Affects how fast you mine with the tool.
+* **Attack Power** – Boosts damage dealt in combat.
+* **Piercing Power** – Modifies damage that bypasses armor.
 
-Bring a touch of magic to your world! Rarity levels can grant special effects to tools, with the first effect now available:
+---
 
-*   **Thor**: A powerful effect for tools that deal piercing damage. Strikes targets with lightning and sets them ablaze on impact.
+### ⚡ Magical Effects
 
-### **Commandsa**
+Rarities can also grant **magical effects**. These effects can add dramatic new abilities to your tools.
 
-There a several commands available. (For now you have to be an operator to be able to use thoses commands)
+**Available effects:**
 
-*   _/rarity set <rarity>_ : Applies the specified rarity to the item currently held.
-    
-*   _/rarity reload_ : Reloads the configuration without needing to restart the game or server, ideal for testing new settings.
-*   _/rarity test <times>_ : Perform a test that will generate X rarities based on the times provided. Ideal to test configured rarities. It will also display their relative chance.
+* **Thor** – When hitting a target with a piercing weapon, strikes lightning and sets the target on fire. 🔥⚡
 
-### **Planned Features**
+---
 
-*   Introduction of additional effects.
-    
-*   Enhanced configuration options to limit rarity application to specific items.
-    
+## 💬 Commands
 
-### **Configuration**
+> ⚠️ All commands require **operator** (admin) permissions.
 
-Rarity levels can be customized to suit your preferences. Each rarity level has several configurable properties, allowing you to fine-tune its effects and influence on the game. Below is an example of how to configure a rarity:
+| Command                | Description                                                              |
+|------------------------|--------------------------------------------------------------------------|
+| `/rarity set <rarity>` | Assigns the specified rarity to the item currently held.                 |
+| `/rarity reload`       | Reloads the configuration without restarting the game/server.            |
+| `/rarity test <times>` | Simulates multiple rarity rolls and displays results with probabilities. |
 
-#### **Example Configuration**
+---
 
-    "unique": {
-      "Name": "Unique",
-      "Color": "#EC290E",
-      "Rarity": 2.0,
-      "DurabilityMultiplier": 2.0,
-      "MiningSpeedMultiplier": 1.9,
-      "AttackPowerMultiplier": 1.9,
-      "PiercingPowerMultiplier": 1.9,
-      "Effects": ["Thor"],
-      "SupportedItems": ["*"]
-    }
-    
+## 🛠️ Configuration
 
-#### **Explanation of Fields**
+Customize rarities to match your server's balance or your personal gameplay style. Each rarity level supports detailed customization.
 
-*   **`Name`**: The name of the rarity (e.g., "Unique"). This will be displayed in-game (might be overrided by land files).
-*   **`Color`**: Hexadecimal color code used to represent the rarity.
-*   **`Rarity`**: The weight or chance of this rarity being applied. Lower values make the rarity rarer.
-*   **`DurabilityMultiplier`**: Multiplier for the tool's durability.
-*   **`MiningSpeedMultiplier`**: Multiplier for the tool's mining speed.
-*   **`AttackPowerMultiplier`**: Multiplier for the tool's attack power.
-*   **`PiercingPowerMultiplier`**: Multiplier for the tool's piercing power.
-*   **`Effects`**: A list of special effects applied to tools of this rarity. Example: `"Thor"`.
-*   **`SupportedItems`**: **NOT YET SUPPORTED** Specifies which items this rarity can be applied to. Use `"*"` to apply to all tools or list specific tools (e.g., `["pickaxe", "axe"]`).
+### 📄 Example Configuration
 
-#### **Adding New Rarities**
+```json
+"unique": {
+  "Name": "Unique",
+  "Color": "#EC290E",
+  "Rarity": 2.0,
+  "DurabilityMultiplier": 2.0,
+  "MiningSpeedMultiplier": 1.9,
+  "AttackPowerMultiplier": 1.9,
+  "PiercingPowerMultiplier": 1.9,
+  "Effects": ["Thor"],
+  "SupportedItems": ["*"]
+}
+```
 
-To add a new rarity, simply follow the same format.
+### 🧾 Explanation of Fields
 
-    "mynewrarity": {
-      "Name": "My Awesome Rarity",
-      "Color": "#4A90E2",
-      "Rarity": 5.0,
-      "DurabilityMultiplier": 1.5,
-      "MiningSpeedMultiplier": 1.4,
-      "AttackPowerMultiplier": 1.4,
-      "PiercingPowerMultiplier": 1.4,
-      "Effects": [],
-      "SupportedItems": ["*"]
-    }
+| Field                     | Description                                                                           |
+|---------------------------|---------------------------------------------------------------------------------------|
+| `Name`                    | Display name of the rarity (can be localized).                                        |
+| `Color`                   | Hex color code shown in item display.                                                 |
+| `Rarity`                  | **Weight** used for selection. Higher = more common. *(See "How Rarity Works" below)* |
+| `DurabilityMultiplier`    | Affects how long tools last.                                                          |
+| `MiningSpeedMultiplier`   | Affects block-breaking speed.                                                         |
+| `AttackPowerMultiplier`   | Affects melee damage.                                                                 |
+| `PiercingPowerMultiplier` | Affects piercing (armor-bypassing) damage.                                            |
+| `Effects`                 | List of special abilities. Example: `["Thor"]`.                                       |
 
-This allows full control over how each rarity impacts gameplay, ensuring a tailored experience for your world.
+---
 
-* * *
+## 🎯 How Rarity Works
 
-### **Inspiration**
+The `Rarity` value in the config is used as a **weight**, not a percentage. You **do not** need to make them add up to 100.
 
-This mod is inspired by the **[RPG Item Rarity](https://mods.vintagestory.at/rpgitemrarity)** mod.
+### ✅ Key Points:
+
+* Higher values = more likely to be selected.
+* The actual chance is based on the **relative weight** compared to others.
+* Example:
+
+  ```json
+  "Common":   { "Rarity": 80.0 },
+  "Uncommon": { "Rarity": 15.0 },
+  "Rare":     { "Rarity": 4.0 },
+  "Legendary":{ "Rarity": 1.0 }
+  ```
+
+  Here, **Common** has an 80% chance because 80 / (80 + 15 + 4 + 1) = 0.80
+
+---
+
+## ➕ Adding New Rarities
+
+Just add a new entry in the config following the same format:
+
+```json
+"epic": {
+  "Name": "Epic",
+  "Color": "#A020F0",
+  "Rarity": 0.5,
+  "DurabilityMultiplier": 2.5,
+  "MiningSpeedMultiplier": 2.0,
+  "AttackPowerMultiplier": 2.2,
+  "PiercingPowerMultiplier": 2.0,
+  "Effects": ["Thor"],
+  "SupportedItems": ["*"]
+}
+```
+
+Create as many rarities as you want and adjust their stats to balance gameplay your way.
+
+---
+
+## 🚧 Planned Features
+
+* More **special effects** to diversify tool behavior.
+* Advanced item filtering via `SupportedItems`.
+* Rarity support for **armor, weapons, and non-tool items**.
+
+---
+
+## 🎨 Inspiration
+
+Inspired by the [RPG Item Rarity Mod](https://mods.vintagestory.at/rpgitemrarity).
+
+---
