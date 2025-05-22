@@ -31,7 +31,7 @@ public static class Rarity
 
     public static bool TryGetRarityTreeAttribute(ItemStack? itemStack, out ITreeAttribute treeAttribute)
     {
-        if (itemStack == null || itemStack.Attributes == null || itemStack.Collectible == null)
+        if (itemStack?.Attributes == null || itemStack.Collectible?.Attributes == null)
         {
             treeAttribute = null!;
             return false;
