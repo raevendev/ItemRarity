@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
@@ -104,7 +104,10 @@ public static class CollectibleObjectPatch
 
         var rarity = ModRarity.GetRandomRarity();
 
-        itemStack.SetRarity(rarity.Key);
+        if (ModRarity.IsValidForRarity(itemStack, true))
+        {
+            itemStack.SetRarity(rarity.Key);
+        }
     }
 
     [HarmonyReversePatch, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo))]
