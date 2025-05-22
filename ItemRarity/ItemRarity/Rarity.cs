@@ -23,7 +23,7 @@ public static class Rarity
 
         var collectible = itemStack.Collectible;
 
-        if (collectible.Durability > 0) // Support any item that has durabiltiy
+        if (collectible.Durability > 0) // Support any item that has durability
             return true;
 
         return false;
@@ -185,8 +185,7 @@ public static class Rarity
     {
         if (itemStack.Collectible is not ItemWearable wearable)
         {
-            ModCore.ServerApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
-            ModCore.ClientApi?.Logger.Warning("Mod is trying to get protection modifier for an unsupported item.");
+            ModCore.LogWarning("Mod is trying to get protection modifier for an unsupported item.");
             return new ProtectionModifiers { PerTierRelativeProtectionLoss = [], PerTierFlatDamageReductionLoss = [] };
         }
 
