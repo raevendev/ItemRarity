@@ -15,7 +15,7 @@ public static class Rarity
 
     public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
-        if (itemStack is not { Attributes: not null, Collectible: not null })
+        if (itemStack?.Attributes == null || itemStack.Collectible?.Attributes == null)
             return false;
 
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(GuidAttribute))
@@ -69,6 +69,12 @@ public static class Rarity
     /// </returns>
     public static ItemRarityInfos GetRandomRarity()
     {
+        if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
+        {
+            ModCore.LogWarning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            return (string.Empty, null!);
+        }
+
         var totalWeight = ModCore.Config.Rarities.Values.Sum(i => i.Rarity);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
         var cumulativeWeight = 0f;
@@ -99,6 +105,13 @@ public static class Rarity
         }
 
         var itemRarity = ModCore.Config[rarity];
+
+        if (itemRarity.Value == null)
+        {
+            ModCore.LogError($"Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
+            return itemRarity;
+        }
+
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
 
         modAttributes.SetString(ModAttributes.Rarity, itemRarity.Key); // Use the key as the rarity.
