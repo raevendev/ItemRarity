@@ -90,6 +90,43 @@ public static class Rarity
         return (first.Key, first.Value);
     }
 
+    public static ItemRarityInfos GetRandomRarityByTier(string tier = "")
+    {
+        if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
+        {
+            ModCore.LogWarning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            return (string.Empty, null!);
+        }
+
+        if (!ModCore.Config.Tiers.TryGetValue(tier, out var tierConfig))
+        {
+            ModCore.LogWarning($"No tier defined or loaded for {tier} in ModCore.Config.Tiers. Returning default rarity.");
+            return (string.Empty, null!);
+        }
+
+        var totalWeight = tierConfig.Sum(i => i.Value);
+        var randomValue = Random.Shared.NextDouble() * totalWeight;
+        var cumulativeWeight = 0f;
+
+        foreach (var tierRarity in tierConfig)
+        {
+            cumulativeWeight += tierRarity.Value;
+            if (randomValue < cumulativeWeight)
+            {
+                if (!ModCore.Config.Rarities.TryGetValue(tierRarity.Key, out var rarityConfig))
+                {
+                    ModCore.LogWarning($"No rarity defined or loaded for {tierRarity.Key} in ModCore.Config.Rarities. Returning default rarity.");
+                    return (string.Empty, null!);
+                }
+
+                return (tierRarity.Key, rarityConfig);
+            }
+        }
+
+        var first = ModCore.Config.Rarities.First();
+        return (first.Key, first.Value);
+    }
+
     public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
         var rarity = GetRandomRarity();

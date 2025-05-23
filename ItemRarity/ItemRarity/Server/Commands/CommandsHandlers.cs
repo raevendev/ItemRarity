@@ -88,6 +88,63 @@ public static class CommandsHandlers
         return TextCommandResult.Success();
     }
 
+    public static TextCommandResult HandleTestTierCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
+    {
+        var tier = args.Parsers[0].GetValue().ToString();
+        var timesToRun = args.Parsers[1].GetValue().ToString();
+
+        if (tier == null)
+        {
+            return TextCommandResult.Error("Missing tier.");
+        }
+
+        if (!int.TryParse(timesToRun, out var timeRun))
+        {
+            return TextCommandResult.Error("Missing times to run.");
+        }
+
+        var rarities = new List<RarityConfig>(timeRun);
+        var totalRarity = ModCore.Config.Tiers[tier].Values.Sum();
+
+        for (var i = 0; i < timeRun; i++)
+        {
+            var rarity = Rarity.GetRandomRarityByTier(tier).Value;
+            rarities.Add(rarity);
+        }
+
+        var results = rarities
+            .GroupBy(r => r.Name)
+            .Select(g =>
+            {
+                var rarityKey = g.Key;
+                var tierRarity = ModCore.Config.Tiers[tier].FirstOrDefault(t => ModCore.Config.Rarities.TryGetValue(t.Key, out var config) && config.Name == rarityKey);
+
+                return new
+                {
+                    Name = rarityKey,
+                    Count = g.Count(),
+                    TierRarityValue = tierRarity.Value,
+                    g.First().Color
+                };
+            })
+            .OrderBy(r => r.Count)
+            .ToList();
+
+        var message = new StringBuilder();
+
+        message.AppendLine($"Rarity test for tier {tier} ran {timeRun} time(s):");
+
+        foreach (var rarity in results)
+        {
+            var relativeChance = rarity.TierRarityValue / totalRarity * 100f;
+            message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
+        }
+
+        serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
+
+        return TextCommandResult.Success();
+    }
+
     public static TextCommandResult HandleDebugItemAttributesCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;

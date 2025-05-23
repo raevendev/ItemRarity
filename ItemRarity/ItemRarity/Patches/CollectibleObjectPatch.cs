@@ -8,6 +8,7 @@ using Vintagestory.API.Datastructures;
 using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
+// ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming
 
 namespace ItemRarity.Patches;
@@ -78,7 +79,7 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
     public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
-        if (outputSlot is not { Itemstack: not null } || !Rarity.IsSuitableFor(outputSlot.Itemstack))
+        if (ModCore.Config.EnableTiers || outputSlot is not { Itemstack: not null } || !Rarity.IsSuitableFor(outputSlot.Itemstack))
             return;
 
         Rarity.SetRandomRarity(outputSlot.Itemstack);

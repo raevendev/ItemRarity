@@ -13,6 +13,8 @@ using Vintagestory.API.Util;
 using Vintagestory.GameContent;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
+// ReSharper disable MemberCanBePrivate.Global
+
 namespace ItemRarity;
 
 /// <summary>
@@ -41,7 +43,7 @@ public sealed class ModCore : ModSystem
 
         LoadConfig(api);
 
-        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(ModAttributes.Guid); // Importang for TreasureTrader
+        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(ModAttributes.Guid); // Important for TreasureTrader
 
         api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 
@@ -103,6 +105,12 @@ public sealed class ModCore : ModSystem
             .HandleWith(del => CommandsHandlers.HandleTestRarityCommand(api, del))
             .EndSubCommand();
 
+        mainCommand.BeginSubCommand("tier")
+            .WithDescription("Run the random rarity generator.")
+            .WithArgs(parsers.Word("tier"), parsers.Int("times"))
+            .HandleWith(del => CommandsHandlers.HandleTestTierCommand(api, del))
+            .EndSubCommand();
+
         mainCommand.BeginSubCommand("itemdebug")
             .WithDescription("Dev debug command")
             .HandleWith(del => CommandsHandlers.HandleDebugItemAttributesCommand(api, del))
@@ -120,7 +128,7 @@ public sealed class ModCore : ModSystem
         ServerApi?.Logger.Warning(message);
         ClientApi?.Logger.Warning(message);
     }
-    
+
     public static void LogError(string message)
     {
         ServerApi?.Logger.Error(message);

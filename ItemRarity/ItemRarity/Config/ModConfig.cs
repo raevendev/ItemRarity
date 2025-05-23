@@ -8,8 +8,10 @@ namespace ItemRarity.Config;
 /// </summary>
 public sealed class ModConfig
 {
+    public bool EnableTiers { get; init; }
     public Dictionary<string, RarityConfig> Rarities { get; init; } = new();
-    
+    public Dictionary<string, Dictionary<string, float>> Tiers { get; init; } = new();
+
     public ItemRarityInfos this[string rarity]
     {
         get
@@ -26,6 +28,65 @@ public sealed class ModConfig
     {
         return new()
         {
+            Tiers = new()
+            {
+                {
+                    "I", new()
+                    {
+                        { "cursed", 10 },
+                        { "common", 60 },
+                        { "uncommon", 25 },
+                        { "rare", 5 }
+                    }
+                },
+                {
+                    "II", new()
+                    {
+                        { "cursed", 8 },
+                        { "common", 45 },
+                        { "uncommon", 30 },
+                        { "rare", 12 },
+                        { "epic", 5 }
+                    }
+                },
+                {
+                    "III", new()
+                    {
+                        { "cursed", 6 },
+                        { "common", 30 },
+                        { "uncommon", 30 },
+                        { "rare", 20 },
+                        { "epic", 10 },
+                        { "legendary", 4 }
+                    }
+                },
+                {
+                    "IV", new()
+                    {
+                        { "cursed", 4 },
+                        { "common", 20 },
+                        { "uncommon", 25 },
+                        { "rare", 25 },
+                        { "epic", 15 },
+                        { "legendary", 8 },
+                        { "unique", 3 }
+                    }
+                },
+                {
+                    "V", new()
+                    {
+                        { "cursed", 2 },
+                        { "common", 10 },
+                        { "uncommon", 15 },
+                        { "rare", 28 },
+                        { "epic", 22 },
+                        { "legendary", 15 },
+                        { "unique", 8 }
+                    }
+                }
+            },
+
+
             Rarities = new()
             {
                 {
