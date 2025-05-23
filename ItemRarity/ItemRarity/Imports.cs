@@ -1,1 +1,1 @@
-﻿global using ItemRarityInfos = (string Key, ItemRarity.Config.ItemRarityConfig Value);
+﻿global using ItemRarityInfos = (string Key, ItemRarity.Config.RarityConfig Value);

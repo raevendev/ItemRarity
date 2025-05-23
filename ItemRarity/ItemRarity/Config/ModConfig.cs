@@ -8,7 +8,7 @@ namespace ItemRarity.Config;
 /// </summary>
 public sealed class ModConfig
 {
-    public Dictionary<string, ItemRarityConfig> Rarities { get; init; } = new();
+    public Dictionary<string, RarityConfig> Rarities { get; init; } = new();
     
     public ItemRarityInfos this[string rarity]
     {

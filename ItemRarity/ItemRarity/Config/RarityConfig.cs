@@ -6,7 +6,7 @@ namespace ItemRarity.Config;
 /// <summary>
 /// Represents the configuration settings for an item's rarity, including multipliers for various item properties.
 /// </summary>
-public sealed class ItemRarityConfig
+public sealed class RarityConfig
 {
     public required string Name { get; init; }
 

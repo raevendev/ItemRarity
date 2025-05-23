@@ -52,7 +52,7 @@ public static class CommandsHandlers
             return TextCommandResult.Error("Missing times to run.");
         }
 
-        var rarities = new List<ItemRarityConfig>(timeRun);
+        var rarities = new List<RarityConfig>(timeRun);
         var totalRarity = ModCore.Config.Rarities.Sum(r => r.Value.Rarity);
 
         for (var i = 0; i < timeRun; i++)

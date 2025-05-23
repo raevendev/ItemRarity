@@ -25,7 +25,7 @@ Rarities can also grant **magical effects**. These effects can add dramatic new 
 
 **Available effects:**
 
-* **Thor** – When hitting a target with a piercing weapon, strikes lightning and sets the target on fire. 🔥⚡
+* **Thor** – When hitting a target with a piercing weapon, strikes lightning and sets the target on fire.
 
 ---
 

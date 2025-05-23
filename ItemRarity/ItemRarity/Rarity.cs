@@ -65,7 +65,7 @@ public static class Rarity
     /// Returns a random rarity based on the configured rarities and their associated weights.
     /// </summary>
     /// <returns>
-    /// A tuple containing the key (rarity name) and value (<see cref="ItemRarityConfig"/>) of the randomly selected rarity.
+    /// A tuple containing the key (rarity name) and value (<see cref="RarityConfig"/>) of the randomly selected rarity.
     /// </returns>
     public static ItemRarityInfos GetRandomRarity()
     {
