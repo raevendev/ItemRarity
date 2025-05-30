@@ -123,18 +123,6 @@ public sealed class ModCore : ModSystem
         HarmonyInstance.UnpatchAll(HarmonyId);
     }
 
-    public static void LogWarning(string message)
-    {
-        ServerApi?.Logger.Warning(message);
-        ClientApi?.Logger.Warning(message);
-    }
-
-    public static void LogError(string message)
-    {
-        ServerApi?.Logger.Error(message);
-        ClientApi?.Logger.Error(message);
-    }
-
     /// <summary>
     /// Loads the configuration for the mod from the configuration file or generates a default configuration if none is found or if an error occurs.
     /// </summary>

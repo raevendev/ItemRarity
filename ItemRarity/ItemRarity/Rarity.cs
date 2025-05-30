@@ -71,7 +71,7 @@ public static class Rarity
     {
         if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
         {
-            ModCore.LogWarning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            ModLogger.Warning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
             return (string.Empty, null!);
         }
 
@@ -94,13 +94,13 @@ public static class Rarity
     {
         if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
         {
-            ModCore.LogWarning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
+            ModLogger.Warning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
             return (string.Empty, null!);
         }
 
         if (!ModCore.Config.Tiers.TryGetValue(tier, out var tierConfig))
         {
-            ModCore.LogWarning($"No tier defined or loaded for {tier} in ModCore.Config.Tiers. Returning default rarity.");
+            ModLogger.Warning($"No tier defined or loaded for {tier} in ModCore.Config.Tiers. Returning default rarity.");
             return (string.Empty, null!);
         }
 
@@ -115,7 +115,7 @@ public static class Rarity
             {
                 if (!ModCore.Config.Rarities.TryGetValue(tierRarity.Key, out var rarityConfig))
                 {
-                    ModCore.LogWarning($"No rarity defined or loaded for {tierRarity.Key} in ModCore.Config.Rarities. Returning default rarity.");
+                    ModLogger.Warning($"No rarity defined or loaded for {tierRarity.Key} in ModCore.Config.Rarities. Returning default rarity.");
                     return (string.Empty, null!);
                 }
 
@@ -137,7 +137,7 @@ public static class Rarity
     {
         if (!IsSuitableFor(itemStack, false))
         {
-            ModCore.LogWarning("Invalid item. Rarity is not supported for this item");
+            ModLogger.Warning("Invalid item. Rarity is not supported for this item");
             return ModCore.Config[string.Empty];
         }
 
@@ -145,7 +145,7 @@ public static class Rarity
 
         if (itemRarity.Value == null)
         {
-            ModCore.LogError($"Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
+            ModLogger.Error($"Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
             return itemRarity;
         }
 
@@ -222,7 +222,7 @@ public static class Rarity
     {
         if (itemStack.Collectible is not ItemWearable wearable)
         {
-            ModCore.LogWarning("Mod is trying to get protection modifier for an unsupported item.");
+            ModLogger.Warning("Mod is trying to get protection modifier for an unsupported item.");
             return new ProtectionModifiers { PerTierRelativeProtectionLoss = [], PerTierFlatDamageReductionLoss = [] };
         }
 
