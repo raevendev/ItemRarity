@@ -47,7 +47,7 @@ public sealed class ModCore : ModSystem
 
         api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 
-        api.Logger.Notification("[ItemRarity] Mod loaded.");
+        ModLogger.Notification("Mod loaded.");
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -62,7 +62,7 @@ public sealed class ModCore : ModSystem
                 if (config != null)
                 {
                     Config = config;
-                    api.Logger.Notification("[ItemRarity] Received config from server.");
+                    ModLogger.Notification("Received config from server.");
                 }
             }
             catch (Exception e)
@@ -135,17 +135,17 @@ public sealed class ModCore : ModSystem
             if (Config != null && Config.Rarities.Any())
             {
                 api.StoreModConfig(Config, ConfigFileName); // Store it again in game the mod added new properties
-                api.Logger.Notification("[ItemRarity] Configuration loaded.");
+                ModLogger.Notification("Configuration loaded.");
                 return;
             }
 
             Config = ModConfig.GetDefaultConfig();
             api.StoreModConfig(Config, ConfigFileName);
-            api.Logger.Notification("[ItemRarity] Configuration not found. Generating default configuration.");
+            ModLogger.Notification("Configuration not found. Generating default configuration.");
         }
         catch
         {
-            api.Logger.Warning("[ItemRarity] Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration).");
+            ModLogger.Warning("Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration).");
             Config = ModConfig.GetDefaultConfig();
         }
     }
