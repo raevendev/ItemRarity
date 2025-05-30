@@ -6,5 +6,11 @@
   "itemrarity:rare": "[Rare]",
   "itemrarity:epic": "[Epic]",
   "itemrarity:legendary": "[Legendary]",
-  "itemrarity:unique": "[Unique]"
+  "itemrarity:unique": "[Unique]",
+  "itemrarity:item-tier-info": "Possible rarities:",
+  "itemrarity:item-tier-i": "Tier I",
+  "itemrarity:item-tier-ii": "Tier II",
+  "itemrarity:item-tier-iii": "Tier III",
+  "itemrarity:item-tier-iv": "Tier IV",
+  "itemrarity:item-tier-v": "Tier V"
 }

@@ -150,13 +150,18 @@ public static class CommandsHandlers
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
 
-        if (Rarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
-        {
-            var sb = new StringBuilder();
-            sb.AppendLine("Rarity Attributes: ");
-            BuildAttributesTree(modAttribute, sb, 1);
-            return TextCommandResult.Success(sb.ToString());
-        }
+        var sb = new StringBuilder();
+        sb.AppendLine("Item Attributes: ");
+        BuildAttributesTree(currentItemStack.Attributes, sb);
+        return TextCommandResult.Success(sb.ToString());
+
+        // if (Rarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
+        // {
+        //     var sb = new StringBuilder();
+        //     sb.AppendLine("Rarity Attributes: ");
+        //     BuildAttributesTree(modAttribute, sb, 1);
+        //     return TextCommandResult.Success(sb.ToString());
+        // }
 
         return TextCommandResult.Success("Item has no rarity attributes.");
     }

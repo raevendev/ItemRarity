@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
+using ItemRarity.Behaviors;
 using ItemRarity.Config;
+using ItemRarity.Items;
 using ItemRarity.Packets;
 using ItemRarity.Server;
 using ItemRarity.Server.Commands;
@@ -37,8 +39,10 @@ public sealed class ModCore : ModSystem
     {
         if (!Harmony.HasAnyPatches(HarmonyId))
         {
+            ModLogger.Notification("Patching...");
             HarmonyInstance = new Harmony(HarmonyId);
             HarmonyInstance.PatchAll();
+            ModLogger.Notification("Successfully patched. Starting mod...");
         }
 
         LoadConfig(api);
@@ -47,7 +51,10 @@ public sealed class ModCore : ModSystem
 
         api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 
-        ModLogger.Notification("Mod loaded.");
+        api.RegisterItemClass("ItemTier", typeof(ItemTier));
+        api.RegisterCollectibleBehaviorClass("CollectibleBehaviorTier", typeof(CollectibleBehaviorTier));
+
+        ModLogger.Notification("Mod Started.");
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -70,6 +77,21 @@ public sealed class ModCore : ModSystem
                 api.Logger.Error(e);
             }
         });
+    }
+
+    public override void AssetsFinalize(ICoreAPI api)
+    {
+        if (!Config.EnableTiers) // Don't add the tier behavior if the config is set to false.'
+            return;
+
+        foreach (var collectible in api.World.Collectibles)
+        {
+            if (collectible.Code == null || collectible.Id == 0)
+                continue;
+            if (collectible.Durability <= 0)
+                continue;
+            collectible.CollectibleBehaviors = collectible.CollectibleBehaviors.Append<CollectibleBehavior>(new CollectibleBehaviorTier(collectible));
+        }
     }
 
     public override void StartServerSide(ICoreServerAPI api)

@@ -127,6 +127,12 @@ public static class Rarity
         return (first.Key, first.Value);
     }
 
+    public static ItemRarityInfos SetRarityByTier(ItemStack itemStack, string tier)
+    {
+        var rarity = GetRandomRarityByTier(tier);
+        return SetRarity(itemStack, rarity.Key);
+    }
+
     public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
     {
         var rarity = GetRandomRarity();

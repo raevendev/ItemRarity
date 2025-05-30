@@ -1,0 +1,8 @@
+﻿{
+  "code": "tier",
+  "class": "ItemTier",
+  "variantgroups": [ { "code": "type", "states": ["I", "II", "III", "IV", "V"] } ],
+  "heldTpIdleAnimation": "holdbothhands",
+  "creativeinventory": { "general": ["*"], "items": ["*"] },
+  "storageFlags": 257
+}

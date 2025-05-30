@@ -4,8 +4,6 @@ using System.Text;
 using HarmonyLib;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
-using Vintagestory.API.Datastructures;
-using Vintagestory.API.MathTools;
 using Vintagestory.GameContent;
 
 // ReSharper disable UnusedMember.Global

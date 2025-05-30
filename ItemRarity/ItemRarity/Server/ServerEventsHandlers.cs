@@ -8,7 +8,6 @@ namespace ItemRarity.Server;
 
 internal static class ServerEventsHandlers
 {
-
     public static void OnPlayerJoin(IServerPlayer byplayer)
     {
         ModCore.ServerApi?.Network.GetChannel(ModCore.ConfigSyncNetChannel).SendPacket(new ServerConfigMessage
