@@ -12,5 +12,6 @@
   "itemrarity:item-tier-ii": "Tier II",
   "itemrarity:item-tier-iii": "Tier III",
   "itemrarity:item-tier-iv": "Tier IV",
-  "itemrarity:item-tier-v": "Tier V"
+  "itemrarity:item-tier-v": "Tier V",
+  "itemrarity:item-tier-s": "Tier S"
 }

@@ -83,6 +83,14 @@ public sealed class ModConfig
                         { "legendary", 15 },
                         { "unique", 8 }
                     }
+                },
+                {
+                    "S", new()
+                    {
+                        { "epic", 30 },
+                        { "legendary", 35 },
+                        { "unique", 35 }
+                    }
                 }
             },
 
