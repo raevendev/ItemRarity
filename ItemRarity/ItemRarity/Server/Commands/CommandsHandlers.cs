@@ -15,7 +15,7 @@ namespace ItemRarity.Server.Commands;
 /// </summary>
 public static class CommandsHandlers
 {
-    public static TextCommandResult HandleSetRarityCommand(TextCommandCallingArgs args)
+    internal static TextCommandResult HandleSetRarityCommand(TextCommandCallingArgs args)
     {
         var rarity = args.Parsers[0].GetValue().ToString();
         if (string.IsNullOrWhiteSpace(rarity))
@@ -32,7 +32,7 @@ public static class CommandsHandlers
         return TextCommandResult.Success($"Item rarity has been set to <font color=\"{setRarity.Value.Color}\">{setRarity.Value.Name}</font>");
     }
 
-    public static TextCommandResult HandleReloadConfigCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
+    internal static TextCommandResult HandleReloadConfigCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
         ModCore.LoadConfig(serverApi);
 
@@ -43,73 +43,39 @@ public static class CommandsHandlers
         return TextCommandResult.Success("Configuration has been reloaded");
     }
 
-    public static TextCommandResult HandleTestRarityCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
+    internal static TextCommandResult HandleTestRarityCommandUnified(TextCommandCallingArgs args)
     {
-        var timesToRun = args.Parsers[0].GetValue().ToString();
+        var timeRun = args.Parsers[0].GetValue() as int? ?? 0;
+        var tier = args.Parsers[1].IsMissing ? null : args.Parsers[1].GetValue().ToString();
 
-        if (!int.TryParse(timesToRun, out var timeRun))
-        {
-            return TextCommandResult.Error("Missing times to run.");
-        }
+        if (timeRun <= 0)
+            return TextCommandResult.Error("Run count must be greater than 0.");
 
         var rarities = new List<RarityConfig>(timeRun);
-        var totalRarity = ModCore.Config.Rarities.Sum(r => r.Value.Rarity);
+        float totalWeight;
 
-        for (var i = 0; i < timeRun; i++)
+        if (tier != null)
         {
-            var rarity = Rarity.GetRandomRarity().Value;
-            rarities.Add(rarity);
-        }
+            if (!ModCore.Config.Tiers.TryGetValue(tier, out var tierData))
+                return TextCommandResult.Error($"Tier '{tier}' not found. Available Tiers: [{string.Join(", ", ModCore.Config.Tiers.Keys.OrderBy(k => k))}]");
 
-        var results = rarities
-            .GroupBy(r => r.Name)
-            .Select(g => new
+            totalWeight = tierData.Values.Sum();
+
+            for (int i = 0; i < timeRun; i++)
             {
-                Name = g.Key,
-                Count = g.Count(),
-                g.First().Rarity,
-                g.First().Color,
-            })
-            .OrderBy(r => r.Count)
-            .ToList();
-
-        var message = new StringBuilder();
-
-        message.AppendLine($"Rarity test ran {timeRun} time(s):");
-
-        foreach (var rarity in results)
-        {
-            var relativeChance = rarity.Rarity / totalRarity * 100f;
-            message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
+                var rarity = Rarity.GetRandomRarityByTier(tier).Value;
+                rarities.Add(rarity);
+            }
         }
-
-        serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
-
-        return TextCommandResult.Success();
-    }
-
-    public static TextCommandResult HandleTestTierCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
-    {
-        var tier = args.Parsers[0].GetValue().ToString();
-        var timesToRun = args.Parsers[1].GetValue().ToString();
-
-        if (tier == null)
+        else
         {
-            return TextCommandResult.Error("Missing tier.");
-        }
+            totalWeight = ModCore.Config.Rarities.Sum(r => r.Value.Rarity);
 
-        if (!int.TryParse(timesToRun, out var timeRun))
-        {
-            return TextCommandResult.Error("Missing times to run.");
-        }
-
-        var rarities = new List<RarityConfig>(timeRun);
-        var totalRarity = ModCore.Config.Tiers[tier].Values.Sum();
-
-        for (var i = 0; i < timeRun; i++)
-        {
-            var rarity = Rarity.GetRandomRarityByTier(tier).Value;
-            rarities.Add(rarity);
+            for (int i = 0; i < timeRun; i++)
+            {
+                var rarity = Rarity.GetRandomRarity().Value;
+                rarities.Add(rarity);
+            }
         }
 
         var results = rarities
@@ -117,35 +83,44 @@ public static class CommandsHandlers
             .Select(g =>
             {
                 var rarityKey = g.Key;
-                var tierRarity = ModCore.Config.Tiers[tier].FirstOrDefault(t => ModCore.Config.Rarities.TryGetValue(t.Key, out var config) && config.Name == rarityKey);
+
+                float weight;
+                if (tier != null)
+                {
+                    var match = ModCore.Config.Tiers[tier].FirstOrDefault(t => ModCore.Config.Rarities.TryGetValue(t.Key, out var rc) && rc.Name == rarityKey);
+                    weight = match.Value;
+                }
+                else
+                {
+                    weight = ModCore.Config.Rarities.Values.FirstOrDefault(r => r.Name == rarityKey)?.Rarity ?? 0;
+                }
 
                 return new
                 {
                     Name = rarityKey,
                     Count = g.Count(),
-                    TierRarityValue = tierRarity.Value,
+                    Weight = weight,
                     g.First().Color
                 };
             })
-            .OrderBy(r => r.Count)
+            .OrderByDescending(r => r.Count)
             .ToList();
 
         var message = new StringBuilder();
+        message.AppendLine(tier != null
+            ? $"Rarity test for tier '{tier}' ran {timeRun} time(s):"
+            : $"Global rarity test ran {timeRun} time(s):");
 
-        message.AppendLine($"Rarity test for tier {tier} ran {timeRun} time(s):");
-
-        foreach (var rarity in results)
+        foreach (var r in results)
         {
-            var relativeChance = rarity.TierRarityValue / totalRarity * 100f;
-            message.AppendLine($" - <font color=\"{rarity.Color}\">{rarity.Name}</font> : {rarity.Count} ({relativeChance:F2}%)");
+            var percent = r.Weight / totalWeight * 100f;
+            message.AppendLine($" - <font color=\"{r.Color}\">{r.Name}</font> : {r.Count} ({percent:F2}%)");
         }
 
-        serverApi.SendMessage(args.Caller.Player, 0, message.ToString(), EnumChatType.OwnMessage);
-
-        return TextCommandResult.Success();
+        return TextCommandResult.Success(message.ToString());
     }
 
-    public static TextCommandResult HandleDebugItemAttributesCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
+    internal static TextCommandResult HandleDebugItemAttributesCommand(TextCommandCallingArgs args)
     {
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
@@ -154,16 +129,6 @@ public static class CommandsHandlers
         sb.AppendLine("Item Attributes: ");
         BuildAttributesTree(currentItemStack.Attributes, sb);
         return TextCommandResult.Success(sb.ToString());
-
-        // if (Rarity.TryGetRarityTreeAttribute(currentItemStack, out var modAttribute))
-        // {
-        //     var sb = new StringBuilder();
-        //     sb.AppendLine("Rarity Attributes: ");
-        //     BuildAttributesTree(modAttribute, sb, 1);
-        //     return TextCommandResult.Success(sb.ToString());
-        // }
-
-        return TextCommandResult.Success("Item has no rarity attributes.");
     }
 
     private static void BuildAttributesTree(ITreeAttribute attributes, StringBuilder sb, int level = 0)

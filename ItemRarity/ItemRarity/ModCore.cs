@@ -108,21 +108,15 @@ public sealed class ModCore : ModSystem
             .HandleWith(del => CommandsHandlers.HandleReloadConfigCommand(api, del))
             .EndSubCommand();
 
-        mainCommand.BeginSubCommand("test")
+        mainCommand.BeginSubCommand("roll")
             .WithDescription("Run the random rarity generator.")
-            .WithArgs(parsers.Int("times"))
-            .HandleWith(del => CommandsHandlers.HandleTestRarityCommand(api, del))
-            .EndSubCommand();
-
-        mainCommand.BeginSubCommand("tier")
-            .WithDescription("Run the random rarity generator.")
-            .WithArgs(parsers.Word("tier"), parsers.Int("times"))
-            .HandleWith(del => CommandsHandlers.HandleTestTierCommand(api, del))
+            .WithArgs(parsers.Int("times"), parsers.OptionalWord("tier"))
+            .HandleWith(CommandsHandlers.HandleTestRarityCommandUnified)
             .EndSubCommand();
 
         mainCommand.BeginSubCommand("itemdebug")
             .WithDescription("Dev debug command")
-            .HandleWith(del => CommandsHandlers.HandleDebugItemAttributesCommand(api, del))
+            .HandleWith(CommandsHandlers.HandleDebugItemAttributesCommand)
             .EndSubCommand();
     }
 
