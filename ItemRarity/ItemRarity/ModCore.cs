@@ -142,7 +142,7 @@ public sealed class ModCore : ModSystem
             Config = api.LoadModConfig<ModConfig>(ConfigFileName);
             if (Config != null && Config.Rarities.Any())
             {
-                api.StoreModConfig(Config, ConfigFileName); // Store it again in game the mod added new properties
+                api.StoreModConfig(Config, ConfigFileName); // Store it again in case the mod added new properties
                 ModLogger.Notification("Configuration loaded.");
                 return;
             }
