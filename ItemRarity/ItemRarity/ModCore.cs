@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
-using ItemRarity.Behaviors;
 using ItemRarity.Config;
 using ItemRarity.Items;
 using ItemRarity.Packets;
+using ItemRarity.Recipes;
 using ItemRarity.Server;
 using ItemRarity.Server.Commands;
 using Vintagestory.API.Client;
@@ -52,7 +52,7 @@ public sealed class ModCore : ModSystem
         api.Network.RegisterChannel(ConfigSyncNetChannel).RegisterMessageType<ServerConfigMessage>();
 
         api.RegisterItemClass("ItemTier", typeof(ItemTier));
-        api.RegisterCollectibleBehaviorClass("CollectibleBehaviorTier", typeof(CollectibleBehaviorTier));
+        api.RegisterItemClass("ItemTierOutput", typeof(ItemTierOutput));
 
         ModLogger.Notification("Mod Started.");
     }
@@ -79,27 +79,14 @@ public sealed class ModCore : ModSystem
         });
     }
 
-    public override void AssetsFinalize(ICoreAPI api)
-    {
-        if (!Config.EnableTiers) // Don't add the tier behavior if the config is set to false.'
-            return;
-
-        foreach (var collectible in api.World.Collectibles)
-        {
-            if (collectible.Code == null || collectible.Id == 0)
-                continue;
-            if (collectible.Durability <= 0)
-                continue;
-            collectible.CollectibleBehaviors = collectible.CollectibleBehaviors.Append<CollectibleBehavior>(new CollectibleBehaviorTier(collectible));
-        }
-    }
-
     public override void StartServerSide(ICoreServerAPI api)
     {
         ServerApi = api;
 
         api.Event.OnEntitySpawn += ServerEventsHandlers.OnEntitySpawn;
         api.Event.PlayerJoin += ServerEventsHandlers.OnPlayerJoin;
+
+        api.RegisterCraftingRecipe(new TierUpgradeRecipe(api.World));
 
         WeatherSystemServer = api.ModLoader.GetModSystem<WeatherSystemServer>();
 
@@ -138,7 +125,6 @@ public sealed class ModCore : ModSystem
             .HandleWith(del => CommandsHandlers.HandleDebugItemAttributesCommand(api, del))
             .EndSubCommand();
     }
-
 
     public override void Dispose()
     {

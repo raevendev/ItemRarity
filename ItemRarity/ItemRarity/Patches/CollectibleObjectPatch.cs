@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
@@ -77,10 +78,26 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
     public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
-        if (ModCore.Config.EnableTiers || outputSlot is not { Itemstack: not null } || !Rarity.IsSuitableFor(outputSlot.Itemstack))
+        if (outputSlot is not { Itemstack: not null } || !Rarity.IsSuitableFor(outputSlot.Itemstack))
             return;
 
-        Rarity.SetRandomRarity(outputSlot.Itemstack);
+        if (!ModCore.Config.EnableTiers)
+            Rarity.SetRandomRarity(outputSlot.Itemstack);
+        else
+        {
+            var tierItem = slots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
+
+            if (tierItem == null)
+            {
+                ModLogger.Warning("Failed to find tier item when crafting");
+                return;
+            }
+
+            Rarity.SetRarityByTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariant().ToUpper());
+
+            foreach (var slot in slots.Where(s => s.Itemstack?.Collectible?.Code == outputSlot.Itemstack?.Collectible?.Code))
+                slot.TakeOut(1);
+        }
     }
 
     [HarmonyReversePatch, HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo))]

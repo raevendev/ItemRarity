@@ -2,7 +2,6 @@
 using System.Text;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
-using Vintagestory.GameContent;
 
 namespace ItemRarity.Items;
 
@@ -10,6 +9,8 @@ public sealed class ItemTier : Item
 {
     public override void GetHeldItemInfo(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
+        base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
+        
         var tierLevel = inSlot.Itemstack.Collectible.Code.EndVariant().ToUpper();
 
         if (!ModCore.Config.Tiers.TryGetValue(tierLevel, out var tierConfig))
@@ -31,4 +32,6 @@ public sealed class ItemTier : Item
                 dsc.AppendLine($"   §c{rarityKey}§7: {chancePercent:F2}% (undefined rarity)");
         }
     }
+    
+    
 }
