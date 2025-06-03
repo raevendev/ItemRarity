@@ -12,10 +12,10 @@ Each rarity level modifies core tool stats, making tools stronger or more effici
 
 **Affected stats:**
 
-* **Durability** - Increases or decreases the lifespan of tools.
-* **Mining Speed** – Affects how fast you mine with the tool.
-* **Attack Power** – Boosts damage dealt in combat.
-* **Piercing Power** – Modifies damage that bypasses armor.
+* **Durability** - Modifies the lifespan of tools.
+* **Mining Speed** - Affects how fast you mine with the tool.
+* **Attack Power** - Modifies damage dealt in combat.
+* **Piercing Power** - Modifies damage dealt by piercing attacks, such as thrown spears, arrows, and other.
 
 ---
 
