@@ -84,7 +84,7 @@ public static class ModSystemWearableStatsPatch
 
         // ReSharper disable once RedundantAssignment
         var protectionModifiers = (itemslot.Itemstack.Item as ItemWearable)!.ProtectionModifiers;
-        protectionModifiers = Rarity.GetRarityProtectionModifiers(itemslot.Itemstack); // Our own protection modifiers
+        protectionModifiers = RarityManager.GetRarityProtectionModifiers(itemslot.Itemstack); // Our own protection modifiers
 
         var damageTier = dmgSource.DamageTier;
         var flatDamageReduction = protectionModifiers.FlatDamageReduction;

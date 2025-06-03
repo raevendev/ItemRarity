@@ -18,7 +18,7 @@ public static class ItemWearablePatch
 
         var itemstack = inSlot.Itemstack;
 
-        if (!Rarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute) || !modAttribute.HasAttribute(ModAttributes.Rarity))
+        if (!RarityManager.TryGetRarityTreeAttribute(itemstack, out var modAttribute) || !modAttribute.HasAttribute(ModAttributes.Rarity))
             return;
 
         // CollectibleObjectPatch.FixItemInfos(itemstack, __instance, dsc, modAttribute);

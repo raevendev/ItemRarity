@@ -23,7 +23,7 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!Rarity.TryGetRarityInfos(slot.Itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(slot.Itemstack, out var rarity))
             return;
 
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
@@ -31,7 +31,7 @@ public static class ItemKnifePatch
         if (entityBehaviour is not { Harvestable: true })
             return;
 
-        var miningSpeed = __instance.KnifeHarvestingSpeed / rarityInfos.Value.MiningSpeedMultiplier
+        var miningSpeed = __instance.KnifeHarvestingSpeed / rarity.MiningSpeedMultiplier
                                                           * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f;
         __result = secondsUsed < miningSpeed;
     }
@@ -43,13 +43,13 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!Rarity.TryGetRarityInfos(slot.Itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(slot.Itemstack, out var rarityInfos))
             return;
 
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
 
         if (entityBehaviour == null || !entityBehaviour.Harvestable ||
-            secondsUsed < __instance.KnifeHarvestingSpeed / rarityInfos.Value.MiningSpeedMultiplier
+            secondsUsed < __instance.KnifeHarvestingSpeed / rarityInfos.MiningSpeedMultiplier
                                                           * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
             return;
 

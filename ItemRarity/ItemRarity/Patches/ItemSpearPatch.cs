@@ -17,7 +17,7 @@ public static class ItemSpearPatch
     [HarmonyPrefix, HarmonyPatch(nameof(ItemSpear.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
     public static bool GetHeldItemInfoPatch(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
-        if (!Rarity.TryGetRarityInfos(inSlot.Itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out var rarity))
             return true;
 
         CollectibleObjectPatch.GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world,
@@ -28,7 +28,7 @@ public static class ItemSpearPatch
         if (inSlot.Itemstack.Collectible.Attributes != null)
             piercingDamages = inSlot.Itemstack.Collectible.Attributes["damage"].AsFloat();
 
-        piercingDamages *= rarityInfos.Value.PiercingPowerMultiplier;
+        piercingDamages *= rarity.PiercingPowerMultiplier;
 
         dsc.AppendLine(piercingDamages + Lang.Get("piercing-damage-thrown"));
 

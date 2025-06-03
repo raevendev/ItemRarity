@@ -16,15 +16,15 @@ public static class EntityProjectilePatch
     [HarmonyPrefix, HarmonyPatch("impactOnEntity"), HarmonyPriority(Priority.Last)]
     public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {
-        if (ModCore.WeatherSystemServer == null || !Rarity.TryGetRarityInfos(__instance.ProjectileStack, out var rarityInfos))
+        if (ModCore.WeatherSystemServer == null || !RarityManager.TryGetRarity(__instance.ProjectileStack, out var rarity))
             return;
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)
         {
-            __instance.Damage *= rarityInfos.Value.PiercingPowerMultiplier;
+            __instance.Damage *= rarity.PiercingPowerMultiplier;
         }
 
-        if (rarityInfos.Value.HasEffect("thor"))
+        if (rarity.HasEffect("thor"))
         {
             var hitPoint = entity.Pos;
 

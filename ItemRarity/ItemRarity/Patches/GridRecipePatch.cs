@@ -28,7 +28,7 @@ public static class GridRecipePatch
         }
 
         var hasTierItem = nonEmptySlots.Any(s => s.Itemstack.Collectible.Code.Path.StartsWith("tier"));
-        var hasTargetItem = nonEmptySlots.Any(s => Rarity.IsSuitableFor(s.Itemstack));
+        var hasTargetItem = nonEmptySlots.Any(s => RarityManager.IsSuitableFor(s.Itemstack));
 
         __result = hasTierItem && hasTargetItem;
         return false;

@@ -14,17 +14,17 @@ public static class ItemShieldPatch
     [HarmonyPostfix, HarmonyPatch(nameof(ItemShield.GetHeldItemName)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemNamePatch(ItemShield __instance, ItemStack itemStack, ref string __result)
     {
-        if (!Rarity.TryGetRarityInfos(itemStack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(itemStack, out var rarity))
             return;
 
-        var rarityName = rarityInfos.Value.IgnoreTranslation
-            ? $"[{rarityInfos.Value.Name}]"
-            : Lang.GetWithFallback($"itemrarity:{rarityInfos.Key}", "itemrarity:unknown", rarityInfos.Value.Name);
+        var rarityName = rarity.IgnoreTranslation
+            ? $"[{rarity.Name}]"
+            : Lang.GetWithFallback($"itemrarity:{rarity.Key}", "itemrarity:unknown", rarity.Name);
 
         if (__result.Contains(rarityName))
             return;
 
-        __result = $"<font color=\"{rarityInfos.Value.Color}\" weight=bold>{rarityName} {__result}</font>";
+        __result = $"<font color=\"{rarity.Color}\" weight=bold>{rarityName} {__result}</font>";
     }
 
     [HarmonyPrefix, HarmonyPatch(nameof(ItemShield.GetHeldItemInfo)), HarmonyPriority(Priority.Last)]
@@ -33,7 +33,7 @@ public static class ItemShieldPatch
         if (inSlot is not { Itemstack: not null })
             return true;
 
-        if (!Rarity.TryGetRarityInfos(inSlot.Itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out var rarityInfos))
             return true;
 
         var itemAttribute = inSlot.Itemstack.ItemAttributes?["shield"];
@@ -47,13 +47,13 @@ public static class ItemShieldPatch
         {
             var num1 = itemAttribute["protectionChance"]["active-projectile"].AsFloat();
             var num2 = itemAttribute["protectionChance"]["passive-projectile"].AsFloat();
-            var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * rarityInfos.Value.ShieldProtectionMultiplier;
+            var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier;
             dsc.AppendLine("<strong>" + Lang.Get("Projectile protection") + "</strong>");
             dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num1), (int)(100.0 * num2), num3.ToString("#.#")));
             dsc.AppendLine();
         }
 
-        var num4 = itemAttribute["damageAbsorption"].AsFloat(2F) * rarityInfos.Value.ShieldProtectionMultiplier;
+        var num4 = itemAttribute["damageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier;
         var num5 = itemAttribute["protectionChance"]["active"].AsFloat();
         var num6 = itemAttribute["protectionChance"]["passive"].AsFloat();
         dsc.AppendLine("<strong>" + Lang.Get("Melee attack protection") + "</strong>");
@@ -76,7 +76,7 @@ public static class ItemShieldPatch
     [HarmonyPostfix, HarmonyPatch(nameof(ItemShield.GetMaxDurability)), HarmonyPriority(Priority.Last)]
     public static void GetMaxDurabilityPatch(ItemShield __instance, ItemStack itemstack, ref int __result)
     {
-        if (!Rarity.TryGetRarityTreeAttribute(itemstack, out var modAttribute))
+        if (!RarityManager.TryGetRarityTreeAttribute(itemstack, out var modAttribute))
             return;
 
         if (!modAttribute.HasAttribute(ModAttributes.Rarity) || !modAttribute.HasAttribute(ModAttributes.MaxDurability))

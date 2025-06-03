@@ -16,12 +16,12 @@ internal static class ServerEventsHandlers
 
     public static void OnEntitySpawn(Entity entity)
     {
-        if (ModCore.Config.EnableTiers || entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
+        if (ModCore.Config.Tier.EnableTiers || entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
             return;
 
-        if (!Rarity.IsSuitableFor(item.Itemstack))
+        if (!RarityManager.IsSuitableFor(item.Itemstack))
             return;
 
-        Rarity.SetRandomRarity(item.Itemstack);
+        RarityManager.SetRandomRarity(item.Itemstack);
     }
 }

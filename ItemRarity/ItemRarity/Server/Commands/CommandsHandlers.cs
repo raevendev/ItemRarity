@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using ItemRarity.Config;
+using ItemRarity.Models;
 using ItemRarity.Packets;
 using Newtonsoft.Json;
 using Vintagestory.API.Common;
@@ -17,24 +18,25 @@ public static class CommandsHandlers
 {
     internal static TextCommandResult HandleSetRarityCommand(TextCommandCallingArgs args)
     {
-        var rarity = args.Parsers[0].GetValue().ToString();
-        if (string.IsNullOrWhiteSpace(rarity))
-        {
-            return TextCommandResult.Error("Missing rarity.");
-        }
+        var rarityKey = args.Parsers[0].GetValue().ToString();
+        if (string.IsNullOrWhiteSpace(rarityKey))
+            return TextCommandResult.Error($"Missing required parameter 'rarityKey'");
+        if (!ModCore.Config.Rarity.TryGetRarity(rarityKey, out var rarity))
+            return TextCommandResult.Error($"Rarity '{rarityKey}' not found");
+
 
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
-        var setRarity = currentItemStack.SetRarity(rarity);
+        currentItemStack.SetRarity(rarity);
 
         activeSlot.MarkDirty();
 
-        return TextCommandResult.Success($"Item rarity has been set to <font color=\"{setRarity.Value.Color}\">{setRarity.Value.Name}</font>");
+        return TextCommandResult.Success($"Item rarity has been set to <font color=\"{rarity.Color}\">{rarity.Name}</font>");
     }
 
     internal static TextCommandResult HandleReloadConfigCommand(ICoreServerAPI serverApi, TextCommandCallingArgs args)
     {
-        ModCore.LoadConfig(serverApi);
+        ModCore.Config = ModConfig.Load(serverApi);
 
         var networkChannel = serverApi.Network.GetChannel(ModCore.ConfigSyncNetChannel);
         var newConfig = new ServerConfigMessage { SerializedConfig = JsonConvert.SerializeObject(ModCore.Config) };
@@ -51,29 +53,33 @@ public static class CommandsHandlers
         if (timeRun <= 0)
             return TextCommandResult.Error("Run count must be greater than 0.");
 
-        var rarities = new List<RarityConfig>(timeRun);
+        var rarities = new List<Rarity>(timeRun);
         float totalWeight;
 
         if (tier != null)
         {
-            if (!ModCore.Config.Tiers.TryGetValue(tier, out var tierData))
-                return TextCommandResult.Error($"Tier '{tier}' not found. Available Tiers: [{string.Join(", ", ModCore.Config.Tiers.Keys.OrderBy(k => k))}]");
+            if (!ModCore.Config.Tier.TryGetTier(tier, out var tierData))
+                return TextCommandResult.Error($"Tier '{tier}' not found. Available Tiers: [{string.Join(", ", ModCore.Config.Tier.Tiers.Keys.OrderBy(k => k))}]");
 
-            totalWeight = tierData.Values.Sum();
+            totalWeight = tierData.Rarities.Sum(r => r.Value);
 
-            for (int i = 0; i < timeRun; i++)
+            for (var i = 0; i < timeRun; i++)
             {
-                var rarity = Rarity.GetRandomRarityByTier(tier).Value;
+                var rarity = RarityManager.GetRandomRarityByTier(tier);
+                if (rarity is null)
+                    continue;
                 rarities.Add(rarity);
             }
         }
         else
         {
-            totalWeight = ModCore.Config.Rarities.Sum(r => r.Value.Rarity);
+            totalWeight = ModCore.Config.Rarity.Rarities.Sum(r => r.Value.Weight);
 
-            for (int i = 0; i < timeRun; i++)
+            for (var i = 0; i < timeRun; i++)
             {
-                var rarity = Rarity.GetRandomRarity().Value;
+                var rarity = RarityManager.GetRandomRarity();
+                if (rarity is null)
+                    continue;
                 rarities.Add(rarity);
             }
         }
@@ -87,12 +93,12 @@ public static class CommandsHandlers
                 float weight;
                 if (tier != null)
                 {
-                    var match = ModCore.Config.Tiers[tier].FirstOrDefault(t => ModCore.Config.Rarities.TryGetValue(t.Key, out var rc) && rc.Name == rarityKey);
+                    var match = ModCore.Config.Tier[tier]!.Rarities.FirstOrDefault(t => ModCore.Config.Rarity.TryGetRarity(t.Key, out var rc) && rc.Name == rarityKey);
                     weight = match.Value;
                 }
                 else
                 {
-                    weight = ModCore.Config.Rarities.Values.FirstOrDefault(r => r.Name == rarityKey)?.Rarity ?? 0;
+                    weight = ModCore.Config.Rarity.Rarities.Values.FirstOrDefault(r => r.Name == rarityKey)?.Weight ?? 0;
                 }
 
                 return new

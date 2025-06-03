@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ItemRarity.Config;
+using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.API.Datastructures;
@@ -8,7 +9,7 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity;
 
-public static class Rarity
+public static class RarityManager
 {
     public const string GuidAttribute = "FE327889-1DD2-430C-BCCA-D94FB132E968"; // Ensure (almost) unique tree attribute key
     public const string RarityAttribute = "rarity";
@@ -23,7 +24,7 @@ public static class Rarity
 
         var collectible = itemStack.Collectible;
 
-        if (collectible.Durability > 0) // Support any item that has durability
+        if (collectible.Durability > 1) // Support any item that has durability
             return true;
 
         return false;
@@ -41,11 +42,11 @@ public static class Rarity
         return treeAttribute != null;
     }
 
-    public static bool TryGetRarityInfos(ItemStack? itemStack, out ItemRarityInfos rarityInfos)
+    public static bool TryGetRarity(ItemStack? itemStack, out Rarity rarityInfos)
     {
         if (itemStack is not { Attributes: not null, Collectible: not null })
         {
-            rarityInfos = default;
+            rarityInfos = null!;
             return false;
         }
 
@@ -53,115 +54,84 @@ public static class Rarity
 
         if (modAttribute is null || !modAttribute.HasAttribute(ModAttributes.Rarity))
         {
-            rarityInfos = default;
+            rarityInfos = null!;
             return false;
         }
 
-        rarityInfos = ModCore.Config[modAttribute.GetString(ModAttributes.Rarity)];
-        return true;
+        return ModCore.Config.Rarity.TryGetRarity(modAttribute.GetString(ModAttributes.Rarity), out rarityInfos);
     }
 
-    /// <summary>
-    /// Returns a random rarity based on the configured rarities and their associated weights.
-    /// </summary>
-    /// <returns>
-    /// A tuple containing the key (rarity name) and value (<see cref="RarityConfig"/>) of the randomly selected rarity.
-    /// </returns>
-    public static ItemRarityInfos GetRandomRarity()
+    public static Rarity? GetRandomRarity()
     {
-        if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
-        {
-            ModLogger.Warning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
-            return (string.Empty, null!);
-        }
-
-        var totalWeight = ModCore.Config.Rarities.Values.Sum(i => i.Rarity);
+        var totalWeight = ModCore.Config.Rarity.Rarities.Values.Sum(i => i.Weight);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
         var cumulativeWeight = 0f;
 
-        foreach (var item in ModCore.Config.Rarities)
+        foreach (var item in ModCore.Config.Rarity.Rarities)
         {
-            cumulativeWeight += item.Value.Rarity;
+            cumulativeWeight += item.Value.Weight;
             if (randomValue < cumulativeWeight)
-                return (item.Key, item.Value);
+                return item.Value;
         }
 
-        var first = ModCore.Config.Rarities.First();
-        return (first.Key, first.Value);
+        return null;
     }
 
-    public static ItemRarityInfos GetRandomRarityByTier(string tier = "")
+    public static Rarity? GetRandomRarityByTier(string tierKey)
     {
-        if (ModCore.Config is { Rarities: null } || ModCore.Config.Rarities.Count == 0)
-        {
-            ModLogger.Warning("No rarities defined or loaded in ModCore.Config.Rarities. Returning default rarity.");
-            return (string.Empty, null!);
-        }
-
-        if (!ModCore.Config.Tiers.TryGetValue(tier, out var tierConfig))
-        {
-            ModLogger.Warning($"No tier defined or loaded for {tier} in ModCore.Config.Tiers. Returning default rarity.");
-            return (string.Empty, null!);
-        }
-
-        var totalWeight = tierConfig.Sum(i => i.Value);
+        var tier = ModCore.Config.Tier.Tiers[tierKey];
+        var totalWeight = tier.Rarities.Sum(i => i.Value);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
         var cumulativeWeight = 0f;
 
-        foreach (var tierRarity in tierConfig)
+        foreach (var tierRarity in tier.Rarities)
         {
             cumulativeWeight += tierRarity.Value;
             if (randomValue < cumulativeWeight)
             {
-                if (!ModCore.Config.Rarities.TryGetValue(tierRarity.Key, out var rarityConfig))
-                {
-                    ModLogger.Warning($"No rarity defined or loaded for {tierRarity.Key} in ModCore.Config.Rarities. Returning default rarity.");
-                    return (string.Empty, null!);
-                }
-
-                return (tierRarity.Key, rarityConfig);
+                if (ModCore.Config.Rarity.TryGetRarity(tierRarity.Key, out var rarityConfig))
+                    return rarityConfig;
+                ModLogger.Warning($"No rarity defined or loaded for {tierRarity.Key}.");
+                return null;
             }
         }
 
-        var first = ModCore.Config.Rarities.First();
-        return (first.Key, first.Value);
+        return null;
     }
 
-    public static ItemRarityInfos SetRarityByTier(ItemStack itemStack, string tier)
+    public static Rarity? SetRarityByTier(ItemStack itemStack, string tier)
     {
         var rarity = GetRandomRarityByTier(tier);
-        return SetRarity(itemStack, rarity.Key);
+        if (rarity is null)
+            return null;
+        SetRarity(itemStack, rarity);
+        return rarity;
     }
 
-    public static ItemRarityInfos SetRandomRarity(ItemStack itemStack)
+    public static Rarity? SetRandomRarity(ItemStack itemStack)
     {
         var rarity = GetRandomRarity();
-        return SetRarity(itemStack, rarity.Key);
+        if (rarity is null)
+            return null;
+        SetRarity(itemStack, rarity);
+        return rarity;
     }
 
-    public static ItemRarityInfos SetRarity(this ItemStack itemStack, string rarity)
+    public static void SetRarity(this ItemStack itemStack, Rarity rarity)
     {
         if (!IsSuitableFor(itemStack, false))
         {
-            ModLogger.Warning("Invalid item. Rarity is not supported for this item");
-            return ModCore.Config[string.Empty];
-        }
-
-        var itemRarity = ModCore.Config[rarity];
-
-        if (itemRarity.Value == null)
-        {
-            ModLogger.Error($"Invalid or null rarity value for rarity key '{rarity}'. Cannot apply rarity bonuses to item {itemStack.GetName()}.");
-            return itemRarity;
+            ModLogger.Warning($"Invalid item. Rarity is not supported for this item {itemStack.Collectible?.Code}");
+            return;
         }
 
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(ModAttributes.Guid);
 
-        modAttributes.SetString(ModAttributes.Rarity, itemRarity.Key); // Use the key as the rarity.
+        modAttributes.SetString(ModAttributes.Rarity, rarity.Key); // Use the key as the rarity.
 
         if (itemStack.Collectible.Durability > 0) // Set max durability
         {
-            modAttributes.SetInt(ModAttributes.MaxDurability, (int)(itemStack.Collectible.GetMaxDurability(itemStack) * itemRarity.Value.DurabilityMultiplier));
+            modAttributes.SetInt(ModAttributes.MaxDurability, (int)(itemStack.Collectible.GetMaxDurability(itemStack) * rarity.DurabilityMultiplier));
         }
 
         if (itemStack.Collectible.MiningSpeed != null && itemStack.Collectible.MiningSpeed.Count > 0) // Set mining speed
@@ -169,19 +139,19 @@ public static class Rarity
             var miningSpeed = modAttributes.GetOrAddTreeAttribute(ModAttributes.MiningSpeed);
             foreach (var kv in itemStack.Collectible.MiningSpeed)
             {
-                miningSpeed.SetFloat(kv.Key.ToString(), kv.Value * GlobalConstants.ToolMiningSpeedModifier * itemRarity.Value.MiningSpeedMultiplier);
+                miningSpeed.SetFloat(kv.Key.ToString(), kv.Value * GlobalConstants.ToolMiningSpeedModifier * rarity.MiningSpeedMultiplier);
             }
         }
 
         if (itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
         {
             var damages = itemStack.Collectible.Attributes["damage"].AsFloat();
-            modAttributes.SetFloat(ModAttributes.PiercingPower, damages * itemRarity.Value.PiercingPowerMultiplier);
+            modAttributes.SetFloat(ModAttributes.PiercingPower, damages * rarity.PiercingPowerMultiplier);
         }
 
         if (itemStack.Collectible.AttackPower > 1f) // Set attack power
         {
-            modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * itemRarity.Value.AttackPowerMultiplier);
+            modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * rarity.AttackPowerMultiplier);
         }
 
         if (itemStack.Collectible is ItemWearable { ProtectionModifiers: not null } wearable && wearable.IsArmor) // Set armor stats
@@ -189,7 +159,7 @@ public static class Rarity
             var protectionModifier = modAttributes.GetOrAddTreeAttribute(ModAttributes.ProtectionModifiers);
 
             protectionModifier.SetFloat(ModAttributes.ArmorFlatDamageReduction,
-                wearable.ProtectionModifiers.FlatDamageReduction * itemRarity.Value.ArmorFlatDamageReductionMultiplier);
+                wearable.ProtectionModifiers.FlatDamageReduction * rarity.ArmorFlatDamageReductionMultiplier);
             protectionModifier.SetFloat(ModAttributes.ArmorRelativeProtection,
                 wearable.ProtectionModifiers.RelativeProtection); // TODO: Support relative protection
 
@@ -197,14 +167,14 @@ public static class Rarity
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierRelativeProtectionLoss.Length; i++)
             {
                 perTierRelativeProtectionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] / itemRarity.Value.ArmorPerTierRelativeProtectionLossMultiplier);
+                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] / rarity.ArmorPerTierRelativeProtectionLossMultiplier);
             }
 
             var perTierFlatDamageRedudctionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.ArmorPerTierFlatDamageReductionLoss);
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss.Length; i++)
             {
                 perTierFlatDamageRedudctionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] / itemRarity.Value.ArmorPerTierFlatDamageProtectionLossMultiplier);
+                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] / rarity.ArmorPerTierFlatDamageProtectionLossMultiplier);
             }
         }
 
@@ -214,14 +184,11 @@ public static class Rarity
             if (itemAttribute != null && itemAttribute.Exists)
             {
                 modAttributes.SetFloat(ModAttributes.ShieldProjectileDamageAbsorption,
-                    itemAttribute["projectileDamageAbsorption"].AsFloat() * itemRarity.Value.ShieldProtectionMultiplier);
+                    itemAttribute["projectileDamageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier);
                 modAttributes.SetFloat(ModAttributes.ShieldDamageAbsorption,
-                    itemAttribute["damageAbsorption"].AsFloat() * itemRarity.Value.ShieldProtectionMultiplier);
+                    itemAttribute["damageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier);
             }
         }
-
-
-        return itemRarity;
     }
 
     public static ProtectionModifiers GetRarityProtectionModifiers(ItemStack itemStack)

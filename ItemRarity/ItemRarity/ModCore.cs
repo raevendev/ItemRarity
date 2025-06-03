@@ -7,6 +7,7 @@ using ItemRarity.Packets;
 using ItemRarity.Recipes;
 using ItemRarity.Server;
 using ItemRarity.Server.Commands;
+using Newtonsoft.Json;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -26,6 +27,7 @@ namespace ItemRarity;
 public sealed class ModCore : ModSystem
 {
     public const string HarmonyId = "itemrarity.patches";
+    public const string ConfigDirectoryName = "ItemRarity";
     public const string ConfigFileName = "itemrarity.json";
     public const string ConfigSyncNetChannel = "itemrarity.configsync";
 
@@ -45,7 +47,7 @@ public sealed class ModCore : ModSystem
             ModLogger.Notification("Successfully patched. Starting mod...");
         }
 
-        LoadConfig(api);
+        Config = ModConfig.Load(api);
 
         GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(ModAttributes.Guid); // Important for TreasureTrader
 
@@ -65,12 +67,14 @@ public sealed class ModCore : ModSystem
         {
             try
             {
-                var config = JsonSerializer.Deserialize<ModConfig>(packet.SerializedConfig);
+                var config = JsonConvert.DeserializeObject<ModConfig>(packet.SerializedConfig);
                 if (config != null)
                 {
                     Config = config;
                     ModLogger.Notification("Received config from server.");
                 }
+                else
+                    ModLogger.Error("Received invalid config from server.");
             }
             catch (Exception e)
             {
@@ -99,7 +103,7 @@ public sealed class ModCore : ModSystem
 
         mainCommand.BeginSubCommand("set")
             .WithDescription("Change the currently held item rarity.")
-            .WithArgs(parsers.Word("rarity", Config.Rarities.Keys.ToArray()))
+            .WithArgs(parsers.Word("rarity", Config.Rarity.Rarities.Keys.ToArray()))
             .HandleWith(CommandsHandlers.HandleSetRarityCommand)
             .EndSubCommand();
 
@@ -123,32 +127,5 @@ public sealed class ModCore : ModSystem
     public override void Dispose()
     {
         HarmonyInstance.UnpatchAll(HarmonyId);
-    }
-
-    /// <summary>
-    /// Loads the configuration for the mod from the configuration file or generates a default configuration if none is found or if an error occurs.
-    /// </summary>
-    /// <param name="api">The core API instance used to load the configuration.</param>
-    public static void LoadConfig(ICoreAPI api)
-    {
-        try
-        {
-            Config = api.LoadModConfig<ModConfig>(ConfigFileName);
-            if (Config != null && Config.Rarities.Any())
-            {
-                api.StoreModConfig(Config, ConfigFileName); // Store it again in case the mod added new properties
-                ModLogger.Notification("Configuration loaded.");
-                return;
-            }
-
-            Config = ModConfig.GetDefaultConfig();
-            api.StoreModConfig(Config, ConfigFileName);
-            ModLogger.Notification("Configuration not found. Generating default configuration.");
-        }
-        catch
-        {
-            ModLogger.Warning("Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration).");
-            Config = ModConfig.GetDefaultConfig();
-        }
     }
 }

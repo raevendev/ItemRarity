@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
+using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
@@ -25,64 +26,64 @@ public static class CollectibleObjectPatch
         if (inSlot is not { Itemstack: not null })
             return;
 
-        if (!Rarity.TryGetRarityInfos(inSlot.Itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out var rarity))
             return;
 
-        FixItemInfos(rarityInfos, inSlot.Itemstack, __instance, dsc);
+        FixItemInfos(rarity, inSlot.Itemstack, __instance, dsc);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPriority(Priority.Last)]
     public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
-        if (!Rarity.TryGetRarityInfos(itemStack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(itemStack, out var rarity))
             return;
 
-        var rarityName = rarityInfos.Value.IgnoreTranslation
-            ? $"[{rarityInfos.Value.Name}]"
-            : Lang.GetWithFallback($"itemrarity:{rarityInfos.Key}", "itemrarity:unknown", rarityInfos.Value.Name);
+        var rarityName = rarity.IgnoreTranslation
+            ? $"[{rarity.Name}]"
+            : Lang.GetWithFallback($"itemrarity:{rarity.Key}", "itemrarity:unknown", rarity.Name);
 
         if (__result.Contains(rarityName))
             return;
 
-        __result = $"<font color=\"{rarityInfos.Value.Color}\" weight=bold>{rarityName} {__result}</font>";
+        __result = $"<font color=\"{rarity.Color}\" weight=bold>{rarityName} {__result}</font>";
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPriority(Priority.Last)]
     public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
-        if (!Rarity.TryGetRarityInfos(itemstack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(itemstack, out var rarityInfos))
             return;
 
-        __result = (int)(__result * rarityInfos.Value.DurabilityMultiplier);
+        __result = (int)(__result * rarityInfos.DurabilityMultiplier);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
-        if (!Rarity.TryGetRarityInfos(withItemStack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(withItemStack, out var rarity))
             return;
 
-        __result *= rarityInfos.Value.AttackPowerMultiplier;
+        __result *= rarity.AttackPowerMultiplier;
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
     public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result, ref ICoreAPI ___api)
     {
-        if (!Rarity.TryGetRarityInfos(itemstack as ItemStack, out var rarityInfos))
+        if (!RarityManager.TryGetRarity(itemstack as ItemStack, out var rarityInfos))
             return;
 
-        __result *= rarityInfos.Value.MiningSpeedMultiplier;
+        __result *= rarityInfos.MiningSpeedMultiplier;
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
     public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
     {
-        if (outputSlot is not { Itemstack: not null } || !Rarity.IsSuitableFor(outputSlot.Itemstack))
+        if (outputSlot is not { Itemstack: not null } || !RarityManager.IsSuitableFor(outputSlot.Itemstack))
             return;
 
-        if (!ModCore.Config.EnableTiers)
-            Rarity.SetRandomRarity(outputSlot.Itemstack);
+        if (!ModCore.Config.Tier.EnableTiers)
+            RarityManager.SetRandomRarity(outputSlot.Itemstack);
         else
         {
             var tierItem = slots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
@@ -93,7 +94,7 @@ public static class CollectibleObjectPatch
                 return;
             }
 
-            Rarity.SetRarityByTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariant().ToUpper());
+            RarityManager.SetRarityByTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariant().ToUpper());
 
             foreach (var slot in slots.Where(s => s.Itemstack?.Collectible?.Code == outputSlot.Itemstack?.Collectible?.Code))
                 slot.TakeOut(1);
@@ -106,7 +107,7 @@ public static class CollectibleObjectPatch
     {
     }
 
-    public static void FixItemInfos(ItemRarityInfos rarityInfos, ItemStack itemStack, CollectibleObject collectible, StringBuilder sb)
+    public static void FixItemInfos(Rarity rarityInfos, ItemStack itemStack, CollectibleObject collectible, StringBuilder sb)
     {
         if (itemStack.Collectible.MiningSpeed != null && itemStack.Collectible.MiningSpeed.Count > 0)
         {
@@ -139,7 +140,7 @@ public static class CollectibleObjectPatch
                         sb.Append(", ");
                     sb.Append(Lang.Get(miningSpeed.Key.ToString()))
                         .Append(' ')
-                        .Append((miningSpeed.Value * rarityInfos.Value.MiningSpeedMultiplier).ToString("#.#"))
+                        .Append((miningSpeed.Value * rarityInfos.MiningSpeedMultiplier).ToString("#.#"))
                         .Append('x');
                 }
 
