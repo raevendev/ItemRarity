@@ -1,6 +1,8 @@
 # 🪄 Item Rarity Mod
 
-Add excitement and variety to your **Vintage Story** experience with the **Item Rarity Mod**! This mod introduces a **rarity system** for tools, affecting their stats and adding special effects. Every time you craft or find a tool, it has a chance to receive a rarity making each item feel unique and powerful!
+Add excitement and variety to your **Vintage Story** experience with the **Item Rarity Mod**! This mod introduces a *
+*rarity system** for tools, affecting their stats and adding special effects. Every time you craft or find a tool, it
+has a chance to receive a rarity making each item feel unique and powerful!
 
 ---
 
@@ -43,42 +45,46 @@ Rarities can also grant **magical effects**. These effects can add dramatic new 
 
 ## 🛠️ Configuration
 
-Customize rarities to match your server's balance or your personal gameplay style. Each rarity level supports detailed customization.
+Customize rarities to match your server's balance or your personal gameplay style. Each rarity level supports detailed
+customization.
 
 ### 📄 Example Configuration
 
 ```json
 "unique": {
-  "Name": "Unique",
-  "Color": "#EC290E",
-  "Rarity": 2.0,
-  "DurabilityMultiplier": 2.0,
-  "MiningSpeedMultiplier": 1.9,
-  "AttackPowerMultiplier": 1.9,
-  "PiercingPowerMultiplier": 1.9,
-  "Effects": ["Thor"],
-  "SupportedItems": ["*"]
+"Name": "Unique",
+"Color": "#EC290E",
+"Weight": 2.0,
+"DurabilityMultiplier": 2.0,
+"MiningSpeedMultiplier": 1.9,
+"AttackPowerMultiplier": 1.9,
+"PiercingPowerMultiplier": 1.9,
+"Effects": ["Thor"],
+"SupportedItems": ["*"]
 }
 ```
 
 ### 🧾 Explanation of Fields
 
-| Field                     | Description                                                                           |
-|---------------------------|---------------------------------------------------------------------------------------|
-| `Name`                    | Display name of the rarity (can be localized).                                        |
-| `Color`                   | Hex color code shown in item display.                                                 |
-| `Rarity`                  | **Weight** used for selection. Higher = more common. *(See "How Rarity Works" below)* |
-| `DurabilityMultiplier`    | Affects how long tools last.                                                          |
-| `MiningSpeedMultiplier`   | Affects block-breaking speed.                                                         |
-| `AttackPowerMultiplier`   | Affects melee damage.                                                                 |
-| `PiercingPowerMultiplier` | Affects piercing (armor-bypassing) damage.                                            |
-| `Effects`                 | List of special abilities. Example: `["Thor"]`.                                       |
+| Field                     | Description                                                                             |
+|---------------------------|-----------------------------------------------------------------------------------------|
+| `Key`                     | Key used by the mod to identify rarities. *BE CAREFUL CHANGING THIS CAN CAUSE PROBLEMS* |
+| `Name`                    | Display name of the rarity (can be localized).                                          |
+| `Color`                   | Hex color code shown in item display.                                                   |
+| `Weight`                  | **Weight** used for selection. Higher = more common. *(See "How Rarity Works" below)*   |
+| `DurabilityMultiplier`    | Affects how long tools last.                                                            |
+| `MiningSpeedMultiplier`   | Affects block-breaking speed.                                                           |
+| `AttackPowerMultiplier`   | Affects melee damage.                                                                   |
+| `PiercingPowerMultiplier` | Affects piercing (armor-bypassing) damage.                                              |
+| `Effects`                 | List of special abilities. Example: `["Thor"]`.                                         |
 
 ---
 
 ## 🎯 How Rarity Works
 
-The `Rarity` value in the config is used as a **weight**, not a percentage. You **do not** need to make them add up to 100.
+The `Rarity` value in the config is used as a **weight**, not a percentage. You **do not** need to make them add up to
+
+100.
 
 ### ✅ Key Points:
 
@@ -87,10 +93,10 @@ The `Rarity` value in the config is used as a **weight**, not a percentage. You 
 * Example:
 
   ```json
-  "Common":   { "Rarity": 80.0 },
-  "Uncommon": { "Rarity": 15.0 },
-  "Rare":     { "Rarity": 4.0 },
-  "Legendary":{ "Rarity": 1.0 }
+  "Common":   { "Weight": 80.0 },
+  "Uncommon": { "Weight": 15.0 },
+  "Rare":     { "Weight": 4.0 },
+  "Legendary":{ "Weight": 1.0 }
   ```
 
   Here, **Common** has an 80% chance because 80 / (80 + 15 + 4 + 1) = 0.80
@@ -102,10 +108,11 @@ The `Rarity` value in the config is used as a **weight**, not a percentage. You 
 Just add a new entry in the config following the same format:
 
 ```json
-"epic": {
+{
+  "Key": "epic",
   "Name": "Epic",
   "Color": "#A020F0",
-  "Rarity": 0.5,
+  "Weight": 0.5,
   "DurabilityMultiplier": 2.5,
   "MiningSpeedMultiplier": 2.0,
   "AttackPowerMultiplier": 2.2,
