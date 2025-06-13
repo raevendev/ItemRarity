@@ -165,7 +165,7 @@ public static class RarityManager
             modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * rarity.AttackPowerMultiplier);
         }
 
-        if (itemStack.Collectible is ItemWearable { ProtectionModifiers: not null } wearable && wearable.IsArmor) // Set armor stats
+        if (itemStack.Collectible is ItemWearable { ProtectionModifiers: not null, IsArmor: true } wearable) // Set armor stats
         {
             var protectionModifier = modAttributes.GetOrAddTreeAttribute(ModAttributes.ProtectionModifiers);
 
@@ -192,7 +192,7 @@ public static class RarityManager
         if (itemStack.Collectible is ItemShield shield)
         {
             var itemAttribute = itemStack.ItemAttributes?["shield"];
-            if (itemAttribute != null && itemAttribute.Exists)
+            if (itemAttribute is { Exists: true })
             {
                 modAttributes.SetFloat(ModAttributes.ShieldProjectileDamageAbsorption,
                     itemAttribute["projectileDamageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier);
@@ -214,8 +214,10 @@ public static class RarityManager
             treeAttribute.HasAttribute(ModAttributes.ProtectionModifiers))
         {
             var protAttribute = treeAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
-            var protModifiers = new ProtectionModifiers();
-            protModifiers.FlatDamageReduction = protAttribute.GetFloat(ModAttributes.ArmorFlatDamageReduction);
+            var protModifiers = new ProtectionModifiers
+            {
+                FlatDamageReduction = protAttribute.GetFloat(ModAttributes.ArmorFlatDamageReduction)
+            };
             //protModifiers.RelativeProtection = protAttribute.GetFloat(ModAttributes.ArmorRelativeProtection);
 
             var perTierRelativeProtectionLossAttribute = protAttribute.GetTreeAttribute(ModAttributes.ArmorPerTierRelativeProtectionLoss);

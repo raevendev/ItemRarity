@@ -53,7 +53,7 @@ public static class ItemKnifePatch
                                                           * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
             return;
 
-        entityBehaviour.SetHarvested(byEntity is EntityPlayer entityPlayer ? entityPlayer.Player : default);
+        entityBehaviour.SetHarvested(byEntity is EntityPlayer entityPlayer ? entityPlayer.Player : null);
         slot.Itemstack?.Collectible.DamageItem(byEntity.World, byEntity, slot, 3);
     }
 }
