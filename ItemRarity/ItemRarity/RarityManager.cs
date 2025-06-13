@@ -129,6 +129,17 @@ public static class RarityManager
 
         modAttributes.SetString(ModAttributes.Rarity, rarity.Key); // Use the key as the rarity.
 
+        if (rarity.CustomAttributes is { Count: > 0 })
+        {
+            foreach (var customAttribute in rarity.CustomAttributes)
+            {
+                if (customAttribute.Key[0] == '$') // If $ is the first char, we want to save the attribute within the mod's attribute section.
+                    modAttributes.SetFloat(customAttribute.Key[1..], customAttribute.Value);
+                else
+                    itemStack.Attributes.SetFloat(customAttribute.Key, customAttribute.Value);
+            }
+        }
+
         if (itemStack.Collectible.Durability > 0) // Set max durability
         {
             modAttributes.SetInt(ModAttributes.MaxDurability, (int)(itemStack.Collectible.GetMaxDurability(itemStack) * rarity.DurabilityMultiplier));

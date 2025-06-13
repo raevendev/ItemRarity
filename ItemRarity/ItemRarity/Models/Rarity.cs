@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace ItemRarity.Models;
@@ -47,10 +48,13 @@ public sealed class Rarity
     [JsonProperty(Order = 11)]
     public float ShieldProtectionMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 30)]
+    [JsonProperty(Order = 99)]
+    public Dictionary<string, float> CustomAttributes { get; init; } = new();
+
+    [JsonProperty(Order = 100)]
     public string[] Effects { get; init; } = [];
 
-    [JsonProperty(Order = 31)]
+    [JsonProperty(Order = 101)]
     public bool IgnoreTranslation { get; init; } = false;
 
     public bool HasEffect(string value)
