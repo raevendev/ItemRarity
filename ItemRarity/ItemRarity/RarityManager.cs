@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using ItemRarity.Config;
 using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;

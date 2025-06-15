@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ItemRarity.Config;
 using ItemRarity.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,8 +14,8 @@ public sealed class TiersJsonConverter : JsonConverter<Dictionary<string, Tier>>
             return;
         writer.WriteStartArray();
 
-        foreach (var rarityConfig in value.Values)
-            serializer.Serialize(writer, rarityConfig);
+        foreach (var tierConfig in value.Values)
+            serializer.Serialize(writer, tierConfig);
 
         writer.WriteEndArray();
     }

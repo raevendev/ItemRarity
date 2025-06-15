@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ItemRarity.Config;
 using ItemRarity.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
