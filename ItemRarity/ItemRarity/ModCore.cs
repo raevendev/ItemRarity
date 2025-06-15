@@ -27,8 +27,6 @@ namespace ItemRarity;
 public sealed class ModCore : ModSystem
 {
     public const string HarmonyId = "itemrarity.patches";
-    public const string ConfigDirectoryName = "ItemRarity";
-    public const string ConfigFileName = "itemrarity.json";
     public const string ConfigSyncNetChannel = "itemrarity.configsync";
 
     public static ModConfig Config = ModConfig.GetDefaultConfig();
@@ -71,10 +69,10 @@ public sealed class ModCore : ModSystem
                 if (config != null)
                 {
                     Config = config;
-                    ModLogger.Notification("Received config from server.");
+                    api.Logger.Notification("Received config from server.");
                 }
                 else
-                    ModLogger.Error("Received invalid config from server.");
+                    api.Logger.Error("Received invalid config from server.");
             }
             catch (Exception e)
             {
