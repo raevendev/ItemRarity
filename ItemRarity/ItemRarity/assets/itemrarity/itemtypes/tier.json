@@ -1,8 +1,29 @@
 ﻿{
   "code": "tier",
   "class": "ItemTier",
-  "variantgroups": [ { "code": "type", "states": ["i", "ii", "iii", "iv", "v", "s"] } ],
+  "variantgroups": [{"code": "type", "states": ["i", "ii", "iii", "iv", "v", "s"]}],
   "heldTpIdleAnimation": "holdbothhands",
-  "creativeinventory": { "general": ["*"], "items": ["*"] },
-  "storageFlags": 257
+  "creativeinventory": {"general": ["*"], "items": ["*"]},
+  "maxstacksize": 16,
+  "shape": {"base": "item/tier"},
+  "textures": {"tier": {"base": "tier-{type}"}},
+
+  "guiTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 0.5, "y": -5, "z": 3},
+    "origin": { "x": 0.44, "y": 0.48, "z": 0.5 },
+    "scale": 1.8
+  },
+  "groundTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": 90, "y": 0, "z": 0 },
+    "origin": { "x": 0.5, "y": 0, "z": 0.58 },
+    "scaleXyz": { "x": -2, "y": 2, "z": 2 }
+  },
+  "tpHandTransform": {
+    "translation": { "x": 0, "y": 0, "z": 0 },
+    "rotation": { "x": -75, "y": -160, "z": 72 },
+    "origin": { "x": -0.28, "y": -0.24, "z": 0.4 },
+    "scaleXyz": { "x": -0.38, "y": 0.38, "z": 0.38 }
+  }
 }
