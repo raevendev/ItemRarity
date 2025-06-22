@@ -60,7 +60,7 @@ public static class CollectibleObjectPatch
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
-        if (!RarityManager.TryGetRarity(withItemStack, out var rarity))
+        if (__instance is ItemWearable || !RarityManager.TryGetRarity(withItemStack, out var rarity))
             return;
 
         __result *= rarity.AttackPowerMultiplier;
