@@ -12,7 +12,7 @@ public static class GridRecipePatch
     [HarmonyPrefix, HarmonyPatch("MatchesShapeLess"), HarmonyPriority(Priority.Last)]
     public static bool MatchesShapeLessPatch(GridRecipe __instance, ref bool __result, ItemSlot[] suppliedSlots, int gridWidth)
     {
-        if (!__instance.Name.Path.Contains("tier-recipe-output"))
+        if (!ModCore.Config.Tier.EnableTiers || !__instance.Name.Path.Contains("tier-recipe-output"))
             return true;
 
         var num = suppliedSlots.Length / gridWidth;
