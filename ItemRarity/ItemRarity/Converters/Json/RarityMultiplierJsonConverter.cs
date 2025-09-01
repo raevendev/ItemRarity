@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using ItemRarity.Models;
 using Newtonsoft.Json;
 
@@ -37,17 +39,21 @@ public sealed class RarityMultiplierJsonConverter : JsonConverter<RarityMultipli
             }
             case JsonToken.StartArray:
             {
-                reader.Read();
-                var min = Convert.ToSingle(reader.Value, CultureInfo.InvariantCulture);
+                var values = new List<float>();
 
-                reader.Read();
-                var max = Convert.ToSingle(reader.Value, CultureInfo.InvariantCulture);
-
-                while (reader.TokenType != JsonToken.EndArray && reader.Read())
+                while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                 {
+                    if (reader.TokenType is JsonToken.Float or JsonToken.Integer)
+                    {
+                        values.Add(Convert.ToSingle(reader.Value, CultureInfo.InvariantCulture));
+                    }
                 }
 
-                return new RarityMultiplier { Min = min, Max = max };
+                return values.Count switch
+                {
+                    1 => new RarityMultiplier { Min = values[0], Max = values[0] },
+                    _ => new RarityMultiplier { Min = values.Min(), Max = values.Max() },
+                };
             }
             default:
                 throw new JsonSerializationException($"Unexpected token {reader.TokenType}");

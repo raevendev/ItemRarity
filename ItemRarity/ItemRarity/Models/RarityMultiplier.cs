@@ -29,7 +29,6 @@ public sealed class RarityMultiplier
         return values.Length switch
         {
             1 => new RarityMultiplier { Min = values[0], Max = values[0] },
-            2 => new RarityMultiplier { Min = values[0], Max = values[1] },
             _ => new RarityMultiplier { Min = values.Min(), Max = values.Max() }
         };
     }
