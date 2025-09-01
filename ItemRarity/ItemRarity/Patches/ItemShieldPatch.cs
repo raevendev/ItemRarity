@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using HarmonyLib;
+using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
@@ -47,13 +48,13 @@ public static class ItemShieldPatch
         {
             var num1 = itemAttribute["protectionChance"]["active-projectile"].AsFloat();
             var num2 = itemAttribute["protectionChance"]["passive-projectile"].AsFloat();
-            var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier;
+            var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier.Random;
             dsc.AppendLine("<strong>" + Lang.Get("Projectile protection") + "</strong>");
             dsc.AppendLine(Lang.Get("shield-stats", (int)(100.0 * num1), (int)(100.0 * num2), num3.ToString("#.#")));
             dsc.AppendLine();
         }
 
-        var num4 = itemAttribute["damageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier;
+        var num4 = itemAttribute["damageAbsorption"].AsFloat(2F) * rarityInfos.ShieldProtectionMultiplier.Random;
         var num5 = itemAttribute["protectionChance"]["active"].AsFloat();
         var num6 = itemAttribute["protectionChance"]["passive"].AsFloat();
         dsc.AppendLine("<strong>" + Lang.Get("Melee attack protection") + "</strong>");

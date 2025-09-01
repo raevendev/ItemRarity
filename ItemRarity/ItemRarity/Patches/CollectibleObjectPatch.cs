@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
+using ItemRarity.Extensions;
 using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -54,7 +55,7 @@ public static class CollectibleObjectPatch
         if (!RarityManager.TryGetRarity(itemstack, out var rarityInfos))
             return;
 
-        __result = (int)(__result * rarityInfos.DurabilityMultiplier);
+        __result = (int)(__result * rarityInfos.DurabilityMultiplier.Max); //TODO: Replace
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
@@ -63,7 +64,7 @@ public static class CollectibleObjectPatch
         if (__instance is ItemWearable || !RarityManager.TryGetRarity(withItemStack, out var rarity))
             return;
 
-        __result *= rarity.AttackPowerMultiplier;
+        __result *= rarity.AttackPowerMultiplier.Random;
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
@@ -73,7 +74,7 @@ public static class CollectibleObjectPatch
         if (!RarityManager.TryGetRarity(itemstack as ItemStack, out var rarityInfos))
             return;
 
-        __result *= rarityInfos.MiningSpeedMultiplier;
+        __result *= rarityInfos.MiningSpeedMultiplier.Random;
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
@@ -140,7 +141,7 @@ public static class CollectibleObjectPatch
                         sb.Append(", ");
                     sb.Append(Lang.Get(miningSpeed.Key.ToString()))
                         .Append(' ')
-                        .Append((miningSpeed.Value * rarityInfos.MiningSpeedMultiplier).ToString("#.#"))
+                        .Append((miningSpeed.Value * rarityInfos.MiningSpeedMultiplier.Random).ToString("#.#")) // TODO: Show real stat (need to save applied value)
                         .Append('x');
                 }
 

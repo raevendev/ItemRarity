@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using HarmonyLib;
+using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
@@ -28,7 +29,7 @@ public static class ItemSpearPatch
         if (inSlot.Itemstack.Collectible.Attributes != null)
             piercingDamages = inSlot.Itemstack.Collectible.Attributes["damage"].AsFloat();
 
-        piercingDamages *= rarity.PiercingPowerMultiplier;
+        piercingDamages *= rarity.PiercingPowerMultiplier.Random;
 
         dsc.AppendLine(piercingDamages + Lang.Get("piercing-damage-thrown"));
 

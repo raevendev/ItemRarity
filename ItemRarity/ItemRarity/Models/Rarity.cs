@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ItemRarity.Converters.Json;
 using Newtonsoft.Json;
 
 namespace ItemRarity.Models;
@@ -21,32 +22,32 @@ public sealed class Rarity
     [JsonProperty(Order = 3)]
     public required float Weight { get; init; }
 
-    [JsonProperty(Order = 4)]
-    public float DurabilityMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 4), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier DurabilityMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 5)]
-    public float MiningSpeedMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 5), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier MiningSpeedMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 6)]
-    public float AttackPowerMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 6), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier AttackPowerMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 7)]
-    public float PiercingPowerMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 7), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier PiercingPowerMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 8)]
-    public float ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 8), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 9)]
-    public float ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 9), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
 
     [JsonIgnore]
-    public float ArmorRelativeProtectionMultiplier { get; init; } = 1F;
+    public RarityMultiplier ArmorRelativeProtectionMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 10)]
-    public float ArmorPerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 10), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier ArmorPerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 11)]
-    public float ShieldProtectionMultiplier { get; init; } = 1F;
+    [JsonProperty(Order = 11), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier ShieldProtectionMultiplier { get; init; } = 1F;
 
     [JsonProperty(Order = 99)]
     public Dictionary<string, float> CustomAttributes { get; init; } = new();

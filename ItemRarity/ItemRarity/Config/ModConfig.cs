@@ -64,15 +64,15 @@ public sealed class ModConfig
                 Name = "Cursed",
                 Color = "#606060",
                 Weight = 8,
-                DurabilityMultiplier = 0.5F,
-                MiningSpeedMultiplier = 0.5F,
-                AttackPowerMultiplier = 0.5F,
-                PiercingPowerMultiplier = 0.5F,
-                ArmorFlatDamageReductionMultiplier = 0.5F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.5F,
-                ArmorRelativeProtectionMultiplier = 0.5F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 0.5F,
-                ShieldProtectionMultiplier = 0.5F
+                DurabilityMultiplier = new[] { 0.2F, 0.9F },
+                MiningSpeedMultiplier = new[] { 0.2F, 0.9F },
+                AttackPowerMultiplier = new[] { 0.2F, 0.9F },
+                PiercingPowerMultiplier = new[] { 0.2F, 0.9F },
+                ArmorFlatDamageReductionMultiplier = new[] { 0.2F, 0.9F },
+                ArmorPerTierFlatDamageProtectionLossMultiplier = new[] { 0.2F, 0.9F },
+                ArmorRelativeProtectionMultiplier = new[] { 0.2F, 0.9F },
+                ArmorPerTierRelativeProtectionLossMultiplier = new[] { 0.2F, 0.9F },
+                ShieldProtectionMultiplier = new[] { 0.2F, 0.9F },
             },
 
             new()
@@ -122,7 +122,7 @@ public sealed class ModConfig
                 ArmorRelativeProtectionMultiplier = 1.2F,
                 ArmorPerTierRelativeProtectionLossMultiplier = 1.2F,
                 ShieldProtectionMultiplier = 1.2F
-            }, 
+            },
             new()
             {
                 Key = "epic",
@@ -172,7 +172,6 @@ public sealed class ModConfig
                 ShieldProtectionMultiplier = 1.9F,
                 Effects = ["Thor"]
             }
-            
         ];
 
         Tier[] tiers =

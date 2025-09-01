@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ItemRarity.Extensions;
 using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -141,7 +142,8 @@ public static class RarityManager
 
         if (itemStack.Collectible.Durability > 0) // Set max durability
         {
-            modAttributes.SetInt(ModAttributes.MaxDurability, (int)(itemStack.Collectible.GetMaxDurability(itemStack) * rarity.DurabilityMultiplier));
+            modAttributes.SetInt(ModAttributes.MaxDurability,
+                (int)(itemStack.Collectible.GetMaxDurability(itemStack) * rarity.DurabilityMultiplier.Max)); // TODO: REPLACE
         }
 
         if (itemStack.Collectible.MiningSpeed != null && itemStack.Collectible.MiningSpeed.Count > 0) // Set mining speed
@@ -149,19 +151,19 @@ public static class RarityManager
             var miningSpeed = modAttributes.GetOrAddTreeAttribute(ModAttributes.MiningSpeed);
             foreach (var kv in itemStack.Collectible.MiningSpeed)
             {
-                miningSpeed.SetFloat(kv.Key.ToString(), kv.Value * GlobalConstants.ToolMiningSpeedModifier * rarity.MiningSpeedMultiplier);
+                miningSpeed.SetFloat(kv.Key.ToString(), kv.Value * GlobalConstants.ToolMiningSpeedModifier * rarity.MiningSpeedMultiplier.Random);
             }
         }
 
         if (itemStack.Collectible.Attributes.KeyExists("damage")) // Set piercing damages
         {
             var damages = itemStack.Collectible.Attributes["damage"].AsFloat();
-            modAttributes.SetFloat(ModAttributes.PiercingPower, damages * rarity.PiercingPowerMultiplier);
+            modAttributes.SetFloat(ModAttributes.PiercingPower, damages * rarity.PiercingPowerMultiplier.Random);
         }
 
         if (itemStack.Collectible.AttackPower > 1f) // Set attack power
         {
-            modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * rarity.AttackPowerMultiplier);
+            modAttributes.SetFloat(ModAttributes.AttackPower, itemStack.Collectible.AttackPower * rarity.AttackPowerMultiplier.Random);
         }
 
         if (itemStack.Collectible is ItemWearable { ProtectionModifiers: not null, IsArmor: true } wearable) // Set armor stats
@@ -169,7 +171,7 @@ public static class RarityManager
             var protectionModifier = modAttributes.GetOrAddTreeAttribute(ModAttributes.ProtectionModifiers);
 
             protectionModifier.SetFloat(ModAttributes.ArmorFlatDamageReduction,
-                wearable.ProtectionModifiers.FlatDamageReduction * rarity.ArmorFlatDamageReductionMultiplier);
+                wearable.ProtectionModifiers.FlatDamageReduction * rarity.ArmorFlatDamageReductionMultiplier.Random);
             protectionModifier.SetFloat(ModAttributes.ArmorRelativeProtection,
                 wearable.ProtectionModifiers.RelativeProtection); // TODO: Support relative protection
 
@@ -177,14 +179,14 @@ public static class RarityManager
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierRelativeProtectionLoss.Length; i++)
             {
                 perTierRelativeProtectionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] / rarity.ArmorPerTierRelativeProtectionLossMultiplier);
+                    wearable.ProtectionModifiers.PerTierRelativeProtectionLoss[i] / rarity.ArmorPerTierRelativeProtectionLossMultiplier.Random);
             }
 
             var perTierFlatDamageRedudctionLossAttribute = protectionModifier.GetOrAddTreeAttribute(ModAttributes.ArmorPerTierFlatDamageReductionLoss);
             for (var i = 0; i < wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss.Length; i++)
             {
                 perTierFlatDamageRedudctionLossAttribute.SetFloat(i.ToString(),
-                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] / rarity.ArmorPerTierFlatDamageProtectionLossMultiplier);
+                    wearable.ProtectionModifiers.PerTierFlatDamageReductionLoss[i] / rarity.ArmorPerTierFlatDamageProtectionLossMultiplier.Random);
             }
         }
 
@@ -194,9 +196,9 @@ public static class RarityManager
             if (itemAttribute is { Exists: true })
             {
                 modAttributes.SetFloat(ModAttributes.ShieldProjectileDamageAbsorption,
-                    itemAttribute["projectileDamageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier);
+                    itemAttribute["projectileDamageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier.Random);
                 modAttributes.SetFloat(ModAttributes.ShieldDamageAbsorption,
-                    itemAttribute["damageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier);
+                    itemAttribute["damageAbsorption"].AsFloat() * rarity.ShieldProtectionMultiplier.Random);
             }
         }
     }
