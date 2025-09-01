@@ -8,7 +8,7 @@ namespace ItemRarity.Config;
 public sealed class TiersConfig
 {
     [JsonProperty(Order = 0)]
-    public bool EnableTiers { get; set; } = false;
+    public bool EnableTiers { get; set; }
 
     [JsonProperty(Order = 50), JsonConverter(typeof(TiersJsonConverter))]
     public Dictionary<string, Tier> Tiers { get; init; } = new();

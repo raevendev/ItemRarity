@@ -12,6 +12,7 @@ public sealed class RaritiesJsonConverter : JsonConverter<Dictionary<string, Rar
     {
         if (value == null || value.Count == 0)
             return;
+        
         writer.WriteStartArray();
 
         foreach (var rarityConfig in value.Values)

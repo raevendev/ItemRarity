@@ -47,7 +47,7 @@ public sealed class ModCore : ModSystem
         Config = ModConfig.Load(api);
 
         // Important for item comparison to ignore attributes e.g TreasureTrader for the story map.
-        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(ModAttributes.Guid);
+        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(AttributesManager.ModAttributeId);
 
         // Mods/Players may add custom attributes, if theses are attributes added but not in the mod attribute tree we have to ignore them too.
         foreach (var rarity in Config.Rarity.Rarities.Values)

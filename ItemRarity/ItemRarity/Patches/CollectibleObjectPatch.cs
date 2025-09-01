@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
-using ItemRarity.Extensions;
 using ItemRarity.Models;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
@@ -55,7 +54,7 @@ public static class CollectibleObjectPatch
         if (!RarityManager.TryGetRarity(itemstack, out var rarityInfos))
             return;
 
-        __result = (int)(__result * rarityInfos.DurabilityMultiplier.Max); //TODO: Replace
+        __result = (int)(__result * AttributesManager.GetStatsMultiplier(itemstack, AttributesManager.MaxDurabilityMultiplier));
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPriority(Priority.Last)]
@@ -64,7 +63,7 @@ public static class CollectibleObjectPatch
         if (__instance is ItemWearable || !RarityManager.TryGetRarity(withItemStack, out var rarity))
             return;
 
-        __result *= rarity.AttackPowerMultiplier.Random;
+        __result *= AttributesManager.GetStatsMultiplier(withItemStack, AttributesManager.AttackPowerMultiplier);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPriority(Priority.Last)]
@@ -74,7 +73,7 @@ public static class CollectibleObjectPatch
         if (!RarityManager.TryGetRarity(itemstack as ItemStack, out var rarityInfos))
             return;
 
-        __result *= rarityInfos.MiningSpeedMultiplier.Random;
+        __result *= AttributesManager.GetStatsMultiplier((itemstack as ItemStack)!, AttributesManager.MiningSpeedMultiplier);
     }
 
     [HarmonyPostfix, HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
@@ -118,6 +117,7 @@ public static class CollectibleObjectPatch
 
             var miningSpeedLine = Lang.Get("item-tooltip-miningspeed") ?? string.Empty;
             var foundLine = Array.FindIndex(lines, line => line.StartsWith(miningSpeedLine, StringComparison.Ordinal));
+            var miningSpeedMul = AttributesManager.GetStatsMultiplier(itemStack, AttributesManager.MiningSpeedMultiplier);
 
             for (var i = 0; i < lines.Length; i++)
             {
@@ -141,7 +141,7 @@ public static class CollectibleObjectPatch
                         sb.Append(", ");
                     sb.Append(Lang.Get(miningSpeed.Key.ToString()))
                         .Append(' ')
-                        .Append((miningSpeed.Value * rarityInfos.MiningSpeedMultiplier.Random).ToString("#.#")) // TODO: Show real stat (need to save applied value)
+                        .Append((miningSpeed.Value * miningSpeedMul).ToString("#.#"))
                         .Append('x');
                 }
 

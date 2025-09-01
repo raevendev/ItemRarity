@@ -40,10 +40,10 @@ public sealed class Rarity
     [JsonProperty(Order = 9), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
 
-    [JsonIgnore]
+    [JsonIgnore, JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorRelativeProtectionMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 10), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonIgnore, JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorPerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
 
     [JsonProperty(Order = 11), JsonConverter(typeof(RarityMultiplierJsonConverter))]
@@ -56,7 +56,7 @@ public sealed class Rarity
     public string[] Effects { get; init; } = [];
 
     [JsonProperty(Order = 101)]
-    public bool IgnoreTranslation { get; init; } = false;
+    public bool IgnoreTranslation { get; init; }
 
     public bool HasEffect(string value)
     {

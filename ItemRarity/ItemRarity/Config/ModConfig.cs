@@ -48,7 +48,7 @@ public sealed class ModConfig
         }
     }
 
-    public static void Save(ICoreAPI api, ModConfig config)
+    private static void Save(ICoreAPI api, ModConfig config)
     {
         api.StoreModConfig(config.Rarity, ConfigRaritiesFileName);
         api.StoreModConfig(config.Tier, ConfigTiersFileName);
@@ -74,7 +74,6 @@ public sealed class ModConfig
                 ArmorPerTierRelativeProtectionLossMultiplier = new[] { 0.2F, 0.9F },
                 ShieldProtectionMultiplier = new[] { 0.2F, 0.9F },
             },
-
             new()
             {
                 Key = "common",

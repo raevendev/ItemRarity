@@ -82,17 +82,16 @@ public static class ModSystemWearableStatsPatch
             return false;
         }
 
-        // ReSharper disable once RedundantAssignment
         var protectionModifiers = (itemslot.Itemstack.Item as ItemWearable)!.ProtectionModifiers;
-        protectionModifiers = RarityManager.GetRarityProtectionModifiers(itemslot.Itemstack); // Our own protection modifiers
-
         var damageTier = dmgSource.DamageTier;
-        var flatDamageReduction = protectionModifiers.FlatDamageReduction;
+        var flatDamageReduction = protectionModifiers.FlatDamageReduction *
+                                  AttributesManager.GetStatsMultiplier(itemslot.Itemstack, AttributesManager.ArmorFlatDamageReductionMultiplier); // MODIFIED
         var relativeProtection = protectionModifiers.RelativeProtection;
         for (var index = 1; index <= damageTier; ++index)
         {
             var num4 = index > protectionModifiers.ProtectionTier ? 1 : 0;
             var num5 = num4 != 0 ? protectionModifiers.PerTierFlatDamageReductionLoss[1] : protectionModifiers.PerTierFlatDamageReductionLoss[0];
+            num5 /= AttributesManager.GetStatsMultiplier(itemslot.Itemstack, AttributesManager.ArmorPerTierFlatDamageProtectionLossMultiplier); // MODIFIED
             var num6 = num4 != 0 ? protectionModifiers.PerTierRelativeProtectionLoss[1] : protectionModifiers.PerTierRelativeProtectionLoss[0];
             if (num4 != 0 && protectionModifiers.HighDamageTierResistant)
             {
@@ -161,13 +160,14 @@ public static class ModSystemWearableStatsPatch
                 if (valueOrDefault && itemAttribute["protectionChance"][key1 + "-projectile"].Exists)
                 {
                     num3 = itemAttribute["protectionChance"][key1 + "-projectile"].AsFloat();
-                    num4 = ModAttributes.GetShieldProjectileDamageAbsorption(itemslot.Itemstack!, itemAttribute["projectileDamageAbsorption"].AsFloat(2F));
-                    // TODO 
+                    num4 = itemAttribute["projectileDamageAbsorption"].AsFloat(2f) *
+                           AttributesManager.GetStatsMultiplier(itemslot.Itemstack, AttributesManager.ShieldProjectileDamageAbsorptionMultiplier); // MODIFIED
                 }
                 else
                 {
                     num3 = itemAttribute["protectionChance"][key1].AsFloat();
-                    num4 = ModAttributes.GetShieldDamageAbsorption(itemslot.Itemstack!, itemAttribute["damageAbsorption"].AsFloat(2F));
+                    num4 = itemAttribute["damageAbsorption"].AsFloat(2f) *
+                           AttributesManager.GetStatsMultiplier(itemslot.Itemstack, AttributesManager.ShieldDamageAbsorptionMultiplier); // MODIFIED
                 }
 
                 double attackYaw;
