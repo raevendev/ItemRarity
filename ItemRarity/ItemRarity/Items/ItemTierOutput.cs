@@ -11,9 +11,6 @@ public sealed class ItemTierOutput : Item
         var tierItem = allInputslots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
         var targetItem = allInputslots.FirstOrDefault(s => s.Itemstack?.Collectible?.Durability > 1);
 
-        ModLogger.Warning($"Created {targetItem.Itemstack.Collectible.Code} / Recipe {byRecipe.Name}");
-
-        
         if (tierItem == null || targetItem == null)
         {
             outputSlot.Itemstack = null;
