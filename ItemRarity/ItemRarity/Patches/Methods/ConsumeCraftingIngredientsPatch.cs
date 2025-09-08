@@ -3,17 +3,26 @@ using HarmonyLib;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
-// ReSharper disable ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
-// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 // ReSharper disable InconsistentNaming
 
-namespace ItemRarity.Patches;
+namespace ItemRarity.Patches.Methods;
 
-[HarmonyPatch(typeof(ItemWearable))]
-public static class ItemWearablePatch
+[HarmonyPatch]
+public static class ConsumeCraftingIngredientsPatch
 {
-    [HarmonyPostfix, HarmonyPatch(nameof(ItemWearable.ConsumeCraftingIngredients)), HarmonyPriority(Priority.Last)]
-    public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
+    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void CollectibleObject_ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
+    {
+        ConsumeCraftingIngredients(slots, outputSlot, matchingRecipe);
+    }
+
+    [HarmonyPatch(typeof(ItemWearable), nameof(ItemWearable.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void ItemWearable_ConsumeCraftingIngredientsPatch(ItemWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
+    {
+        ConsumeCraftingIngredients(inSlots, outputSlot, recipe);
+    }
+
+    private static void ConsumeCraftingIngredients(ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
     {
         if (outputSlot is not { Itemstack: not null } || !RarityManager.IsSuitableFor(outputSlot.Itemstack))
             return;
