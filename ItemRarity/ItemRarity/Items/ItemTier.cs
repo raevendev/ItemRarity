@@ -20,10 +20,9 @@ public sealed class ItemTier : Item
 
         dsc.AppendLine(Lang.Get("itemrarity:item-tier-info"));
 
-        foreach (var kvp in tierConfig.Rarities.OrderByDescending(kvp => kvp.Value))
+        foreach (var (rarityKey, value) in tierConfig.Rarities.OrderByDescending(kvp => kvp.Value))
         {
-            var rarityKey = kvp.Key;
-            var chancePercent = kvp.Value / totalWeight * 100;
+            var chancePercent = value / totalWeight * 100;
 
             if (ModCore.Config.Rarity.TryGetRarity(rarityKey, out var rarity))
                 dsc.AppendLine(

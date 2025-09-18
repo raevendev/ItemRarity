@@ -14,13 +14,6 @@ public sealed class MiningSpeedModifier : IStatsModifier
     public void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes)
     {
         var mul = rarity.MiningSpeedMultiplier.Random;
-        
-        // var miningSpeedTree = modAttributes.GetOrAddTreeAttribute(AttributesManager.MiningSpeed);
-        //
-        // foreach (var kv in itemStack.Collectible.MiningSpeed)
-        // {
-        //     miningSpeedTree.SetFloat(kv.Key.ToString(), kv.Value * GlobalConstants.ToolMiningSpeedModifier * mul);
-        // }
 
         modAttributes.SetFloat(AttributesManager.MiningSpeedMultiplier, mul);
     }

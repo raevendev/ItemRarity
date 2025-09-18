@@ -7,6 +7,7 @@ using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
 
+// ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
 
 namespace ItemRarity.Patches.Methods;
