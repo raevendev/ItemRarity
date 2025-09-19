@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
-using ItemRarity.Models;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
@@ -28,7 +28,7 @@ public static class GetHeldItemInfoPatch
         if (inSlot is not { Itemstack: not null })
             return;
 
-        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out var rarity))
+        if (!Rarity.TryGetRarity(inSlot.Itemstack, out var rarity))
             return;
 
         FixItemInfos(rarity, inSlot.Itemstack, __instance, dsc);
@@ -37,7 +37,7 @@ public static class GetHeldItemInfoPatch
     [HarmonyPatch(typeof(ItemSpear), nameof(ItemSpear.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
     public static bool ItemSpear_GetHeldItemInfoPatch(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
-        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out _))
+        if (!Rarity.TryGetRarity(inSlot.Itemstack, out _))
             return true;
 
         CollectibleObject_GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world,
@@ -61,7 +61,7 @@ public static class GetHeldItemInfoPatch
         if (inSlot is not { Itemstack: not null })
             return true;
 
-        if (!RarityManager.TryGetRarity(inSlot.Itemstack, out var rarityInfos))
+        if (!Rarity.TryGetRarity(inSlot.Itemstack, out _))
             return true;
 
         var itemAttribute = inSlot.Itemstack.ItemAttributes?["shield"];
@@ -103,7 +103,7 @@ public static class GetHeldItemInfoPatch
         return false;
     }
 
-    private static void FixItemInfos(Rarity rarityInfos, ItemStack itemStack, CollectibleObject collectible, StringBuilder sb)
+    private static void FixItemInfos(RarityModel rarityModelInfos, ItemStack itemStack, CollectibleObject collectible, StringBuilder sb)
     {
         if (itemStack.Collectible.MiningSpeed is { Count: > 0 })
         {

@@ -1,7 +1,7 @@
 ﻿{
   "code": "tier",
   "class": "ItemTier",
-  "variantgroups": [{"code": "type", "states": ["i", "ii", "iii", "iv", "v", "s"]}],
+  "variantgroups": [{"code": "type", "states": ["1", "2", "3", "4", "5", "1000"]}],
   "heldTpIdleAnimation": "holdbothhands",
   "creativeinventory": {"general": ["*"], "items": ["*"]},
   "maxstacksize": 16,

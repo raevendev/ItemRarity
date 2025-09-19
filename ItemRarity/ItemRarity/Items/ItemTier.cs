@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using ItemRarity.Extensions;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
@@ -11,7 +12,13 @@ public sealed class ItemTier : Item
     {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
-        var tierLevel = inSlot.Itemstack.Collectible.Code.EndVariant().ToUpper();
+        var tierLevel = inSlot.Itemstack.Collectible.Code.EndVariantInteger();
+
+        if (tierLevel <= 0)
+        {
+            ModLogger.Error("Tier level out of range.");
+            return;
+        }
 
         if (!ModCore.Config.Tier.TryGetTier(tierLevel, out var tierConfig))
             return;

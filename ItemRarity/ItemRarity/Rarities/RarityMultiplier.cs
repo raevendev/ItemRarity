@@ -2,7 +2,7 @@
 using System.Linq;
 using SysRdm = System.Random;
 
-namespace ItemRarity.Models;
+namespace ItemRarity.Rarities;
 
 public sealed class RarityMultiplier
 {

@@ -8,10 +8,10 @@
   "itemrarity:legendary": "[Légendaire]",
   "itemrarity:unique": "[Unique]",
   "itemrarity:item-tier-info": "Rarétés possibles: ",
-  "itemrarity:item-tier-i": "Tier I",
-  "itemrarity:item-tier-ii": "Tier II",
-  "itemrarity:item-tier-iii": "Tier III",
-  "itemrarity:item-tier-iv": "Tier IV",
-  "itemrarity:item-tier-v": "Tier V",
-  "itemrarity:item-tier-s": "Tier S"
+  "itemrarity:item-tier-1": "Tier I",
+  "itemrarity:item-tier-2": "Tier II",
+  "itemrarity:item-tier-3": "Tier III",
+  "itemrarity:item-tier-4": "Tier IV",
+  "itemrarity:item-tier-5": "Tier V",
+  "itemrarity:item-tier-1000": "Tier S"
 }

@@ -9,7 +9,7 @@
 	"textureSizes": {
 	},
 	"textures": {
-		"tier": "tier-i",
+		"tier": "tier-1",
 		"meteorite-iron1": "game:block/stone/rock/meteorite-iron1"
 	},
 	"elements": [

@@ -1,4 +1,4 @@
-﻿using ItemRarity.Models;
+﻿using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 
@@ -11,9 +11,9 @@ public sealed class PiercingPowerModifier : IStatsModifier
         return itemStack.Collectible.Attributes.KeyExists("damage");
     }
 
-    public void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes)
+    public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
     {
-        var mul = rarity.PiercingPowerMultiplier.Random;
+        var mul = rarityModel.PiercingPowerMultiplier.Random;
 
         modAttributes.SetFloat(AttributesManager.PiercingPowerMultiplier, mul);
     }

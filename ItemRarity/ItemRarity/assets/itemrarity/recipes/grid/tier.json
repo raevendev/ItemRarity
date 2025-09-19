@@ -9,7 +9,7 @@
       "L": { "type": "item", "code": "game:flint", "quantity": 2 },
       "G": { "type": "item", "code": "game:gear-rusty" }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-i", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-1", "quantity": 1 }
   },
   {
     "ingredientPattern": "R,F,R,L,G,L",
@@ -21,7 +21,7 @@
       "L": { "type": "item", "code": "game:metalbit-copper", "quantity": 10 },
       "G": { "type": "item", "code": "game:gear-rusty" }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-ii", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-2", "quantity": 1 }
   },
   {
     "ingredientPattern": "R,F,T,L,G,L",
@@ -34,7 +34,7 @@
       "L": { "type": "item", "code": "game:metalbit-tinbronze", "quantity": 10 },
       "G": { "type": "item", "code": "game:hide-scraped-*" }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-iii", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-3", "quantity": 1 }
   },
   {
     "ingredientPattern": "R,F,T,L,G,L",
@@ -47,7 +47,7 @@
       "L": { "type": "item", "code": "game:metalbit-iron", "quantity": 10 },
       "G": { "type": "item", "code": "game:gear-temporal" }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-iv", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-4", "quantity": 1 }
   },
   {
     "ingredientPattern": "R,F,T,L,G,L",
@@ -60,7 +60,7 @@
       "L": { "type": "item", "code": "game:metalbit-steel", "quantity": 15 },
       "G": { "type": "item", "code": "game:gear-temporal" }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-v", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-5", "quantity": 1 }
   },
   {
     "ingredientPattern": "A,C,T,I,Z,B,G,F,S",
@@ -77,6 +77,6 @@
       "F": { "type": "item", "code": "game:charcoal", "quantity": 20 },
       "S": { "type": "item", "code": "game:metalbit-silver", "quantity": 20 }
     },
-    "output": { "type": "item", "code": "itemrarity:tier-s", "quantity": 1 }
+    "output": { "type": "item", "code": "itemrarity:tier-1000", "quantity": 1 }
   }
 ]

@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
-using ItemRarity.Models;
+using ItemRarity.Rarities;
+using ItemRarity.Tiers;
 using Vintagestory.API.Common;
 
 namespace ItemRarity.Config;
@@ -56,12 +57,13 @@ public sealed class ModConfig
 
     public static ModConfig GetDefaultConfig()
     {
-        Rarity[] rarities =
+        RarityModel[] rarities =
         [
             new()
             {
                 Key = "cursed",
                 Name = "Cursed",
+                Level = -1,
                 Color = "#606060",
                 Weight = 8,
                 DurabilityMultiplier = new[] { 0.2F, 0.9F },
@@ -78,6 +80,7 @@ public sealed class ModConfig
             {
                 Key = "common",
                 Name = "Common",
+                Level = 0,
                 Color = "#FFFFFF",
                 Weight = 40,
                 DurabilityMultiplier = 1F,
@@ -94,6 +97,7 @@ public sealed class ModConfig
             {
                 Key = "uncommon",
                 Name = "Uncommon",
+                Level = 1,
                 Color = "#36FF00",
                 Weight = 30,
                 DurabilityMultiplier = 1.1F,
@@ -110,6 +114,7 @@ public sealed class ModConfig
             {
                 Key = "rare",
                 Name = "Rare",
+                Level = 2,
                 Color = "#13DBE8",
                 Weight = 20,
                 DurabilityMultiplier = 1.2F,
@@ -126,6 +131,7 @@ public sealed class ModConfig
             {
                 Key = "epic",
                 Name = "Epic",
+                Level = 3,
                 Color = "#8413E8",
                 Weight = 12,
                 DurabilityMultiplier = 1.4F,
@@ -142,6 +148,7 @@ public sealed class ModConfig
             {
                 Key = "legendary",
                 Name = "Legendary",
+                Level = 4,
                 Color = "#E08614",
                 Weight = 8,
                 DurabilityMultiplier = 1.6F,
@@ -158,6 +165,7 @@ public sealed class ModConfig
             {
                 Key = "unique",
                 Name = "Unique",
+                Level = 10,
                 Color = "#EC290E",
                 Weight = 2,
                 DurabilityMultiplier = 2F,
@@ -173,11 +181,11 @@ public sealed class ModConfig
             }
         ];
 
-        Tier[] tiers =
+        TierModel[] tiers =
         [
             new()
             {
-                Key = "I",
+                Level = 1,
                 Rarities = new()
                 {
                     { "cursed", 10 },
@@ -188,7 +196,7 @@ public sealed class ModConfig
             },
             new()
             {
-                Key = "II",
+                Level = 2,
                 Rarities = new()
                 {
                     { "cursed", 8 },
@@ -200,7 +208,7 @@ public sealed class ModConfig
             },
             new()
             {
-                Key = "III",
+                Level = 3,
                 Rarities = new()
                 {
                     { "cursed", 6 },
@@ -213,7 +221,7 @@ public sealed class ModConfig
             },
             new()
             {
-                Key = "IV",
+                Level = 4,
                 Rarities = new()
                 {
                     { "cursed", 4 },
@@ -227,7 +235,7 @@ public sealed class ModConfig
             },
             new()
             {
-                Key = "V",
+                Level = 5,
                 Rarities = new()
                 {
                     { "cursed", 2 },
@@ -241,7 +249,7 @@ public sealed class ModConfig
             },
             new()
             {
-                Key = "S",
+                Level = 1000,
                 Rarities = new()
                 {
                     { "epic", 30 },
@@ -261,7 +269,9 @@ public sealed class ModConfig
 
             Tier = new()
             {
-                Tiers = tiers.ToDictionary(t => t.Key),
+                
+                
+                Tiers = tiers.ToDictionary(t => t.Level),
             }
         };
     }

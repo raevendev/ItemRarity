@@ -1,5 +1,8 @@
 ﻿using System.Linq;
 using HarmonyLib;
+using ItemRarity.Extensions;
+using ItemRarity.Rarities;
+using ItemRarity.Tiers;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
@@ -24,25 +27,33 @@ public static class ConsumeCraftingIngredientsPatch
 
     private static void ConsumeCraftingIngredients(ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
     {
-        if (outputSlot is not { Itemstack: not null } || !RarityManager.IsSuitableFor(outputSlot.Itemstack))
+        if (outputSlot is not { Itemstack: not null })
             return;
 
-        if (!ModCore.Config.Tier.EnableTiers)
-            RarityManager.SetRandomRarity(outputSlot.Itemstack);
-        else
+        switch (ModCore.Config.Tier.EnableTiers)
         {
-            var tierItem = inSlots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
-
-            if (tierItem == null)
+            case false when Rarity.IsSuitableFor(outputSlot.Itemstack):
+                Rarity.ApplyRarity(outputSlot.Itemstack);
+                break;
+            case true when Rarity.IsSuitableFor(outputSlot.Itemstack, false):
             {
-                ModLogger.Warning("Failed to find tier item when crafting");
-                return;
+                var tierItem = inSlots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
+
+                if (tierItem == null)
+                {
+                    ModLogger.Warning("Failed to find tier item when crafting");
+                    return;
+                }
+
+                if (Rarity.TryGetRarity(outputSlot.Itemstack, out _))
+                    Tier.ApplyTierUpgrade(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
+                else
+                    Tier.ApplyTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
+
+                foreach (var slot in inSlots.Where(s => s.Itemstack?.Collectible?.Code == outputSlot.Itemstack?.Collectible?.Code))
+                    slot.TakeOut(1);
+                break;
             }
-
-            RarityManager.SetRarityByTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariant().ToUpper());
-
-            foreach (var slot in inSlots.Where(s => s.Itemstack?.Collectible?.Code == outputSlot.Itemstack?.Collectible?.Code))
-                slot.TakeOut(1);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
@@ -23,7 +24,7 @@ public static class GetMaxDurabilityPatch
 
     private static void GetMaxDurability(ItemStack itemStack, ref int __result)
     {
-        if (!RarityManager.TryGetRarity(itemStack, out var rarityInfos))
+        if (!Rarity.TryGetRarity(itemStack, out _))
             return;
 
         __result = (int)(__result * AttributesManager.GetStatsMultiplier(itemStack, AttributesManager.MaxDurabilityMultiplier));

@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Vintagestory.API.Common;
-using Vintagestory.GameContent;
 
 namespace ItemRarity.Items;
 

@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
 
@@ -23,7 +24,7 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!RarityManager.TryGetRarity(slot.Itemstack, out var rarity))
+        if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
 
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
@@ -43,7 +44,7 @@ public static class ItemKnifePatch
         if (entitySel == null || slot is not { Itemstack: not null })
             return;
 
-        if (!RarityManager.TryGetRarity(slot.Itemstack, out var rarityInfos))
+        if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
 
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();

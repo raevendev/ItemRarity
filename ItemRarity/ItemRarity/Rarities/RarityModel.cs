@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using ItemRarity.Converters.Json;
 using Newtonsoft.Json;
 
-namespace ItemRarity.Models;
+namespace ItemRarity.Rarities;
 
 /// <summary>
 /// Represents the configuration settings for an item's rarity, including multipliers for various item properties.
 /// </summary>
-public sealed class Rarity
+public sealed class RarityModel
 {
     [JsonProperty(Order = 0)]
     public required string Key { get; init; }
@@ -17,27 +17,30 @@ public sealed class Rarity
     public required string Name { get; init; }
 
     [JsonProperty(Order = 2)]
-    public required string Color { get; init; }
+    public required int Level { get; init; }
 
     [JsonProperty(Order = 3)]
+    public required string Color { get; init; }
+
+    [JsonProperty(Order = 4)]
     public required float Weight { get; init; }
 
-    [JsonProperty(Order = 4), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 5), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier DurabilityMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 5), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 6), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier MiningSpeedMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 6), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 7), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier AttackPowerMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 7), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 8), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier PiercingPowerMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 8), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 9), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 9), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 10), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
 
     [JsonIgnore, JsonConverter(typeof(RarityMultiplierJsonConverter))]
@@ -46,8 +49,9 @@ public sealed class Rarity
     [JsonIgnore, JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorPerTierRelativeProtectionLossMultiplier { get; init; } = 1F;
 
-    [JsonProperty(Order = 11), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    [JsonProperty(Order = 12), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ShieldProtectionMultiplier { get; init; } = 1F;
+
 
     [JsonProperty(Order = 99)]
     public Dictionary<string, float> CustomAttributes { get; init; } = new();

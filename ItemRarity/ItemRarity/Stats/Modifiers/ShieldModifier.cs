@@ -1,4 +1,4 @@
-﻿using ItemRarity.Models;
+﻿using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.GameContent;
@@ -12,10 +12,10 @@ public sealed class ShieldModifier : IStatsModifier
         return itemStack.Collectible is ItemShield shield;
     }
 
-    public void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes)
+    public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
     {
-        var damageAbsorptionMul = rarity.ShieldProtectionMultiplier.Random;
-        var projectileDamageAbsorptionMul = rarity.ShieldProtectionMultiplier.Random; // TODO: support projectile
+        var damageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random;
+        var projectileDamageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random; // TODO: support projectile
 
         modAttributes.SetFloat(AttributesManager.ShieldDamageAbsorptionMultiplier, damageAbsorptionMul);
         modAttributes.SetFloat(AttributesManager.ArmorPerTierFlatDamageProtectionLossMultiplier, projectileDamageAbsorptionMul);

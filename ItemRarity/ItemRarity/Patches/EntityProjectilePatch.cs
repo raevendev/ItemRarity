@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
 using Vintagestory.GameContent;
@@ -16,7 +17,7 @@ public static class EntityProjectilePatch
     [HarmonyPrefix, HarmonyPatch("impactOnEntity"), HarmonyPriority(Priority.Last)]
     public static void ImpactEntityPatch(EntityProjectile __instance, Entity entity)
     {
-        if (ModCore.WeatherSystemServer == null || !RarityManager.TryGetRarity(__instance.ProjectileStack, out var rarity))
+        if (ModCore.WeatherSystemServer == null || !Rarity.TryGetRarity(__instance.ProjectileStack, out var rarity))
             return;
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)

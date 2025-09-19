@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Text;
 using ItemRarity.Config;
-using ItemRarity.Models;
 using ItemRarity.Packets;
+using ItemRarity.Rarities;
+using ItemRarity.Tiers;
 using Newtonsoft.Json;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
@@ -27,7 +28,8 @@ public static class CommandsHandlers
 
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
-        currentItemStack.SetRarity(rarity);
+
+        Rarity.ApplyRarity(currentItemStack);
 
         activeSlot.MarkDirty();
 
@@ -48,26 +50,24 @@ public static class CommandsHandlers
     internal static TextCommandResult HandleTestRarityCommandUnified(TextCommandCallingArgs args)
     {
         var timeRun = args.Parsers[0].GetValue() as int? ?? 0;
-        var tier = args.Parsers[1].IsMissing ? null : args.Parsers[1].GetValue().ToString();
+        var tier = args.Parsers[1].IsMissing ? null : args.Parsers[1].GetValue() as int?;
 
         if (timeRun <= 0)
             return TextCommandResult.Error("Run count must be greater than 0.");
 
-        var rarities = new List<Rarity>(timeRun);
+        var rarities = new List<RarityModel>(timeRun);
         float totalWeight;
 
         if (tier != null)
         {
-            if (!ModCore.Config.Tier.TryGetTier(tier, out var tierData))
+            if (!ModCore.Config.Tier.TryGetTier(tier.Value, out var tierData))
                 return TextCommandResult.Error($"Tier '{tier}' not found. Available Tiers: [{string.Join(", ", ModCore.Config.Tier.Tiers.Keys.OrderBy(k => k))}]");
 
             totalWeight = tierData.Rarities.Sum(r => r.Value);
 
             for (var i = 0; i < timeRun; i++)
             {
-                var rarity = RarityManager.GetRandomRarityByTier(tier);
-                if (rarity is null)
-                    continue;
+                var rarity = Tier.GetRandomRarityByTier(tierData);
                 rarities.Add(rarity);
             }
         }
@@ -77,9 +77,7 @@ public static class CommandsHandlers
 
             for (var i = 0; i < timeRun; i++)
             {
-                var rarity = RarityManager.GetRandomRarity();
-                if (rarity is null)
-                    continue;
+                var rarity = Rarity.GetRandomRarity();
                 rarities.Add(rarity);
             }
         }
@@ -93,7 +91,8 @@ public static class CommandsHandlers
                 float weight;
                 if (tier != null)
                 {
-                    var match = ModCore.Config.Tier[tier]!.Rarities.FirstOrDefault(t => ModCore.Config.Rarity.TryGetRarity(t.Key, out var rc) && rc.Name == rarityKey);
+                    var match = ModCore.Config.Tier[tier.Value]!.Rarities.FirstOrDefault(t =>
+                        ModCore.Config.Rarity.TryGetRarity(t.Key, out var rc) && rc.Name == rarityKey);
                     weight = match.Value;
                 }
                 else

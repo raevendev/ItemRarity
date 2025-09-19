@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
-using Vintagestory.GameContent;
 
 // ReSharper disable InconsistentNaming
 
@@ -13,7 +13,7 @@ public static class GetMiningSpeedPatch
     public static void CollectibleObject_GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result, ref ICoreAPI ___api)
     {
-        if (!RarityManager.TryGetRarity(itemstack as ItemStack, out var rarityInfos))
+        if (!Rarity.TryGetRarity(itemstack as ItemStack, out _))
             return;
 
         __result *= AttributesManager.GetStatsMultiplier((itemstack as ItemStack)!, AttributesManager.MiningSpeedMultiplier);

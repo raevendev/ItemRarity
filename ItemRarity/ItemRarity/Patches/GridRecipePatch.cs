@@ -2,6 +2,7 @@
 
 using System.Linq;
 using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 
 namespace ItemRarity.Patches;
@@ -26,9 +27,9 @@ public static class GridRecipePatch
             __result = false;
             return false;
         }
-        
+
         var hasTierItem = nonEmptySlots.Any(s => s.Itemstack.Collectible.Code.Path.StartsWith("tier"));
-        var hasTargetItem = nonEmptySlots.Any(s => RarityManager.IsSuitableFor(s.Itemstack));
+        var hasTargetItem = nonEmptySlots.Any(s => Rarity.IsSuitableFor(s.Itemstack, false));
 
         __result = hasTierItem && hasTargetItem;
         return false;

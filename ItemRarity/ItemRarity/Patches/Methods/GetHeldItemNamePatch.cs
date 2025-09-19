@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
@@ -24,7 +25,7 @@ public static class GetHeldItemNamePatch
 
     private static void GetHeldItemName(ItemStack itemStack, ref string __result)
     {
-        if (!RarityManager.TryGetRarity(itemStack, out var rarity))
+        if (!Rarity.TryGetRarity(itemStack, out var rarity))
             return;
 
         var rarityName = rarity.IgnoreTranslation

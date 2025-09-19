@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using ItemRarity.Models;
+using ItemRarity.Rarities;
 using Newtonsoft.Json;
 
 namespace ItemRarity.Converters.Json;

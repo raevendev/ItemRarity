@@ -1,4 +1,4 @@
-﻿using ItemRarity.Models;
+﻿using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 
@@ -11,9 +11,9 @@ public sealed class DurabilityModifier : IStatsModifier
         return itemStack.Collectible.Durability > 0;
     }
 
-    public void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes)
+    public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
     {
-        var mul = rarity.DurabilityMultiplier.Random;
+        var mul = rarityModel.DurabilityMultiplier.Random;
 
         modAttributes.SetFloat(AttributesManager.MaxDurabilityMultiplier, mul);
     }

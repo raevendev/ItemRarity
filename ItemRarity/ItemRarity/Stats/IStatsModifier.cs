@@ -1,4 +1,4 @@
-﻿using ItemRarity.Models;
+﻿using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 
@@ -8,5 +8,5 @@ public interface IStatsModifier
 {
     bool IsSuitable(ItemStack itemStack);
 
-    void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes);
+    void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes);
 }

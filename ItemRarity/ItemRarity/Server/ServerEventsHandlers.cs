@@ -1,4 +1,5 @@
 ﻿using ItemRarity.Packets;
+using ItemRarity.Rarities;
 using Newtonsoft.Json;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -19,9 +20,9 @@ internal static class ServerEventsHandlers
         if (ModCore.Config.Tier.EnableTiers || entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
             return;
 
-        if (!RarityManager.IsSuitableFor(item.Itemstack))
+        if (!Rarity.IsSuitableFor(item.Itemstack))
             return;
 
-        RarityManager.SetRandomRarity(item.Itemstack);
+        Rarity.ApplyRarity(item.Itemstack);
     }
 }

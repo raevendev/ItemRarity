@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using ItemRarity.Converters.Json;
-using ItemRarity.Models;
+using ItemRarity.Rarities;
 using Newtonsoft.Json;
 
 namespace ItemRarity.Config;
@@ -14,12 +14,12 @@ public sealed class RaritiesConfig
     public bool ApplyRarityOnItemDrop { get; init; } = true;
 
     [JsonProperty(Order = 50), JsonConverter(typeof(RaritiesJsonConverter))]
-    public Dictionary<string, Rarity> Rarities { get; init; } = new();
+    public Dictionary<string, RarityModel> Rarities { get; init; } = new();
 
-    public Rarity? this[string rarityKey] => Rarities.GetValueOrDefault(rarityKey);
+    public RarityModel? this[string rarityKey] => Rarities.GetValueOrDefault(rarityKey);
 
-    public bool TryGetRarity(string rarityKey, out Rarity rarity)
+    public bool TryGetRarity(string rarityKey, out RarityModel rarityModel)
     {
-        return Rarities.TryGetValue(rarityKey, out rarity!);
+        return Rarities.TryGetValue(rarityKey, out rarityModel!);
     }
 }

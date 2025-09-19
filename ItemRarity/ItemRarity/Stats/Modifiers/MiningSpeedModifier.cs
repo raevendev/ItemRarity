@@ -1,4 +1,4 @@
-﻿using ItemRarity.Models;
+﻿using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 
@@ -11,9 +11,9 @@ public sealed class MiningSpeedModifier : IStatsModifier
         return itemStack.Collectible.MiningSpeed is { Count: > 0 };
     }
 
-    public void Apply(Rarity rarity, ItemStack itemStack, ITreeAttribute modAttributes)
+    public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
     {
-        var mul = rarity.MiningSpeedMultiplier.Random;
+        var mul = rarityModel.MiningSpeedMultiplier.Random;
 
         modAttributes.SetFloat(AttributesManager.MiningSpeedMultiplier, mul);
     }
