@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ItemRarity.Logs;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 
@@ -14,7 +15,7 @@ public static class Tier
     public static IEnumerable<(RarityModel, float Value)> GetRaritiesByTier(TierModel tierModel, Predicate<RarityModel>? includeRarity = null)
     {
         return (includeRarity != null
-            ? tierModel.Rarities.Select(r => (ModCore.Config.Rarity[r.Key], r.Value)).Where(r => !includeRarity(r.Item1!))
+            ? tierModel.Rarities.Select(r => (ModCore.Config.Rarity[r.Key], r.Value)).Where(r => includeRarity(r.Item1!))
             : tierModel.Rarities.Select(r => (ModCore.Config.Rarity[r.Key], r.Value)))!;
     }
 
@@ -34,7 +35,7 @@ public static class Tier
             }
         }
 
-        ModLogger.Error("Failed to get random rarity by tier");
+        Logger.Error("Failed to get random rarity by tier");
 
         return ModCore.Config.Rarity.Rarities.First().Value;
     }
@@ -44,7 +45,7 @@ public static class Tier
         if (ModCore.Config.Tier.TryGetTier(tierLevel, out var tierModel))
             ApplyTier(itemStack, tierModel);
         else
-            ModLogger.Error($"Failed to get tier for level {tierLevel}");
+            Logger.Error($"Failed to get tier for level {tierLevel}");
     }
 
     public static void ApplyTier(ItemStack itemStack, TierModel tierModel)
@@ -53,24 +54,24 @@ public static class Tier
         Rarity.ApplyRarity(itemStack, tierRarity);
     }
 
-    public static void ApplyTierUpgrade(ItemStack itemStack, int tierLevel)
+    public static void ApplyTierUpgrade(ItemStack inputItem, ItemStack outputItem, int tierLevel)
     {
         if (ModCore.Config.Tier.TryGetTier(tierLevel, out var tierModel))
-            ApplyTierUpgrade(itemStack, tierModel);
+            ApplyTierUpgrade(inputItem, outputItem, tierModel);
         else
-            ModLogger.Error($"Failed to get tier for level {tierLevel}");
+            Logger.Error($"Failed to get tier for level {tierLevel}");
     }
 
-    public static void ApplyTierUpgrade(ItemStack itemStack, TierModel tierModel)
+    public static void ApplyTierUpgrade(ItemStack inputItem, ItemStack outputItem, TierModel tierModel)
     {
-        if (!Rarity.TryGetRarity(itemStack, out var currentRarity))
+        if (!Rarity.TryGetRarity(inputItem, out var currentRarity))
         {
-            ModLogger.Warning($"Failed to upgrade Rarity for item {itemStack.Collectible.Code}");
+            Logger.Warning($"Failed to upgrade Rarity for item {inputItem.Collectible.Code}");
             return;
         }
 
-        var rarities = GetRaritiesByTier(tierModel, model => model.Level >= currentRarity.Level);
+        var rarities = GetRaritiesByTier(tierModel, model => model.Level > currentRarity.Level);
         var upgradedRarity = GetRandomRarityByTier(tierModel, rarities);
-        Rarity.ApplyRarity(itemStack, upgradedRarity);
+        Rarity.ApplyRarity(outputItem, upgradedRarity);
     }
 }

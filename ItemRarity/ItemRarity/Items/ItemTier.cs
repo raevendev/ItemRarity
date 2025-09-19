@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using ItemRarity.Extensions;
+using ItemRarity.Logs;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 
@@ -16,7 +17,7 @@ public sealed class ItemTier : Item
 
         if (tierLevel <= 0)
         {
-            ModLogger.Error("Tier level out of range.");
+            Logger.Error("Tier level out of range.");
             return;
         }
 

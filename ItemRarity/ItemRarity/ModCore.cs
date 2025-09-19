@@ -3,6 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using ItemRarity.Config;
 using ItemRarity.Items;
+using ItemRarity.Logs;
 using ItemRarity.Packets;
 using ItemRarity.Recipes;
 using ItemRarity.Server;
@@ -28,20 +29,21 @@ public sealed class ModCore : ModSystem
     public const string HarmonyId = "itemrarity.patches";
     public const string ConfigSyncNetChannel = "itemrarity.configsync";
 
-    public static ModConfig Config = ModConfig.GetDefaultConfig();
-    public static Harmony HarmonyInstance = null!;
-    public static ICoreClientAPI? ClientApi;
-    public static ICoreServerAPI? ServerApi;
-    public static WeatherSystemServer? WeatherSystemServer;
+    private static Harmony _harmonyInstance = null!;
+
+    public static ModConfig Config { get; set; } = ModConfig.GetDefaultConfig();
+    public static ICoreClientAPI? ClientApi { get; private set; }
+    public static ICoreServerAPI? ServerApi { get; private set; }
+    public static WeatherSystemServer? WeatherSystemServer { get; private set; }
 
     public override void Start(ICoreAPI api)
     {
         if (!Harmony.HasAnyPatches(HarmonyId))
         {
-            ModLogger.Notification("Patching...");
-            HarmonyInstance = new Harmony(HarmonyId);
-            HarmonyInstance.PatchAll();
-            ModLogger.Notification("Successfully patched. Starting mod...");
+            Logger.Notification("Patching...");
+            _harmonyInstance = new Harmony(HarmonyId);
+            _harmonyInstance.PatchAll();
+            Logger.Notification("Successfully patched. Starting mod...");
         }
 
         Config = ModConfig.Load(api);
@@ -49,7 +51,7 @@ public sealed class ModCore : ModSystem
         // Important for item comparison to ignore attributes e.g TreasureTrader for the story map.
         GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(AttributesManager.ModAttributeId);
 
-        // Mods/Players may add custom attributes, if theses are attributes added but not in the mod attribute tree we have to ignore them too.
+        // Mods/Players may add custom attributes, if theses are attributes added outside the mod attribute tree we have to ignore them too.
         foreach (var rarity in Config.Rarity.Rarities.Values)
         {
             if (rarity.CustomAttributes is not { Count: > 0 } attributes)
@@ -63,7 +65,7 @@ public sealed class ModCore : ModSystem
         api.RegisterItemClass("ItemTier", typeof(ItemTier));
         api.RegisterItemClass("ItemTierOutput", typeof(ItemTierOutput));
 
-        ModLogger.Notification("Mod Started.");
+        Logger.Notification("Mod Started.");
     }
 
     public override void StartClientSide(ICoreClientAPI api)
@@ -78,10 +80,10 @@ public sealed class ModCore : ModSystem
                 if (config != null)
                 {
                     Config = config;
-                    api.Logger.Notification("Received config from server.");
+                    Logger.Notification("Received config from server.", EnumAppSide.Client);
                 }
                 else
-                    api.Logger.Error("Received invalid config from server.");
+                    Logger.Error("Received invalid config from server.", EnumAppSide.Client);
             }
             catch (Exception e)
             {
@@ -133,6 +135,6 @@ public sealed class ModCore : ModSystem
 
     public override void Dispose()
     {
-        HarmonyInstance.UnpatchAll(HarmonyId);
+        _harmonyInstance.UnpatchAll(HarmonyId);
     }
 }

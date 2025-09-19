@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ItemRarity.Logs;
 using ItemRarity.Stats;
 using ItemRarity.Stats.Modifiers;
 using Vintagestory.API.Common;
@@ -44,7 +45,7 @@ public static class Rarity
                 return item.Value;
         }
 
-        ModLogger.Error("Failed to get random rarity");
+        Logger.Error("Failed to get random rarity");
 
         return ModCore.Config.Rarity.Rarities.First().Value;
     }
@@ -74,7 +75,7 @@ public static class Rarity
     {
         if (!IsSuitableFor(itemStack, false))
         {
-            ModLogger.Warning($"Invalid item. Rarity is not supported for this item {itemStack.Collectible?.Code}");
+            Logger.Warning($"Invalid item. Rarity is not supported for this item {itemStack.Collectible?.Code}");
             return;
         }
 

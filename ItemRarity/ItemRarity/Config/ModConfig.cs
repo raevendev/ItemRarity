@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using ItemRarity.Logs;
 using ItemRarity.Rarities;
 using ItemRarity.Tiers;
 using Vintagestory.API.Common;
@@ -29,7 +30,7 @@ public sealed class ModConfig
             {
                 var defaultConfig = GetDefaultConfig();
                 Save(api, defaultConfig);
-                ModLogger.Notification("Configuration not found. The default configuration has been saved.");
+                Logger.Notification("Configuration not found. The default configuration has been saved.");
                 return defaultConfig;
             }
 
@@ -39,12 +40,12 @@ public sealed class ModConfig
                 Tier = tiers,
             };
             Save(api, config); // Store it again in case we added new fields 
-            ModLogger.Notification("Configuration loaded.");
+            Logger.Notification("Configuration loaded.");
             return config;
         }
         catch
         {
-            ModLogger.Error("Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration file).");
+            Logger.Error("Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration file, please backup your configuration before deleting the file).");
             return GetDefaultConfig();
         }
     }

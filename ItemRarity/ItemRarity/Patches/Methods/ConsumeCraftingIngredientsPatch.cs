@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using HarmonyLib;
 using ItemRarity.Extensions;
+using ItemRarity.Logs;
 using ItemRarity.Rarities;
 using ItemRarity.Tiers;
 using Vintagestory.API.Common;
@@ -41,12 +42,20 @@ public static class ConsumeCraftingIngredientsPatch
 
                 if (tierItem == null)
                 {
-                    ModLogger.Warning("Failed to find tier item when crafting");
+                    Logger.Warning("Failed to find tier item when applying tier");
                     return;
                 }
 
-                if (Rarity.TryGetRarity(outputSlot.Itemstack, out _))
-                    Tier.ApplyTierUpgrade(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
+                var targetItem = inSlots.FirstOrDefault(s => s.Itemstack?.Collectible?.Durability > 1);
+
+                if (targetItem == null)
+                {
+                    Logger.Warning("Failed to find target item when applying tier");
+                    return;
+                }
+
+                if (Rarity.TryGetRarity(targetItem.Itemstack, out _))
+                    Tier.ApplyTierUpgrade(targetItem.Itemstack, outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
                 else
                     Tier.ApplyTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
 
