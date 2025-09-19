@@ -3,7 +3,7 @@ using System.Linq;
 using HarmonyLib;
 using ItemRarity.Config;
 using ItemRarity.Items;
-using ItemRarity.Logs;
+using ItemRarity.Logging;
 using ItemRarity.Packets;
 using ItemRarity.Recipes;
 using ItemRarity.Server;

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using HarmonyLib;
 using ItemRarity.Extensions;
-using ItemRarity.Logs;
+using ItemRarity.Logging;
 using ItemRarity.Rarities;
 using ItemRarity.Tiers;
 using Vintagestory.API.Common;

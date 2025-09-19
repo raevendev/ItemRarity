@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using ItemRarity.Logs;
+using ItemRarity.Logging;
 using ItemRarity.Rarities;
 using ItemRarity.Tiers;
 using Vintagestory.API.Common;

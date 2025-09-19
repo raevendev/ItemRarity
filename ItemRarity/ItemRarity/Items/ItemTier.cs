@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 using ItemRarity.Extensions;
-using ItemRarity.Logs;
+using ItemRarity.Logging;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ItemRarity.Logs;
+using ItemRarity.Logging;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 
