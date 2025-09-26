@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using ItemRarity.Config;
 using ItemRarity.Logging;
 using ItemRarity.Stats;
 using ItemRarity.Stats.Modifiers;
 using Vintagestory.API.Common;
+using Attribute = ItemRarity.Attributes.Attribute;
 
 namespace ItemRarity.Rarities;
 
@@ -16,12 +18,14 @@ public static class Rarity
         new ArmorFlatDamageReductionModifier(), new ShieldModifier()
     ];
 
+    private static RaritiesConfig Config => ModCore.Config.Rarity;
+
     public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true)
     {
         if (itemStack?.Attributes == null || itemStack.Collectible?.Attributes == null)
             return false;
 
-        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(AttributesManager.ModAttributeId))
+        if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(Attribute.ModAttributeId))
             return false;
 
         var collectible = itemStack.Collectible;
@@ -34,11 +38,11 @@ public static class Rarity
 
     public static RarityModel GetRandomRarity()
     {
-        var totalWeight = ModCore.Config.Rarity.Rarities.Values.Sum(i => i.Weight);
+        var totalWeight = Config.Rarities.Values.Sum(i => i.Weight);
         var randomValue = Random.Shared.NextDouble() * totalWeight;
         var cumulativeWeight = 0f;
 
-        foreach (var item in ModCore.Config.Rarity.Rarities)
+        foreach (var item in Config.Rarities)
         {
             cumulativeWeight += item.Value.Weight;
             if (randomValue < cumulativeWeight)
@@ -47,7 +51,7 @@ public static class Rarity
 
         Logger.Error("Failed to get random rarity");
 
-        return ModCore.Config.Rarity.Rarities.First().Value;
+        return Config.Rarities.First().Value;
     }
 
     public static bool TryGetRarity(ItemStack? itemStack, out RarityModel rarityModel)
@@ -58,17 +62,17 @@ public static class Rarity
             return false;
         }
 
-        var modAttribute = itemStack.Attributes.GetTreeAttribute(AttributesManager.ModAttributeId);
+        var modAttribute = itemStack.Attributes.GetTreeAttribute(Attribute.ModAttributeId);
 
-        if (modAttribute is null || !modAttribute.HasAttribute(AttributesManager.Rarity))
+        if (modAttribute is null || !modAttribute.HasAttribute(Attribute.Rarity))
         {
             rarityModel = null!;
             return false;
         }
 
-        var rarityKey = modAttribute.GetString(AttributesManager.Rarity);
+        var rarityKey = modAttribute.GetString(Attribute.Rarity);
 
-        return ModCore.Config.Rarity.TryGetRarity(rarityKey, out rarityModel);
+        return Config.TryGetRarity(rarityKey, out rarityModel);
     }
 
     public static void ApplyRarity(ItemStack itemStack, RarityModel? rarityModel = null)
@@ -81,9 +85,9 @@ public static class Rarity
 
         rarityModel ??= GetRandomRarity();
 
-        var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(AttributesManager.ModAttributeId);
+        var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(Attribute.ModAttributeId);
 
-        modAttributes.SetString(AttributesManager.Rarity, rarityModel.Key); // Use the key as the rarity.
+        modAttributes.SetString(Attribute.Rarity, rarityModel.Key); // Use the key as the rarity.
 
         if (rarityModel.CustomAttributes is { Count: > 0 })
         {

@@ -33,10 +33,10 @@ public static class ConsumeCraftingIngredientsPatch
 
         switch (ModCore.Config.Tier.EnableTiers)
         {
-            case false when Rarity.IsSuitableFor(outputSlot.Itemstack):
+            case false when Rarity.IsSuitableFor(outputSlot.Itemstack): // Without Tiers.
                 Rarity.ApplyRarity(outputSlot.Itemstack);
                 break;
-            case true when Rarity.IsSuitableFor(outputSlot.Itemstack, false):
+            case true when Rarity.IsSuitableFor(outputSlot.Itemstack, false): // With Tiers.
             {
                 var tierItem = inSlots.FirstOrDefault(s => s.Itemstack?.Collectible?.Code.PathStartsWith("tier") ?? false);
 

@@ -3,6 +3,7 @@
 using System.Linq;
 using HarmonyLib;
 using ItemRarity.Rarities;
+using ItemRarity.Tiers;
 using Vintagestory.API.Common;
 
 namespace ItemRarity.Patches;
@@ -30,7 +31,11 @@ public static class GridRecipePatch
 
         var hasTierItem = nonEmptySlots.Any(s => s.Itemstack.Collectible.Code.Path.StartsWith("tier"));
         var hasTargetItem = nonEmptySlots.Any(s => Rarity.IsSuitableFor(s.Itemstack, false));
+        
+        // TODO: ignore lower tiers, should we apply a tier tag on items or base on rarity applied ??
 
+        
+        
         __result = hasTierItem && hasTargetItem;
         return false;
     }

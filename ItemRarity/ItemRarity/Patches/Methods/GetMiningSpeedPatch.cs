@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Attributes;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 
@@ -16,6 +17,6 @@ public static class GetMiningSpeedPatch
         if (!Rarity.TryGetRarity(itemstack as ItemStack, out _))
             return;
 
-        __result *= AttributesManager.GetStatsMultiplier((itemstack as ItemStack)!, AttributesManager.MiningSpeedMultiplier);
+        __result *= Attribute.MiningSpeedMultiplier.GetFloat(itemstack as ItemStack, 1f);
     }
 }

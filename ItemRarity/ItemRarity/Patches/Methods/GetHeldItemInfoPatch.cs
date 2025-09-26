@@ -6,6 +6,7 @@ using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
+using Attribute = ItemRarity.Attributes.Attribute;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
@@ -48,7 +49,7 @@ public static class GetHeldItemInfoPatch
         if (inSlot.Itemstack.Collectible.Attributes != null)
             piercingDamages = inSlot.Itemstack.Collectible.Attributes["damage"].AsFloat();
 
-        piercingDamages *= AttributesManager.GetStatsMultiplier(inSlot.Itemstack, AttributesManager.PiercingPowerMultiplier);
+        piercingDamages *= Attribute.PiercingPowerMultiplier.GetFloat(inSlot.Itemstack, 1f);
 
         dsc.AppendLine(piercingDamages + Lang.Get("piercing-damage-thrown"));
 
@@ -73,7 +74,7 @@ public static class GetHeldItemInfoPatch
 
         if (itemAttribute["protectionChance"]["active-projectile"].Exists)
         {
-            var projectileDamageAbsorptionMul = AttributesManager.GetStatsMultiplier(inSlot.Itemstack, AttributesManager.ShieldProjectileDamageAbsorptionMultiplier);
+            var projectileDamageAbsorptionMul = Attribute.ShieldProjectileDamageAbsorptionMultiplier.GetFloat(inSlot.Itemstack, 1f);
             var num1 = itemAttribute["protectionChance"]["active-projectile"].AsFloat();
             var num2 = itemAttribute["protectionChance"]["passive-projectile"].AsFloat();
             var num3 = itemAttribute["projectileDamageAbsorption"].AsFloat(2F) * projectileDamageAbsorptionMul;
@@ -82,7 +83,7 @@ public static class GetHeldItemInfoPatch
             dsc.AppendLine();
         }
 
-        var damageAbsorptionMul = AttributesManager.GetStatsMultiplier(inSlot.Itemstack, AttributesManager.ShieldProjectileDamageAbsorptionMultiplier);
+        var damageAbsorptionMul = Attribute.ShieldDamageAbsorptionMultiplier.GetFloat(inSlot.Itemstack, 1f);
         var num4 = itemAttribute["damageAbsorption"].AsFloat(2F) * damageAbsorptionMul;
         var num5 = itemAttribute["protectionChance"]["active"].AsFloat();
         var num6 = itemAttribute["protectionChance"]["passive"].AsFloat();
@@ -113,7 +114,7 @@ public static class GetHeldItemInfoPatch
 
             var miningSpeedLine = Lang.Get("item-tooltip-miningspeed") ?? string.Empty;
             var foundLine = Array.FindIndex(lines, line => line.StartsWith(miningSpeedLine, StringComparison.Ordinal));
-            var miningSpeedMul = AttributesManager.GetStatsMultiplier(itemStack, AttributesManager.MiningSpeedMultiplier);
+            var miningSpeedMul = Attribute.MiningSpeedMultiplier.GetFloat(itemStack, 1f);
 
             for (var i = 0; i < lines.Length; i++)
             {

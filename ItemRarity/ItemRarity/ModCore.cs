@@ -15,6 +15,7 @@ using Vintagestory.API.Config;
 using Vintagestory.API.Server;
 using Vintagestory.API.Util;
 using Vintagestory.GameContent;
+using Attribute = ItemRarity.Attributes.Attribute;
 
 // ReSharper disable MemberCanBePrivate.Global
 
@@ -49,7 +50,7 @@ public sealed class ModCore : ModSystem
         Config = ModConfig.Load(api);
 
         // Important for item comparison to ignore attributes e.g TreasureTrader for the story map.
-        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(AttributesManager.ModAttributeId);
+        GlobalConstants.IgnoredStackAttributes = GlobalConstants.IgnoredStackAttributes.Append(Attribute.ModAttributeId);
 
         // Mods/Players may add custom attributes, if theses are attributes added outside the mod attribute tree we have to ignore them too.
         foreach (var rarity in Config.Rarity.Rarities.Values)

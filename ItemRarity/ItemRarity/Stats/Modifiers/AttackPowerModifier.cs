@@ -1,4 +1,5 @@
-﻿using ItemRarity.Rarities;
+﻿using ItemRarity.Attributes;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 
@@ -15,6 +16,6 @@ public sealed class AttackPowerModifier : IStatsModifier
     {
         var mul = rarityModel.AttackPowerMultiplier.Random;
 
-        modAttributes.SetFloat(AttributesManager.AttackPowerMultiplier, mul);
+        Attribute.AttackPowerMultiplier.SetFloat(modAttributes, mul);
     }
 }

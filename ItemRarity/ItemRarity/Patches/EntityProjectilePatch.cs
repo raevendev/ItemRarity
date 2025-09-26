@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Attributes;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Common.Entities;
@@ -22,7 +23,7 @@ public static class EntityProjectilePatch
 
         if (__instance.DamageType == EnumDamageType.PiercingAttack)
         {
-            __instance.Damage *= AttributesManager.GetStatsMultiplier(__instance.ProjectileStack, AttributesManager.PiercingPowerMultiplier);
+            __instance.Damage *= Attribute.PiercingPowerMultiplier.GetFloat(__instance.ProjectileStack, 1f);
         }
 
         if (rarity.HasEffect("thor"))

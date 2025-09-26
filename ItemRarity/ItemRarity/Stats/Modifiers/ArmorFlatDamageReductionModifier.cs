@@ -1,4 +1,5 @@
-﻿using ItemRarity.Rarities;
+﻿using ItemRarity.Attributes;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.GameContent;
@@ -17,7 +18,7 @@ public sealed class ArmorFlatDamageReductionModifier : IStatsModifier
         var flatRedMul = rarityModel.ArmorFlatDamageReductionMultiplier.Random;
         var perTierFlatProtMul = rarityModel.ArmorPerTierFlatDamageProtectionLossMultiplier.Random;
 
-        modAttributes.SetFloat(AttributesManager.ArmorFlatDamageReductionMultiplier, flatRedMul);
-        modAttributes.SetFloat(AttributesManager.ArmorPerTierFlatDamageProtectionLossMultiplier, perTierFlatProtMul);
+        Attribute.ArmorFlatDamageReductionMultiplier.SetFloat(modAttributes, flatRedMul);
+        Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.SetFloat(modAttributes, perTierFlatProtMul);
     }
 }

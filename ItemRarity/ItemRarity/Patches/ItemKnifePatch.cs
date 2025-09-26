@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Attributes;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
@@ -32,7 +33,7 @@ public static class ItemKnifePatch
         if (entityBehaviour is not { Harvestable: true })
             return;
 
-        var miningSpeed = __instance.KnifeHarvestingSpeed / AttributesManager.GetStatsMultiplier(slot.Itemstack, AttributesManager.MiningSpeedMultiplier)
+        var miningSpeed = __instance.KnifeHarvestingSpeed / Attribute.MiningSpeedMultiplier.GetFloat(slot.Itemstack, 1f)
             * entityBehaviour.GetHarvestDuration(byEntity) + 0.15000000596046448f;
         __result = secondsUsed < miningSpeed;
     }
@@ -50,7 +51,7 @@ public static class ItemKnifePatch
         var entityBehaviour = entitySel.Entity.GetBehavior<EntityBehaviorHarvestable>();
 
         if (entityBehaviour == null || !entityBehaviour.Harvestable ||
-            secondsUsed < __instance.KnifeHarvestingSpeed / AttributesManager.GetStatsMultiplier(slot.Itemstack, AttributesManager.MiningSpeedMultiplier)
+            secondsUsed < __instance.KnifeHarvestingSpeed / Attribute.MiningSpeedMultiplier.GetFloat(slot.Itemstack, 1f)
             * entityBehaviour.GetHarvestDuration(byEntity) - 0.10000000149011612)
             return;
 

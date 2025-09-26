@@ -1,4 +1,5 @@
-﻿using ItemRarity.Rarities;
+﻿using ItemRarity.Attributes;
+using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.GameContent;
@@ -17,7 +18,7 @@ public sealed class ShieldModifier : IStatsModifier
         var damageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random;
         var projectileDamageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random; // TODO: support projectile
 
-        modAttributes.SetFloat(AttributesManager.ShieldDamageAbsorptionMultiplier, damageAbsorptionMul);
-        modAttributes.SetFloat(AttributesManager.ArmorPerTierFlatDamageProtectionLossMultiplier, projectileDamageAbsorptionMul);
+        Attribute.ShieldDamageAbsorptionMultiplier.SetFloat(modAttributes, damageAbsorptionMul);
+        Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.SetFloat(modAttributes, projectileDamageAbsorptionMul);
     }
 }

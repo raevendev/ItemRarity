@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using ItemRarity.Attributes;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
@@ -13,9 +14,9 @@ public static class GetAttackPowerPatch
     [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetAttackPower)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void CollectibleObject_GetAttackPowerPatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
-        if (__instance is ItemWearable || !Rarity.TryGetRarity(withItemStack, out var rarity))
+        if (__instance is ItemWearable || !Rarity.TryGetRarity(withItemStack, out _))
             return;
 
-        __result *= AttributesManager.GetStatsMultiplier(withItemStack, AttributesManager.AttackPowerMultiplier);
+        __result *= Attribute.AttackPowerMultiplier.GetFloat(withItemStack, 1f);
     }
 }
