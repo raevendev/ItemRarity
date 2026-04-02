@@ -10,23 +10,23 @@ public sealed class AttributeAccessor(string attributeKey)
     {
         if (itemStack == null)
         {
-            Logger.Warning($"Can't get attribute value '{attributeKey}', ItemStack is null.'");
+            Logger.Warning($"Can't get attribute value '{Attribute.ModAttributeId}', ItemStack is null.'");
             modAttributes = null!;
             return false;
         }
 
         if (itemStack.Attributes == null)
         {
-            Logger.Warning($"Can't get attribute value '{attributeKey}' for ItemStack '{itemStack.Collectible.Code}' because the ItemStack's attributes are null.'");
+            Logger.Warning($"Can't get attribute value '{Attribute.ModAttributeId}' for ItemStack '{itemStack.Collectible.Code}' because the ItemStack's attributes are null.'");
             modAttributes = null!;
             return false;
         }
 
-        var attributes = itemStack.Attributes.GetTreeAttribute(attributeKey);
+        var attributes = itemStack.Attributes.GetTreeAttribute(Attribute.ModAttributeId);
         if (attributes == null)
         {
             Logger.Warning(
-                $"Can't get attribute value '{attributeKey}' for ItemStack '{itemStack.Collectible.Code}' because the ItemStack's attributes are missing rarity.'");
+                $"Can't get attribute value '{Attribute.ModAttributeId}' for ItemStack '{itemStack.Collectible.Code}' because the ItemStack's attributes are missing rarity.'");
             modAttributes = null!;
             return false;
         }
