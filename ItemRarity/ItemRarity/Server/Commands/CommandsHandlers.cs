@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Vintagestory.API.Common;
 using Vintagestory.API.Datastructures;
 using Vintagestory.API.Server;
+using Vintagestory.API.Util;
 
 namespace ItemRarity.Server.Commands;
 
@@ -29,7 +30,7 @@ public static class CommandsHandlers
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
 
-        Rarity.ApplyRarity(currentItemStack);
+        Rarity.ApplyRarity(currentItemStack, rarity);
 
         activeSlot.MarkDirty();
 
