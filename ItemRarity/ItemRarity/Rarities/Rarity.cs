@@ -72,6 +72,12 @@ public static class Rarity
 
         var rarityKey = modAttribute.GetString(Attribute.Rarity);
 
+        if (rarityKey == null)
+        {
+            rarityModel = null!;
+            return false;
+        }
+        
         return Config.TryGetRarity(rarityKey, out rarityModel);
     }
 

@@ -15,21 +15,21 @@ namespace ItemRarity.Patches.Methods;
 public static class ConsumeCraftingIngredientsPatch
 {
     [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleObject_ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe)
+    public static void CollectibleObject_ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe, ref bool __result)
     {
-        ConsumeCraftingIngredients(slots, outputSlot, matchingRecipe);
+       __result = ConsumeCraftingIngredients(slots, outputSlot, matchingRecipe);
     }
 
     [HarmonyPatch(typeof(ItemWearable), nameof(ItemWearable.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void ItemWearable_ConsumeCraftingIngredientsPatch(ItemWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
+    public static void ItemWearable_ConsumeCraftingIngredientsPatch(ItemWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe, ref bool __result)
     {
-        ConsumeCraftingIngredients(inSlots, outputSlot, recipe);
+        __result = ConsumeCraftingIngredients(inSlots, outputSlot, recipe);
     }
 
-    private static void ConsumeCraftingIngredients(ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
+    private static bool ConsumeCraftingIngredients(ItemSlot[] inSlots, ItemSlot outputSlot, GridRecipe recipe)
     {
         if (outputSlot is not { Itemstack: not null })
-            return;
+            return false;
 
         switch (ModCore.Config.Tier.EnableTiers)
         {
@@ -43,7 +43,7 @@ public static class ConsumeCraftingIngredientsPatch
                 if (tierItem == null)
                 {
                     Logger.Warning("Failed to find tier item when applying tier");
-                    return;
+                    return false;
                 }
 
                 var targetItem = inSlots.FirstOrDefault(s => s.Itemstack?.Collectible?.Durability > 1);
@@ -51,18 +51,20 @@ public static class ConsumeCraftingIngredientsPatch
                 if (targetItem == null)
                 {
                     Logger.Warning("Failed to find target item when applying tier");
-                    return;
+                    return false;
                 }
 
                 if (Rarity.TryGetRarity(targetItem.Itemstack, out _))
                     Tier.ApplyTierUpgrade(targetItem.Itemstack, outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
                 else
                     Tier.ApplyTier(outputSlot.Itemstack, tierItem.Itemstack.Collectible.Code.EndVariantInteger());
-
+                
                 foreach (var slot in inSlots.Where(s => s.Itemstack?.Collectible?.Code == outputSlot.Itemstack?.Collectible?.Code))
                     slot.TakeOut(1);
                 break;
             }
         }
+
+        return false;
     }
 }

@@ -78,7 +78,7 @@ public static class Tier
 
         var modAttributes = itemStack.Attributes.GetOrAddTreeAttribute(Attribute.ModAttributeId);
 
-        modAttributes.SetInt(Attribute.Rarity, tierModel.Level);
+        modAttributes.SetInt(Attribute.Tier, tierModel.Level);
     }
 
     public static void ApplyTierUpgrade(ItemStack inputItem, ItemStack outputItem, int tierLevel)
