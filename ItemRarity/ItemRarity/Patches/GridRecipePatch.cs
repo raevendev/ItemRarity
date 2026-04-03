@@ -3,7 +3,6 @@
 using System.Linq;
 using HarmonyLib;
 using ItemRarity.Rarities;
-using ItemRarity.Tiers;
 using Vintagestory.API.Common;
 
 namespace ItemRarity.Patches;
