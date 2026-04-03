@@ -3,10 +3,12 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using HarmonyLib;
 using ItemRarity.Rarities;
+using Vintagestory;
 using Vintagestory.API.Common;
 using Vintagestory.API.Config;
 using Vintagestory.GameContent;
 using Attribute = ItemRarity.Attributes.Attribute;
+using Logger = ItemRarity.Logging.Logger;
 
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
@@ -19,6 +21,13 @@ public static class GetHeldItemInfoPatch
     [HarmonyReversePatch, HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetHeldItemInfo))]
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static void CollectibleObject_GetHeldItemInfoReversePatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world,
+        bool withDebugInfo)
+    {
+    }
+
+    [HarmonyReversePatch, HarmonyPatch(typeof(ItemWearable), nameof(ItemWearable.GetHeldItemInfo))]
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static void ItemWearable_GetHeldItemInfoReversePatch(ItemWearable __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world,
         bool withDebugInfo)
     {
     }
@@ -104,6 +113,45 @@ public static class GetHeldItemInfoPatch
         return false;
     }
 
+    [HarmonyPatch(typeof(ItemWearable), nameof(ItemWearable.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
+    public static bool ItemWearable_GetHeldItemInfoPatch(ItemWearable __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+    {
+        if (inSlot is not { Itemstack: not null })
+            return true;
+
+        if (!Rarity.TryGetRarity(inSlot.Itemstack, out _))
+            return true;
+
+        if (inSlot.Itemstack.Item is not ItemWearable wearable)
+            return true;
+
+        ItemWearable_GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world, withDebugInfo);
+
+        var flatProtectionMul = Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(inSlot.Itemstack, -1f);
+
+        if (flatProtectionMul > 0)
+        {
+            var flatProtectionLine = Lang.Get("Flat damage reduction: {0} hp", wearable.ProtectionModifiers.FlatDamageReduction) ?? string.Empty;
+            var lines = dsc.ToString().Trim().Split(Environment.NewLine);
+            var foundLine = Array.FindIndex(lines, line => line.StartsWith(flatProtectionLine, StringComparison.CurrentCultureIgnoreCase));
+
+            dsc.Clear();
+
+            for (var i = 0; i < lines.Length; i++)
+            {
+                if (i != foundLine)
+                {
+                    dsc.AppendLine(lines[i]);
+                    continue;
+                }
+
+                dsc.AppendLine(Lang.Get("Flat damage reduction: {0} hp", (wearable.ProtectionModifiers.FlatDamageReduction * flatProtectionMul).ToString("F")));
+            }
+        }
+
+        return false;
+    }
+
     private static void FixItemInfos(RarityModel rarityModelInfos, ItemStack itemStack, CollectibleObject collectible, StringBuilder sb)
     {
         if (itemStack.Collectible.MiningSpeed is { Count: > 0 })
@@ -149,31 +197,6 @@ public static class GetHeldItemInfoPatch
                     sb.AppendLine(Lang.Get("Attack power: -{0} hp", collectible.GetAttackPower(itemStack).ToString("0.#")));
                 }
             }
-        }
-        else if (collectible is ItemWearable { ProtectionModifiers: not null } wearable)
-        {
-            // var protectionModifier = modAttribute.GetTreeAttribute(ModAttributes.ProtectionModifiers);
-            //
-            // if (protectionModifier == null)
-            // {
-            //     sb.AppendLine("Missing flat protection modifier");
-            //     return;
-            // }
-            //
-            // var flatProtTranslation = Lang.Get("Flat damage reduction: {0} hp", wearable.ProtectionModifiers.FlatDamageReduction) ?? string.Empty;
-            // // var relProtTranslation = Lang.Get("Percent protection: {0}%", 100.0 * wearable.ProtectionModifiers.RelativeProtection) ?? string.Empty;
-            //
-            // for (var i = 0; i < lines.Length; i++)
-            // {
-            //     var line = lines[i];
-            //
-            //     if (line.StartsWith(flatProtTranslation))
-            //         sb.AppendLine(Lang.Get("Flat damage reduction: {0} hp", protectionModifier.GetFloat(ModAttributes.ArmorFlatDamageReduction).ToString("F")));
-            //     // else if (line.StartsWith(relProtTranslation.Substring(0, 5)))
-            //     //     sb.AppendLine(Lang.Get("Percent protection: {0}%", (protectionModifier.GetFloat(ModAttributes.ArmorRelativeProtection) * 100.0).ToString("F")));
-            //     else
-            //         sb.AppendLine(line);
-            // }
         }
     }
 }

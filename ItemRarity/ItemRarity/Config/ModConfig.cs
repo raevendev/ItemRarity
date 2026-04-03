@@ -45,7 +45,8 @@ public sealed class ModConfig
         }
         catch
         {
-            Logger.Error("Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration file, please backup your configuration before deleting the file).");
+            Logger.Error(
+                "Failed to load configuration. Falling back to the default configuration (Will not overwrite existing configuration file, please backup your configuration before deleting the file).");
             return GetDefaultConfig();
         }
     }
@@ -270,8 +271,6 @@ public sealed class ModConfig
 
             Tier = new()
             {
-                
-                
                 Tiers = tiers.ToDictionary(t => t.Level),
             }
         };
