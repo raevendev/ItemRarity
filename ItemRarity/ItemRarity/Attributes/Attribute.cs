@@ -18,14 +18,9 @@ public static class Attribute
     public static readonly AttributeAccessor AttackRangeMultiplier = new("attackrangemul");
 
     public static readonly AttributeAccessor PiercingPowerMultiplier = new("piercingdamagemul");
-    // public static readonly AttributeAccessor ProtectionModifiers = new("protectionmodifiers");
 
-    // public static readonly AttributeAccessor ArmorFlatDamageReduction = new("armorflatdamagereduction");
     public static readonly AttributeAccessor ArmorFlatDamageReductionMultiplier = new("armorflatdamagereductionmul");
     public static readonly AttributeAccessor ArmorPerTierFlatDamageProtectionLossMultiplier = new("armorpertierflatdamagereductionlossmul");
-
-    // public static readonly AttributeAccessor ArmorRelativeProtection = new("armorrelativeprotection");
-    // public static readonly AttributeAccessor ArmorRelativeProtectionMultiplier = new("armorrelativeprotectionmul");
 
     public static readonly AttributeAccessor ShieldDamageAbsorptionMultiplier = new("shielddamageabsorptionmul");
     public static readonly AttributeAccessor ShieldProjectileDamageAbsorptionMultiplier = new("shieldprojectiledamageabsorptionmul");
