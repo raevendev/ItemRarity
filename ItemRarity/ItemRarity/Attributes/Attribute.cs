@@ -15,6 +15,7 @@ public static class Attribute
     public static readonly AttributeAccessor MaxDurabilityMultiplier = new("maxdurabilitymul");
     public static readonly AttributeAccessor MiningSpeedMultiplier = new("miningspeedmul");
     public static readonly AttributeAccessor AttackPowerMultiplier = new("attackpowermul");
+    public static readonly AttributeAccessor AttackRangeMultiplier = new("attackrangemul");
 
     public static readonly AttributeAccessor PiercingPowerMultiplier = new("piercingdamagemul");
     // public static readonly AttributeAccessor ProtectionModifiers = new("protectionmodifiers");
