@@ -27,9 +27,20 @@ public static class GetProtectionModifiersPatch
         if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
 
-        __result.FlatDamageReduction *= Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(slot.Itemstack, 1f);
+        var protectionModifiers = new ProtectionModifiers // TODO: For now, i created a new instance each time, this is really not ideal.
+        {
+            ProtectionTier = __result.ProtectionTier,
+            HighDamageTierResistant = __result.HighDamageTierResistant,
+            RelativeProtection = __result.RelativeProtection,
+            FlatDamageReduction = __result.FlatDamageReduction * Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(slot.Itemstack, 1f),
+            PerTierFlatDamageReductionLoss = new float[__result.PerTierFlatDamageReductionLoss.Length],
+            PerTierRelativeProtectionLoss = new float[__result.PerTierRelativeProtectionLoss.Length],
+        };
 
         for (var i = 0; i < __result.PerTierFlatDamageReductionLoss.Length; i++)
-            __result.PerTierFlatDamageReductionLoss[i] *= Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.GetFloat(slot.Itemstack, 1f);
+            protectionModifiers.PerTierFlatDamageReductionLoss[i] = __result.PerTierFlatDamageReductionLoss[i] *
+                                                                    Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.GetFloat(slot.Itemstack, 1f);
+
+        __result = protectionModifiers;
     }
 }
