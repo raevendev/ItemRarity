@@ -20,7 +20,7 @@ public sealed class TierUpgradeRecipe : GridRecipe
                 {
                     Type = EnumItemClass.Item,
                     Code = "itemrarity:tier-*",
-                    IsWildCard = true
+                    MatchingType = EnumRecipeMatchType.Wildcard // TODO: bas UseWildcard = true
                 }
             }
         };
@@ -31,6 +31,6 @@ public sealed class TierUpgradeRecipe : GridRecipe
             Code = "itemrarity:tier-output"
         };
 
-        ResolveIngredients(worldAccessor);
+        Resolve(worldAccessor, nameof(TierUpgradeRecipe));
     }
 }
