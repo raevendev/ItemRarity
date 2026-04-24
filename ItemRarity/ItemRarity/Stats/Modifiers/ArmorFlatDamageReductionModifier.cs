@@ -10,7 +10,7 @@ public sealed class ArmorFlatDamageReductionModifier : IStatsModifier
 {
     public bool IsSuitable(ItemStack itemStack)
     {
-        return itemStack.Collectible is ItemWearable { ProtectionModifiers: not null, IsArmor: true };
+        return itemStack.Collectible.HasBehavior<CollectibleBehaviorWearable>();
     }
 
     public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
