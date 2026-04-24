@@ -10,13 +10,13 @@ public sealed class ShieldModifier : IStatsModifier
 {
     public bool IsSuitable(ItemStack itemStack)
     {
-        return itemStack.Collectible is ItemShield shield;
+        return itemStack.Collectible is ItemShield or ItemShieldFromAttributes;
     }
 
     public void Apply(RarityModel rarityModel, ItemStack itemStack, ITreeAttribute modAttributes)
     {
         var damageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random;
-        var projectileDamageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random; // TODO: support projectile
+        var projectileDamageAbsorptionMul = rarityModel.ShieldProtectionMultiplier.Random;
 
         Attribute.ShieldDamageAbsorptionMultiplier.SetFloat(modAttributes, damageAbsorptionMul);
         Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.SetFloat(modAttributes, projectileDamageAbsorptionMul);
