@@ -143,43 +143,4 @@ public static class GetHeldItemInfoPatch
 
         return false;
     }
-
-    /*[HarmonyPatch(typeof(CollectibleBehaviorWearable), nameof(CollectibleBehaviorWearable.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
-    public static bool CollectibleBehaviorWearable_GetHeldItemInfoPatch(CollectibleBehaviorWearable __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
-    {
-        if (inSlot is not { Itemstack: not null })
-            return true;
-
-        if (!Rarity.TryGetRarity(inSlot.Itemstack, out _))
-            return true;
-
-        if (inSlot.Itemstack.Item is not ItemWearable wearable)
-            return true;
-
-        ItemWearable_GetHeldItemInfoReversePatch(__instance, inSlot, dsc, world, withDebugInfo);
-
-        var flatProtectionMul = Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(inSlot.Itemstack, -1f);
-
-        if (flatProtectionMul > 0)
-        {
-            var flatProtectionLine = Lang.Get("Flat damage reduction: {0} hp", wearable.ProtectionModifiers.FlatDamageReduction) ?? string.Empty;
-            var lines = dsc.ToString().Trim().Split(Environment.NewLine);
-            var foundLine = Array.FindIndex(lines, line => line.StartsWith(flatProtectionLine, StringComparison.CurrentCultureIgnoreCase));
-
-            dsc.Clear();
-
-            for (var i = 0; i < lines.Length; i++)
-            {
-                if (i != foundLine)
-                {
-                    dsc.AppendLine(lines[i]);
-                    continue;
-                }
-
-                dsc.AppendLine(Lang.Get("Flat damage reduction: {0} hp", (wearable.ProtectionModifiers.FlatDamageReduction * flatProtectionMul).ToString("F")));
-            }
-        }
-
-        return false;
-    }*/
 }
