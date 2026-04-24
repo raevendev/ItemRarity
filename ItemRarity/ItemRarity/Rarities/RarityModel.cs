@@ -33,14 +33,17 @@ public sealed class RarityModel
 
     [JsonProperty(Order = 7), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier AttackPowerMultiplier { get; init; } = 1F;
-
+    
     [JsonProperty(Order = 8), JsonConverter(typeof(RarityMultiplierJsonConverter))]
-    public RarityMultiplier PiercingPowerMultiplier { get; init; } = 1F;
+    public RarityMultiplier AttackRangeMultiplier { get; init; } = 1F;
 
     [JsonProperty(Order = 9), JsonConverter(typeof(RarityMultiplierJsonConverter))]
-    public RarityMultiplier ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
+    public RarityMultiplier PiercingPowerMultiplier { get; init; } = 1F;
 
     [JsonProperty(Order = 10), JsonConverter(typeof(RarityMultiplierJsonConverter))]
+    public RarityMultiplier ArmorFlatDamageReductionMultiplier { get; init; } = 1F;
+
+    [JsonProperty(Order = 11), JsonConverter(typeof(RarityMultiplierJsonConverter))]
     public RarityMultiplier ArmorPerTierFlatDamageProtectionLossMultiplier { get; init; } = 1F;
 
     [JsonIgnore, JsonConverter(typeof(RarityMultiplierJsonConverter))]

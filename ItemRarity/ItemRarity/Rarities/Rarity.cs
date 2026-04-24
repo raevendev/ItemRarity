@@ -14,7 +14,7 @@ public static class Rarity
     private static readonly IStatsModifier[] StatsModifiers =
     [
         new DurabilityModifier(), new MiningSpeedModifier(),
-        new PiercingPowerModifier(), new AttackPowerModifier(),
+        new PiercingPowerModifier(), new AttackPowerModifier(), new AttackRangeModifier(),
         new ArmorFlatDamageReductionModifier(), new ShieldModifier()
     ];
 
