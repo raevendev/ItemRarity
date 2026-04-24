@@ -15,13 +15,14 @@ public static class GetHeldItemNamePatch
     public static void CollectibleObject_GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
         GetHeldItemName(itemStack, ref __result);
-    }
-
-    [HarmonyPatch(typeof(ItemShield), nameof(ItemShield.GetHeldItemName)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void ItemShield_GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
+    }   
+    
+    [HarmonyPatch(typeof(ItemShieldFromAttributes), nameof(ItemShieldFromAttributes.GetHeldItemName)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void ItemShieldFromAttributes_GetHeldItemNamePatch(ItemShieldFromAttributes __instance, ItemStack itemStack, ref string __result)
     {
         GetHeldItemName(itemStack, ref __result);
     }
+    
 
     private static void GetHeldItemName(ItemStack itemStack, ref string __result)
     {
