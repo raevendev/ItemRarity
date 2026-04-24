@@ -13,6 +13,9 @@ public sealed class ItemTier : Item
     {
         base.GetHeldItemInfo(inSlot, dsc, world, withDebugInfo);
 
+        if (inSlot.Itemstack is null)
+            return;
+
         var tierLevel = inSlot.Itemstack.Collectible.Code.EndVariantInteger();
 
         if (tierLevel <= 0)
