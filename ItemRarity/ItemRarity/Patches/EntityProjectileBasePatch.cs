@@ -12,7 +12,7 @@ namespace ItemRarity.Patches;
 /// <summary>
 /// A Harmony patch class for modifying the behavior of the <see cref="EntityProjectile"/> class.
 /// </summary>
-[HarmonyPatch(typeof(EntityProjectileBase))]
+[HarmonyPatch]
 public static class EntityProjectileBasePatch
 {
     /// <summary>
@@ -27,7 +27,7 @@ public static class EntityProjectileBasePatch
         if (__instance.DamageType != EnumDamageType.PiercingAttack || __instance.WeaponStack is null)
             return;
 
-        if (!Rarity.TryGetRarity(__instance.WeaponStack, out var rarityModel))
+        if (!Rarity.TryGetRarity(__instance.WeaponStack, out _))
             return;
 
         damage *= Attribute.PiercingPowerMultiplier.GetFloat(__instance.ProjectileStack, 1f);
@@ -42,10 +42,7 @@ public static class EntityProjectileBasePatch
     [HarmonyPatch(typeof(EntityProjectileBase), "DealDamage"), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void DealDamage(EntityProjectileBase __instance, Entity target, bool __result)
     {
-        if (!__result)
-            return;
-
-        if (__instance.DamageType != EnumDamageType.PiercingAttack || __instance.WeaponStack is null)
+        if (!__result || __instance.DamageType != EnumDamageType.PiercingAttack || __instance.WeaponStack is null)
             return;
 
         if (!Rarity.TryGetRarity(__instance.WeaponStack, out var rarityModel))

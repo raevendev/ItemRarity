@@ -6,19 +6,18 @@ using Vintagestory.GameContent;
 
 // ReSharper disable InconsistentNaming
 
-namespace ItemRarity.Patches.Methods;
+namespace ItemRarity.Patches;
 
 [HarmonyPatch]
-public static class GetKnifeHarvestingSpeedPatch
+public static class ItemKnifePatch
 {
-    [HarmonyPostfix, HarmonyPatch(typeof(ItemKnife), nameof(ItemKnife.GetKnifeHarvestingSpeed)), HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(typeof(ItemKnife), nameof(ItemKnife.GetKnifeHarvestingSpeed)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void GetKnifeHarvestingSpeed(ItemKnife __instance, ItemSlot slot, ref float __result)
     {
         if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
-        
+
         __result = (float)(1.0 / (((__instance.GetMiningSpeeds(slot)[EnumBlockMaterial.Plant] * Attribute.MiningSpeedMultiplier.GetFloat(slot.Itemstack)) - 1.0) * 0.5 +
                                   1.0));
-        
     }
 }

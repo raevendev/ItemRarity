@@ -6,11 +6,29 @@ using Vintagestory.GameContent;
 
 // ReSharper disable InconsistentNaming
 
-namespace ItemRarity.Patches.Methods;
+namespace ItemRarity.Patches;
 
 [HarmonyPatch]
-public static class GetProtectionModifiersPatch
+public static class CollectibleBehaviorWearablePatch
 {
+    /// <summary>
+    /// Overrides the ingredient consumption logic for wearable items during crafting.
+    /// Replaces the original result with a custom implementation.
+    /// </summary>
+    /// <param name="__instance">The wearable item instance involved in the crafting.</param>
+    /// <param name="inSlots">The input item slots containing the ingredients.</param>
+    /// <param name="outputSlot">The output slot where the crafted item will be placed.</param>
+    /// <param name="recipe">The recipe being executed.</param>
+    /// <param name="bhHandling">The event handling status (modified by reference).</param>
+    /// <param name="__result">The final success status of the ingredient consumption.</param>
+    [HarmonyPatch(typeof(CollectibleBehaviorWearable), nameof(CollectibleBehaviorWearable.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void CollectibleBehaviorWearable_ConsumeCraftingIngredientsPatch(CollectibleBehaviorWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot,
+        IRecipeBase recipe,
+        ref EnumHandling bhHandling, ref bool __result)
+    {
+        __result = PatchHelpers.ConsumeCraftingIngredients(inSlots, outputSlot, recipe);
+    }
+
     /// <summary>
     /// Postfix patch to inject rarity modifiers into the protection values of wearable items.
     /// Runs last to ensure custom stats are applied after all base calculations.
@@ -21,9 +39,6 @@ public static class GetProtectionModifiersPatch
     [HarmonyPatch(typeof(CollectibleBehaviorWearable), nameof(CollectibleBehaviorWearable.GetProtectionModifiers)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void CollectibleBehaviorWearable_GetAttackPowerPatch(CollectibleBehaviorWearable __instance, ItemSlot slot, ref ProtectionModifiers __result)
     {
-        if (slot is not { Itemstack: not null })
-            return;
-
         if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
 
