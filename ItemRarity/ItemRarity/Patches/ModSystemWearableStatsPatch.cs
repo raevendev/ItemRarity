@@ -25,11 +25,11 @@ public static class ModSystemWearableStatsPatch
     {
         double num1 = 1.0471975803375244;
         float num2 = damage;
-        ItemSlot[] itemSlotArray = new ItemSlot[2]
-        {
+        ItemSlot[] itemSlotArray =
+        [
             player.Entity.LeftHandItemSlot,
             player.Entity.RightHandItemSlot
-        };
+        ];
         for (int index = 0; index < itemSlotArray.Length; ++index)
         {
             ItemSlot itemSlot = itemSlotArray[index];

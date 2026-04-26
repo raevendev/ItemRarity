@@ -124,8 +124,8 @@ public sealed class ModCore : ModSystem
 
         mainCommand.BeginSubCommand("roll")
             .WithDescription("Run the random rarity generator.")
-            .WithArgs(parsers.Int("times"), parsers.OptionalWord("tier"))
-            .HandleWith(CommandsHandlers.HandleTestRarityCommandUnified)
+            .WithArgs(parsers.Int("times"), parsers.OptionalInt("tier"))
+            .HandleWith(CommandsHandlers.HandleTestRarityCommand)
             .EndSubCommand();
 
         mainCommand.BeginSubCommand("itemdebug")

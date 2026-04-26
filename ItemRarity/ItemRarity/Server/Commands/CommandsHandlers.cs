@@ -21,13 +21,18 @@ public static class CommandsHandlers
     {
         var rarityKey = args.Parsers[0].GetValue().ToString();
         if (string.IsNullOrWhiteSpace(rarityKey))
-            return TextCommandResult.Error($"Missing required parameter 'rarityKey'");
+            return TextCommandResult.Error("Missing required parameter 'rarityKey'");
         if (!ModCore.Config.Rarity.TryGetRarity(rarityKey, out var rarity))
             return TextCommandResult.Error($"Rarity '{rarityKey}' not found");
 
 
         var activeSlot = args.Caller.Player.InventoryManager.ActiveHotbarSlot;
         var currentItemStack = activeSlot.Itemstack;
+
+        if (currentItemStack == null)
+        {
+            return TextCommandResult.Error($"Slot '{activeSlot.Itemstack}' is null");
+        }
 
         Rarity.ApplyRarity(currentItemStack, rarity);
 
@@ -47,7 +52,7 @@ public static class CommandsHandlers
         return TextCommandResult.Success("Configuration has been reloaded");
     }
 
-    internal static TextCommandResult HandleTestRarityCommandUnified(TextCommandCallingArgs args)
+    internal static TextCommandResult HandleTestRarityCommand(TextCommandCallingArgs args)
     {
         var timeRun = args.Parsers[0].GetValue() as int? ?? 0;
         var tier = args.Parsers[1].IsMissing ? null : args.Parsers[1].GetValue() as int?;
