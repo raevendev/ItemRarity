@@ -8,7 +8,7 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity.Patches;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(CollectibleBehaviorWearable))]
 public static class CollectibleBehaviorWearablePatch
 {
     /// <summary>
@@ -21,8 +21,8 @@ public static class CollectibleBehaviorWearablePatch
     /// <param name="recipe">The recipe being executed.</param>
     /// <param name="bhHandling">The event handling status (modified by reference).</param>
     /// <param name="__result">The final success status of the ingredient consumption.</param>
-    [HarmonyPatch(typeof(CollectibleBehaviorWearable), nameof(CollectibleBehaviorWearable.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleBehaviorWearable_ConsumeCraftingIngredientsPatch(CollectibleBehaviorWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot,
+    [HarmonyPatch(nameof(CollectibleBehaviorWearable.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void ConsumeCraftingIngredientsPatch(CollectibleBehaviorWearable __instance, ItemSlot[] inSlots, ItemSlot outputSlot,
         IRecipeBase recipe,
         ref EnumHandling bhHandling, ref bool __result)
     {
@@ -36,8 +36,8 @@ public static class CollectibleBehaviorWearablePatch
     /// <param name="__instance">The wearable item instance being processed.</param>
     /// <param name="slot">The equipment slot where the item is located.</param>
     /// <param name="__result">The protection modifiers to be updated with rarity bonuses.</param>
-    [HarmonyPatch(typeof(CollectibleBehaviorWearable), nameof(CollectibleBehaviorWearable.GetProtectionModifiers)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleBehaviorWearable_GetAttackPowerPatch(CollectibleBehaviorWearable __instance, ItemSlot slot, ref ProtectionModifiers __result)
+    [HarmonyPatch(nameof(CollectibleBehaviorWearable.GetProtectionModifiers)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void GetAttackPowerPatch(CollectibleBehaviorWearable __instance, ItemSlot slot, ref ProtectionModifiers __result)
     {
         if (!Rarity.TryGetRarity(slot.Itemstack, out _))
             return;

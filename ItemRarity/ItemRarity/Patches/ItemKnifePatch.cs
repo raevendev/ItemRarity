@@ -8,10 +8,10 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity.Patches;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(ItemKnife))]
 public static class ItemKnifePatch
 {
-    [HarmonyPatch(typeof(ItemKnife), nameof(ItemKnife.GetKnifeHarvestingSpeed)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(nameof(ItemKnife.GetKnifeHarvestingSpeed)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void GetKnifeHarvestingSpeed(ItemKnife __instance, ItemSlot slot, ref float __result)
     {
         if (!Rarity.TryGetRarity(slot.Itemstack, out _))

@@ -11,7 +11,7 @@ using Attribute = ItemRarity.Attributes.Attribute;
 
 namespace ItemRarity.Patches;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(CollectibleObject))]
 public static class CollectibleObjectPatch
 {
     [HarmonyReversePatch, HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetHeldItemInfo))]
@@ -21,7 +21,7 @@ public static class CollectibleObjectPatch
     {
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetAttackPower)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(nameof(CollectibleObject.GetAttackPower)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void GetAttackPowerPatch(CollectibleObject __instance, ItemStack itemStack, ref float __result)
     {
         if (!Rarity.TryGetRarity(itemStack, out _))
@@ -30,8 +30,8 @@ public static class CollectibleObjectPatch
         __result *= Attribute.AttackPowerMultiplier.GetFloat(itemStack, 1f);
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetMaxDurability)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleObject_GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
+    [HarmonyPatch(nameof(CollectibleObject.GetMaxDurability)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void GetMaxDurabilityPatch(CollectibleObject __instance, ItemStack itemstack, ref int __result)
     {
         if (!Rarity.TryGetRarity(itemstack, out _))
             return;
@@ -39,8 +39,8 @@ public static class CollectibleObjectPatch
         __result = (int)(__result * Attribute.MaxDurabilityMultiplier.GetFloat(itemstack, 1f));
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetMiningSpeed)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleObject_GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
+    [HarmonyPatch(nameof(CollectibleObject.GetMiningSpeed)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void GetMiningSpeedPatch(CollectibleObject __instance, IItemStack itemstack, BlockSelection blockSel, Block block, IPlayer forPlayer,
         ref float __result)
     {
         if (!Rarity.TryGetRarity(itemstack as ItemStack, out _))
@@ -49,7 +49,7 @@ public static class CollectibleObjectPatch
         __result *= Attribute.MiningSpeedMultiplier.GetFloat(itemstack as ItemStack, 1f);
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetAttackRange)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(nameof(CollectibleObject.GetAttackRange)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void GetAttackRangePatch(CollectibleObject __instance, ItemStack withItemStack, ref float __result)
     {
         if (!Rarity.TryGetRarity(withItemStack, out _))
@@ -58,29 +58,20 @@ public static class CollectibleObjectPatch
         __result *= Attribute.AttackRangeMultiplier.GetFloat(withItemStack, 1f);
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetHeldItemName)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleObject_GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
+    [HarmonyPatch(nameof(CollectibleObject.GetHeldItemName)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void GetHeldItemNamePatch(CollectibleObject __instance, ItemStack itemStack, ref string __result)
     {
         PatchHelpers.GetHeldItemName(itemStack, ref __result);
     }
-
-    /// <summary>
-    /// Overrides the ingredient consumption logic for general collectible objects during crafting.
-    /// Replaces the original result with a custom implementation.
-    /// </summary>
-    /// <param name="__instance">The collectible object instance involved in the crafting.</param>
-    /// <param name="slots">The input item slots containing the ingredients.</param>
-    /// <param name="outputSlot">The output slot where the crafted item will be placed.</param>
-    /// <param name="matchingRecipe">The recipe being executed.</param>
-    /// <param name="__result">The final success status of the ingredient consumption.</param>
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void CollectibleObject_ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe,
+    
+    [HarmonyPatch(nameof(CollectibleObject.ConsumeCraftingIngredients)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    public static void ConsumeCraftingIngredientsPatch(CollectibleObject __instance, ItemSlot[] slots, ItemSlot outputSlot, GridRecipe matchingRecipe,
         ref bool __result)
     {
         __result = PatchHelpers.ConsumeCraftingIngredients(slots, outputSlot, matchingRecipe);
     }
 
-    [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
+    [HarmonyPatch(nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         if (inSlot is not { Itemstack: not null })

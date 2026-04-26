@@ -10,11 +10,11 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity.Patches;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(ItemShield))]
 public static class ItemShieldPatch
 {
-    [HarmonyPatch(typeof(ItemShield), nameof(ItemShield.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
-    public static bool ItemShield_GetHeldItemInfoPatch(ItemShield __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+    [HarmonyPatch(nameof(ItemShield.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
+    public static bool GetHeldItemInfoPatch(ItemShield __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         if (inSlot is not { Itemstack: not null })
             return true;

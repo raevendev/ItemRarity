@@ -9,11 +9,11 @@ using Vintagestory.GameContent;
 
 namespace ItemRarity.Patches;
 
-[HarmonyPatch]
+[HarmonyPatch(typeof(ItemSpear))]
 public static class ItemSpearPatch
 {
-    [HarmonyPatch(typeof(ItemSpear), nameof(ItemSpear.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
-    public static bool ItemSpear_GetHeldItemInfoPatch(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
+    [HarmonyPatch(nameof(ItemSpear.GetHeldItemInfo)), HarmonyPrefix, HarmonyPriority(Priority.Last)]
+    public static bool GetHeldItemInfoPatch(ItemSpear __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
         if (!Rarity.TryGetRarity(inSlot.Itemstack, out _))
             return true;

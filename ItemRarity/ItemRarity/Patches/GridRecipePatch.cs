@@ -10,7 +10,7 @@ namespace ItemRarity.Patches;
 [HarmonyPatch(typeof(RecipeBase))]
 public static class GridRecipePatch
 {
-    [HarmonyPrefix, HarmonyPatch("MatchesShapeLess"), HarmonyPriority(Priority.Last)]
+    [HarmonyPatch("MatchesShapeLess"), HarmonyPrefix, HarmonyPriority(Priority.Last)]
     public static bool MatchesShapeLessPatch(RecipeBase __instance, ref bool __result, ItemSlot[] suppliedSlots, IWorldAccessor world,
         IRecipeIngredient?[] ingredients)
     {
