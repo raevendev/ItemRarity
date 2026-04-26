@@ -23,13 +23,6 @@ public static class GetHeldItemInfoPatch
     {
     }
 
-    // [HarmonyReversePatch, HarmonyPatch(typeof(ItemWearable), nameof(ItemWearable.GetHeldItemInfo))]
-    // [MethodImpl(MethodImplOptions.NoInlining)]
-    // public static void ItemWearable_GetHeldItemInfoReversePatch(ItemWearable __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world,
-    //     bool withDebugInfo)
-    // {
-    // }
-
     [HarmonyPatch(typeof(CollectibleObject), nameof(CollectibleObject.GetHeldItemInfo)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
     public static void CollectibleObject_GetHeldItemInfoPatch(CollectibleObject __instance, ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
     {
