@@ -124,6 +124,7 @@ Here, **Common** has an 80% chance because 80 / (80 + 15 + 4 + 1) = 0.80
 
 - More **special effects** to diversify tool behavior.
 - Advanced item filtering via.
+- A more linear way of getting rarities, more tied to the player progression than total randomness.
 
 ---
 
