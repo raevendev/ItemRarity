@@ -1,7 +1,8 @@
 {
-  "type": "code",
+  "$schema": "https://moddbcdn.vintagestory.at/schema/modinfo.latest.json",
+  "type": "Code",
   "modid": "itemrarity",
-  "side:": "universal",
+  "side": "Universal",
   "name": "ItemRarity",
   "description": "This mod introduces a rarity mechanic to items. Rarity levels influence key item stats, such as durability, damage, and more.",
   "version": "1.2.0",
