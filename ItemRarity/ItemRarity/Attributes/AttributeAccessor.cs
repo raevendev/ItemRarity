@@ -6,7 +6,7 @@ namespace ItemRarity.Attributes;
 
 public sealed class AttributeAccessor(string attributeKey)
 {
-    private bool EnsureValid(ItemStack? itemStack, out ITreeAttribute modAttributes)
+    private static bool EnsureValid(ItemStack? itemStack, out ITreeAttribute modAttributes)
     {
         if (itemStack == null)
         {

@@ -17,28 +17,23 @@ public sealed class ModConfig
     private static readonly string ConfigTiersFileName = Path.Combine(ConfigDirectoryName, "tiers.json");
 
     public required RaritiesConfig Rarity { get; init; }
+    
     public required TiersConfig Tier { get; init; }
 
     public static ModConfig Load(ICoreAPI api)
     {
         try
         {
-            var rarities = api.LoadModConfig<RaritiesConfig>(ConfigRaritiesFileName);
-            var tiers = api.LoadModConfig<TiersConfig>(ConfigTiersFileName);
-
-            if (rarities is null || tiers is null)
-            {
-                var defaultConfig = GetDefaultConfig();
-                Save(api, defaultConfig);
-                Logger.Notification("Configuration not found. The default configuration has been saved.");
-                return defaultConfig;
-            }
-
+            var defaultConfig = GetDefaultConfig();
+            var rarities = api.LoadModConfig<RaritiesConfig>(ConfigRaritiesFileName) ?? defaultConfig.Rarity;
+            var tiers = api.LoadModConfig<TiersConfig>(ConfigTiersFileName) ?? defaultConfig.Tier;
+            
             var config = new ModConfig
             {
                 Rarity = rarities,
                 Tier = tiers,
             };
+            
             Save(api, config); // Store it again in case we added new fields 
             Logger.Notification("Configuration loaded.");
             return config;
@@ -54,7 +49,7 @@ public sealed class ModConfig
     private static void Save(ICoreAPI api, ModConfig config)
     {
         api.StoreModConfig(config.Rarity, ConfigRaritiesFileName);
-        api.StoreModConfig(config.Tier, ConfigTiersFileName);
+        //api.StoreModConfig(config.Tier, ConfigTiersFileName); //TODO 
     }
 
     public static ModConfig GetDefaultConfig()

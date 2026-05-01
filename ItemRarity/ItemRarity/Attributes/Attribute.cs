@@ -2,6 +2,7 @@
 using Vintagestory.API.Datastructures;
 
 // ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable StringLiteralTypo
 
 namespace ItemRarity.Attributes;
 
