@@ -33,7 +33,7 @@ public static class PatchHelpers
 
         switch (ModCore.Config.Tier.EnableTiers)
         {
-            case false when Rarity.IsSuitableFor(outputSlot.Itemstack): // Without Tiers.
+            case false when ModCore.Config.Rarity.ApplyRarityOnCraft && Rarity.IsSuitableFor(outputSlot.Itemstack): // Without Tiers.
                 Rarity.ApplyRarity(outputSlot.Itemstack);
                 break;
             case true when Rarity.IsSuitableFor(outputSlot.Itemstack, false): // With Tiers.
