@@ -17,7 +17,8 @@ internal static class ServerEventsHandlers
 
     public static void OnEntitySpawn(Entity entity)
     {
-        if (ModCore.Config.Tier.EnableTiers || entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
+        if (ModCore.Config.Tier.EnableTiers || !ModCore.Config.Rarity.ApplyRarityOnItemDrop ||
+            entity is not EntityItem { Itemstack: not null, Attributes: not null } item)
             return;
 
         if (!Rarity.IsSuitableFor(item.Itemstack))
