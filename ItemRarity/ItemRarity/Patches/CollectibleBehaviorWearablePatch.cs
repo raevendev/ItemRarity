@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using ItemRarity.Attributes;
+using ItemRarity.Logging;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
@@ -37,9 +38,9 @@ public static class CollectibleBehaviorWearablePatch
     /// <param name="slot">The equipment slot where the item is located.</param>
     /// <param name="__result">The protection modifiers to be updated with rarity bonuses.</param>
     [HarmonyPatch(nameof(CollectibleBehaviorWearable.GetProtectionModifiers)), HarmonyPostfix, HarmonyPriority(Priority.Last)]
-    public static void GetAttackPowerPatch(CollectibleBehaviorWearable __instance, ItemSlot slot, ref ProtectionModifiers __result)
+    public static void GetProtectionModifiersPatch(CollectibleBehaviorWearable __instance, ItemSlot slot, ref ProtectionModifiers? __result)
     {
-        if (!Rarity.TryGetRarity(slot.Itemstack, out _))
+        if (__result is null || !Rarity.TryGetRarity(slot.Itemstack, out _))
             return;
 
         var protectionModifiers = new ProtectionModifiers // TODO: For now, i created a new instance each time, this is really not ideal.
