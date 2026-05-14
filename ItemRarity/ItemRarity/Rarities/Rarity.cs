@@ -20,12 +20,15 @@ public static class Rarity
 
     private static RaritiesConfig Config => ModCore.Config.Rarity;
 
-    public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true)
+    public static bool IsSuitableFor(ItemStack? itemStack, bool invalidIfRarityExists = true, bool ignoreExcludedItems = false)
     {
         if (itemStack?.Attributes == null || itemStack.Collectible?.Attributes == null)
             return false;
 
         if (invalidIfRarityExists && itemStack.Attributes.HasAttribute(Attribute.ModAttributeId))
+            return false;
+        
+        if(!ignoreExcludedItems && Config.ExcludeItems.Contains(itemStack.Collectible.Code))
             return false;
 
         var collectible = itemStack.Collectible;

@@ -13,6 +13,9 @@ public sealed class RaritiesConfig
     [JsonProperty(Order = 1)]
     public bool ApplyRarityOnItemDrop { get; init; } = true;
 
+    [JsonProperty(Order = 49)]
+    public string[] ExcludeItems { get; init; } = [];
+    
     [JsonProperty(Order = 50), JsonConverter(typeof(RaritiesJsonConverter))]
     public Dictionary<string, RarityModel> Rarities { get; init; } = new();
 
