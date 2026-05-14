@@ -69,9 +69,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = new[] { 0.2F, 0.9F },
                 PiercingPowerMultiplier = new[] { 0.2F, 0.9F },
                 ArmorFlatDamageReductionMultiplier = new[] { 0.2F, 0.9F },
-                ArmorPerTierFlatDamageProtectionLossMultiplier = new[] { 0.2F, 0.9F },
+                ArmorPerTierFlatDamageProtectionLossMultiplier = new[] { 1.2F, 1.9F },
                 ArmorRelativeProtectionMultiplier = new[] { 0.2F, 0.9F },
-                ArmorPerTierRelativeProtectionLossMultiplier = new[] { 0.2F, 0.9F },
+                ArmorPerTierRelativeProtectionLossMultiplier = new[] { 1.2F, 1.9F },
                 ShieldProtectionMultiplier = new[] { 0.2F, 0.9F },
             },
             new()
@@ -105,9 +105,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = 1.1F,
                 PiercingPowerMultiplier = 1.1F,
                 ArmorFlatDamageReductionMultiplier = 1.1F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 1.1F,
+                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.1F,
                 ArmorRelativeProtectionMultiplier = 1.1F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 1.1F,
+                ArmorPerTierRelativeProtectionLossMultiplier = 0.1F,
                 ShieldProtectionMultiplier = 1.1F
             },
             new()
@@ -123,9 +123,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = 1.2F,
                 PiercingPowerMultiplier = 1.2F,
                 ArmorFlatDamageReductionMultiplier = 1.2F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 1.2F,
+                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.2F,
                 ArmorRelativeProtectionMultiplier = 1.2F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 1.2F,
+                ArmorPerTierRelativeProtectionLossMultiplier = 0.2F,
                 ShieldProtectionMultiplier = 1.2F
             },
             new()
@@ -141,9 +141,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = 1.3F,
                 PiercingPowerMultiplier = 1.3F,
                 ArmorFlatDamageReductionMultiplier = 1.3F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 1.3F,
+                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.3F,
                 ArmorRelativeProtectionMultiplier = 1.3F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 1.3F,
+                ArmorPerTierRelativeProtectionLossMultiplier = 0.3F,
                 ShieldProtectionMultiplier = 1.3F
             },
             new()
@@ -159,9 +159,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = 1.5F,
                 PiercingPowerMultiplier = 1.5F,
                 ArmorFlatDamageReductionMultiplier = 1.5F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 1.5F,
+                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.5F,
                 ArmorRelativeProtectionMultiplier = 1.5F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 1.5F,
+                ArmorPerTierRelativeProtectionLossMultiplier = 0.5F,
                 ShieldProtectionMultiplier = 1.6F
             },
             new()
@@ -177,9 +177,9 @@ public sealed class ModConfig
                 AttackRangeMultiplier = 1.6F,
                 PiercingPowerMultiplier = 1.9F,
                 ArmorFlatDamageReductionMultiplier = 1.9F,
-                ArmorPerTierFlatDamageProtectionLossMultiplier = 1.9F,
+                ArmorPerTierFlatDamageProtectionLossMultiplier = 0.9F,
                 ArmorRelativeProtectionMultiplier = 1.9F,
-                ArmorPerTierRelativeProtectionLossMultiplier = 1.9F,
+                ArmorPerTierRelativeProtectionLossMultiplier = 0.9F,
                 ShieldProtectionMultiplier = 1.9F,
                 Effects = ["Thor"]
             }
