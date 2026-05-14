@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using ItemRarity.Attributes;
-using ItemRarity.Logging;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
