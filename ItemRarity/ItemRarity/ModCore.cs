@@ -35,10 +35,13 @@ public sealed class ModCore : ModSystem
     public static ModConfig Config { get; set; } = ModConfig.GetDefaultConfig();
     public static ICoreClientAPI? ClientApi { get; private set; }
     public static ICoreServerAPI? ServerApi { get; private set; }
+    public static ICoreAPI CoreApi { get; private set; }
     public static WeatherSystemServer? WeatherSystemServer { get; private set; }
 
     public override void Start(ICoreAPI api)
     {
+        CoreApi = api;
+
         if (!Harmony.HasAnyPatches(HarmonyId))
         {
             Logger.Notification("Patching...");
