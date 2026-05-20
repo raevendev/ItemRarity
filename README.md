@@ -1,7 +1,6 @@
 # Item Rarity Mod
 
-Add excitement and variety to your **Vintage Story** experience with the **Item Rarity Mod**! This mod introduces a \*
-\*rarity system\*\* for tools, affecting their stats and adding special effects. Every time you craft or find a tool, it
+Add excitement and variety to your **Vintage Story** experience with the **Item Rarity Mod**! This mod introduces a **rarity system** for tools, affecting their stats and adding special effects. Every time you craft or find a tool, it
 has a chance to receive a rarity making each item feel unique and powerful!
 
 ---
