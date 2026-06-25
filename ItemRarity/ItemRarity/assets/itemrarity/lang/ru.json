@@ -1,0 +1,17 @@
+{
+  "itemrarity:unknown": "[{0}]",
+  "itemrarity:cursed": "[Проклято]",
+  "itemrarity:common": "[Обычный]",
+  "itemrarity:uncommon": "[Необычный]",
+  "itemrarity:rare": "[Редкий]",
+  "itemrarity:epic": "[Эпичный]",
+  "itemrarity:legendary": "[Легендарный]",
+  "itemrarity:unique": "[Уникальный]",
+  "itemrarity:item-tier-info": "Возможные раритеты:",
+  "itemrarity:item-tier-1": "Уровень I",
+  "itemrarity:item-tier-2": "Уровень II",
+  "itemrarity:item-tier-3": "Уровень III",
+  "itemrarity:item-tier-4": "Уровень IV",
+  "itemrarity:item-tier-5": "Уровень V",
+  "itemrarity:item-tier-1000": "Уровень S"
+}
