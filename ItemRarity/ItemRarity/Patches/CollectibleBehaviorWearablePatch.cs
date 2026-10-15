@@ -1,8 +1,9 @@
-﻿using HarmonyLib;
-using ItemRarity.Attributes;
+﻿using System;
+using HarmonyLib;
 using ItemRarity.Rarities;
 using Vintagestory.API.Common;
 using Vintagestory.GameContent;
+using Attribute = ItemRarity.Attributes.Attribute;
 
 // ReSharper disable InconsistentNaming
 
@@ -47,14 +48,14 @@ public static class CollectibleBehaviorWearablePatch
             ProtectionTier = __result.ProtectionTier,
             HighDamageTierResistant = __result.HighDamageTierResistant,
             RelativeProtection = __result.RelativeProtection,
-            FlatDamageReduction = __result.FlatDamageReduction * Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(slot.Itemstack, 1f),
+            FlatDamageReduction = MathF.Round(__result.FlatDamageReduction * Attribute.ArmorFlatDamageReductionMultiplier.GetFloat(slot.Itemstack, 1f), 2),
             PerTierFlatDamageReductionLoss = new float[__result.PerTierFlatDamageReductionLoss.Length],
             PerTierRelativeProtectionLoss = new float[__result.PerTierRelativeProtectionLoss.Length],
         };
 
         for (var i = 0; i < __result.PerTierFlatDamageReductionLoss.Length; i++)
-            protectionModifiers.PerTierFlatDamageReductionLoss[i] = __result.PerTierFlatDamageReductionLoss[i] *
-                                                                    Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.GetFloat(slot.Itemstack, 1f);
+            protectionModifiers.PerTierFlatDamageReductionLoss[i]
+                = MathF.Round(__result.PerTierFlatDamageReductionLoss[i] * Attribute.ArmorPerTierFlatDamageProtectionLossMultiplier.GetFloat(slot.Itemstack, 1f), 2);
 
         __result = protectionModifiers;
     }
