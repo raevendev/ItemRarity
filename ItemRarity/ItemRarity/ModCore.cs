@@ -103,7 +103,8 @@ public sealed class ModCore : ModSystem
         api.Event.OnEntitySpawn += ServerEventsHandlers.OnEntitySpawn;
         api.Event.PlayerJoin += ServerEventsHandlers.OnPlayerJoin;
 
-        api.RegisterCraftingRecipe(new TierUpgradeRecipe(api.World));
+        if (Config.Tier is { EnableTiers: true, AllowTierUpgrade: true })
+            api.RegisterCraftingRecipe(new TierUpgradeRecipe(api.World));
 
         WeatherSystemServer = api.ModLoader.GetModSystem<WeatherSystemServer>();
 

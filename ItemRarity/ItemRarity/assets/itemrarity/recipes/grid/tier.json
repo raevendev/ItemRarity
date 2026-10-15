@@ -1,5 +1,6 @@
 ﻿[
   {
+    "enabled": false,
     "ingredientPattern": "R,F,R,L,G,L",
     "width": 3,
     "height": 2,
@@ -12,6 +13,7 @@
     "output": { "type": "item", "code": "itemrarity:tier-1", "quantity": 1 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "R,F,R,L,G,L",
     "width": 3,
     "height": 2,
@@ -24,6 +26,7 @@
     "output": { "type": "item", "code": "itemrarity:tier-2", "quantity": 1 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "R,F,T,L,G,L",
     "width": 3,
     "height": 2,
@@ -37,6 +40,7 @@
     "output": { "type": "item", "code": "itemrarity:tier-3", "quantity": 1 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "R,F,T,L,G,L",
     "width": 3,
     "height": 2,
@@ -50,6 +54,7 @@
     "output": { "type": "item", "code": "itemrarity:tier-4", "quantity": 1 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "R,F,T,L,G,L",
     "width": 3,
     "height": 2,
@@ -63,6 +68,7 @@
     "output": { "type": "item", "code": "itemrarity:tier-5", "quantity": 1 }
   },
   {
+    "enabled": false,
     "ingredientPattern": "A,C,T,I,Z,B,G,F,S",
     "width": 3,
     "height": 3,
