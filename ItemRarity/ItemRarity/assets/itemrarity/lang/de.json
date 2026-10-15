@@ -1,0 +1,17 @@
+{
+  "itemrarity:unknown": "[{0}]",
+  "itemrarity:cursed": "[Verflucht]",
+  "itemrarity:common": "[Gewöhnlich]",
+  "itemrarity:uncommon": "[Ungewöhnlich]",
+  "itemrarity:rare": "[Selten]",
+  "itemrarity:epic": "[Episch]",
+  "itemrarity:legendary": "[Legendär]",
+  "itemrarity:unique": "[Einzigartig]",
+  "itemrarity:item-tier-info": "Mögliche Seltenheiten: ",
+  "itemrarity:item-tier-1": "Stufe I",
+  "itemrarity:item-tier-2": "Stufe II",
+  "itemrarity:item-tier-3": "Stufe III",
+  "itemrarity:item-tier-4": "Stufe IV",
+  "itemrarity:item-tier-5": "Stufe V",
+  "itemrarity:item-tier-1000": "Stufe S"
+}
